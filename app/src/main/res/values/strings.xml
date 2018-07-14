@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Signu</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="login">Log in</string>
+    <string name="signup">Sign up</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="preg_member">Still not in Signu\'s family?</string>
+    <string name="name">Name</string>
+    <string name="lastname">Lastname</string>
+
+    <!-- Error messages -->
+    <string name="email_required">Email required</string>
+    <string name="password_required">Password must be bigger</string>
+
+    <!-- Info messages -->
+    <string name="info_signup">Info: Signu will send you an email to confirm your email and give you a provisional password</string>
+
+
+
+</resources>
