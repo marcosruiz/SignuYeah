@@ -15,25 +15,20 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SimpleCursorAdapter;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Created by marco on 25/04/2017.
  */
 
-public class ListViewPdfLoader extends ListActivity implements LoaderManager.LoaderCallbacks<Cursor>{
+public class ListViewPdfLoader extends ListActivity{
     // This is the Adapter being used to display the list's data
     SimpleCursorAdapter mAdapter;
 
-    // These are the Contacts rows that we will retrieve
-    static final String[] PROJECTION = new String[] {ContactsContract.Data._ID,
-            ContactsContract.Data.DISPLAY_NAME};
-
-    // This is the select criteria
-    static final String SELECTION = "((" +
-            ContactsContract.Data.DISPLAY_NAME + " NOTNULL) AND (" +
-            ContactsContract.Data.DISPLAY_NAME + " != '' ))";
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // Create a progress bar to display while the list loads
@@ -47,43 +42,30 @@ public class ListViewPdfLoader extends ListActivity implements LoaderManager.Loa
         ViewGroup root = (ViewGroup) findViewById(android.R.id.content);
         root.addView(progressBar);
 
-        // For the cursor adapter, specify which columns go into which views
-        String[] fromColumns = {ContactsContract.Data.DISPLAY_NAME};
-        int[] toViews = {R.id.pdf_list}; // The TextView in simple_list_item_1
+        //Get data
+        StorageController sc = new StorageController();
+        JSONObject user = sc.getSavedJSON("myUser.data");
 
-        // Create an empty adapter we will use to display the loaded data.
-        // We pass null for the cursor, then update it in onLoadFinished()
-        mAdapter = new SimpleCursorAdapter(this,
-                R.layout.content_list_pdf, null,
-                fromColumns, toViews, 0);
-        setListAdapter(mAdapter);
+        // Show data pdfs_to_sign
+        try {
+            JSONArray pdfsToSign = user.getJSONArray("pdfs_to_sign");
+            if(pdfsToSign.length()==0){
 
-        // Prepare the loader.  Either re-connect with an existing one,
-        // or start a new one.
-        getLoaderManager().initLoader(0, null, this);
-    }
+                //I will mock pdfs
+                pdfsToSign.put("5b890186fb7ba53460b6dae4");
 
-    // Called when a new Loader needs to be created
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        // Now create and return a CursorLoader that will take care of
-        // creating a Cursor for the data being displayed.
-        return new CursorLoader(this, ContactsContract.Data.CONTENT_URI,
-                PROJECTION, SELECTION, null, null);
-    }
+                for(int i=0; i < pdfsToSign.length(); i++){
+                    String pdfId = pdfsToSign.getString(i);
+                    
+                }
 
-    // Called when a previously created loader has finished loading
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        // Swap the new cursor in.  (The framework will take care of closing the
-        // old cursor once we return.)
-        mAdapter.swapCursor(data);
-    }
-
-    // Called when a previously created loader is reset, making the data unavailable
-    public void onLoaderReset(Loader<Cursor> loader) {
-        // This is called when the last Cursor provided to onLoadFinished()
-        // above is about to be closed.  We need to make sure we are no
-        // longer using it.
-        mAdapter.swapCursor(null);
+            }
+            else{
+                //There are pdfs
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

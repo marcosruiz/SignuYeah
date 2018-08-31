@@ -1,23 +1,44 @@
 package markens.signu;
 
+import android.app.LoaderManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.Loader;
+import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 
 /**
  * Created by marco on 05/06/2018.
  */
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements Callback{
+
+    CoordinatorLayout coordinatorLayoutSignup;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        coordinatorLayoutSignup = (CoordinatorLayout) findViewById(R.id.coordinatorLayoutLogin);
 
         setupFloatingLabelErrorEmail();
         setupFloatingLabelErrorPassword();
@@ -25,19 +46,75 @@ public class LoginActivity extends AppCompatActivity {
         final Button button_signup = (Button) findViewById(R.id.button_signup);
         button_signup.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                launchActivity();
+                launchActivitySignup();
+            }
+        });
+
+        final Button button_login = (Button) findViewById(R.id.button_login);
+        button_login.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //Sending POST to login
+                CallAPISignu call = new CallAPISignu(LoginActivity.this,"http://10.0.3.2:3000/api/users/login", "POST"); //TODO esto no deberia ir a pelo
+                JSONObject jsonParam = new JSONObject();
+                final EditText et_email = (EditText) findViewById(R.id.edit_email);
+                final EditText et_pass = (EditText) findViewById(R.id.edit_pass);
+                try {
+                    jsonParam.put("email", et_email.getText().toString());
+                    jsonParam.put("password", et_pass.getText().toString());
+                    call.execute(jsonParam);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
     }
 
-    private void launchActivity(){
+    public void callback(JSONObject jsonInfo){
+
+        try {
+            if(jsonInfo.getInt("code")==0){
+                //Save session
+                SharedPreferences preferences = getSharedPreferences("app.signu", Context.MODE_PRIVATE);
+                //Save user
+                JSONObject user = jsonInfo.getJSONObject("user");
+                StorageController sc = new StorageController();
+                sc.saveJSON("myUser.data", user);
+                //Go to MainActivity
+                launchActivityMain();
+            } else{
+                //Show error message
+                showSnackBar(jsonInfo);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private void launchActivitySignup(){
         Intent intent = new Intent(this, SignupActivity.class);
         startActivity(intent);
     }
 
+    private void launchActivityMain(){
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    public void showSnackBar(JSONObject jsonInfo){
+        String info = "Incorrect login";
+        try {
+            info = jsonInfo.getString("message");
+            Snackbar snackbar = Snackbar.make(coordinatorLayoutSignup, info, Snackbar.LENGTH_LONG); //TODO
+            snackbar.show();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
-     * Input errors
+     * Shows input errors
      */
     private void setupFloatingLabelErrorEmail() {
         final TextInputLayout floatingUsernameLabel = (TextInputLayout) findViewById(R.id.input_layout_email);
@@ -78,6 +155,9 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Shows password error
+     */
     private void setupFloatingLabelErrorPassword() {
         final TextInputLayout floatingUsernameLabel = (TextInputLayout) findViewById(R.id.input_layout_password);
         floatingUsernameLabel.getEditText().addTextChangedListener(new TextWatcher() {

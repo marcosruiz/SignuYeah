@@ -1,10 +1,17 @@
 package markens.signu;
 
+import android.app.LoaderManager;
+import android.content.Loader;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,7 +20,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+import org.json.JSONObject;
+
+public class MainActivity extends AppCompatActivity implements Callback, LoaderManager.LoaderCallbacks<Object> {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +39,15 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        //Add items to the list
+//        StorageController sc = new StorageController();
+//        JSONObject user = sc.getSavedJSON("user.data");
+
+        //Carga datos
+        getLoaderManager().initLoader(2,null, this);
+
+
     }
 
     @Override
@@ -50,7 +68,27 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-
+//
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void callback(JSONObject jsonInfo) {
+
+    }
+
+    @Override
+    public Loader<Object> onCreateLoader(int id, Bundle args) {
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Object> loader, Object data) {
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Object> loader) {
+
     }
 }

@@ -12,6 +12,16 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="android:windowBackground">@color/colorBackground</item>
+        <item name="android:colorBackground">@color/colorPrimary</item>
+        <item name="android:panelFullBackground">@color/colorBackground</item>
+        <item name="android:panelBackground">@color/colorBackground</item>
+        <item name="android:panelColorBackground">@color/colorBackground</item>
+        <item name="android:popupBackground">@color/colorBackground</item>
+        <!--<item name="android:colorBackgroundFloating">@color/colorBackground</item>-->
+        <!--<item name="android:windowBackground">@color/colorBackground</item>-->
+        <item name="android:actionMenuTextColor">@color/colorBackground</item>
+
+
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -23,6 +33,8 @@
         <item name="android:windowActionBar">@color/colorAccent</item>
         <item name="android:textColor">@color/textColor</item>
         <item name="colorControlNormal">@color/textColor</item>
+
+
 
         <!-- API 23 -->
         <!--<item name="android:titleTextColor">@color/colorAccent</item>-->
