@@ -25,12 +25,14 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by marco on 05/06/2018.
  */
 
-public class LoginActivity extends AppCompatActivity implements Callback{
+public class LoginActivity extends AppCompatActivity implements Callback {
 
     CoordinatorLayout coordinatorLayoutSignup;
 
@@ -49,17 +51,21 @@ public class LoginActivity extends AppCompatActivity implements Callback{
                 launchActivitySignup();
             }
         });
-
         final Button button_login = (Button) findViewById(R.id.button_login);
         button_login.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //Sending POST to login
-                CallAPISignu call = new CallAPISignu(LoginActivity.this,"http://10.0.3.2:3000/api/users/login", "POST"); //TODO esto no deberia ir a pelo
+                Map<String, String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/x-www-form-urlencoded");
+                CallAPISignu call = new CallAPISignu(LoginActivity.this, "https://signu-server.herokuapp.com/oauth2/token", "POST", headers); //TODO esto no deberia ir a pelo
                 JSONObject jsonParam = new JSONObject();
                 final EditText et_email = (EditText) findViewById(R.id.edit_email);
                 final EditText et_pass = (EditText) findViewById(R.id.edit_pass);
                 try {
-                    jsonParam.put("email", et_email.getText().toString());
+                    jsonParam.put("grant_type", "password");
+                    jsonParam.put("client_id", "application");
+                    jsonParam.put("client_secret", "secret");
+                    jsonParam.put("username", et_email.getText().toString());
                     jsonParam.put("password", et_pass.getText().toString());
                     call.execute(jsonParam);
                 } catch (JSONException e) {
@@ -67,50 +73,51 @@ public class LoginActivity extends AppCompatActivity implements Callback{
                 }
             }
         });
-
     }
 
-    public void callback(JSONObject jsonInfo){
+    public void callback(JSONObject jsonInfo) {
 
         try {
-            if(jsonInfo.getInt("code")==0){
+            System.out.println(jsonInfo.toString());
+            String valueTokenType = jsonInfo.getString("token_type");
+            if (valueTokenType.equals("bearer")) {
                 //Save session
                 SharedPreferences preferences = getSharedPreferences("app.signu", Context.MODE_PRIVATE);
                 //Save user
-                JSONObject user = jsonInfo.getJSONObject("user");
-                StorageController sc = new StorageController();
-                sc.saveJSON("myUser.data", user);
+                StorageController sc = new StorageController(this);
+                sc.saveJSON("myToken.data", jsonInfo);
                 //Go to MainActivity
-                launchActivityMain();
-            } else{
+                // launchActivityMain();
+                Snackbar snackbar = Snackbar.make(coordinatorLayoutSignup, "Login working", Snackbar.LENGTH_LONG); //TODO
+                snackbar.show();
+            } else {
                 //Show error message
                 showSnackBar(jsonInfo);
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
     }
 
-    private void launchActivitySignup(){
+    private void launchActivitySignup() {
         Intent intent = new Intent(this, SignupActivity.class);
         startActivity(intent);
     }
 
-    private void launchActivityMain(){
+    private void launchActivityMain() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 
-    public void showSnackBar(JSONObject jsonInfo){
+    public void showSnackBar(JSONObject jsonInfo) {
         String info = "Incorrect login";
         try {
             info = jsonInfo.getString("message");
-            Snackbar snackbar = Snackbar.make(coordinatorLayoutSignup, info, Snackbar.LENGTH_LONG); //TODO
-            snackbar.show();
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        Snackbar snackbar = Snackbar.make(coordinatorLayoutSignup, info, Snackbar.LENGTH_LONG); //TODO
+        snackbar.show();
     }
 
     /**
@@ -122,26 +129,27 @@ public class LoginActivity extends AppCompatActivity implements Callback{
             @Override
             public void onTextChanged(CharSequence text, int start, int count, int after) {
                 floatingUsernameLabel.setError(getString(R.string.email_required));
-                if (text.length() > 0 && text.length() <= 3) {
+                if (text.length() > 0 && text.length() <= 3 && !floatingUsernameLabel.isErrorEnabled()) {
                     floatingUsernameLabel.setErrorEnabled(true);
-                } else if(!isThere(text, '@')){
+                } else if (!isThere(text, '@') && !floatingUsernameLabel.isErrorEnabled()) {
                     floatingUsernameLabel.setErrorEnabled(true);
-                } else if(!isThere(text,'.')){
+                } else if (!isThere(text, '.') && !floatingUsernameLabel.isErrorEnabled()) {
                     floatingUsernameLabel.setErrorEnabled(true);
-                } else {
+                } else if (floatingUsernameLabel.isErrorEnabled()) {
                     floatingUsernameLabel.setErrorEnabled(false);
                 }
             }
 
-            private boolean isThere(CharSequence cs, char c){
+            private boolean isThere(CharSequence cs, char c) {
                 boolean isThere = false;
-                for(int i = 0; cs.length() > i; i++){
-                    if(cs.charAt(i)==c){
+                for (int i = 0; cs.length() > i; i++) {
+                    if (cs.charAt(i) == c) {
                         isThere = true;
                     }
                 }
                 return isThere;
             }
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count,
                                           int after) {
@@ -167,19 +175,22 @@ public class LoginActivity extends AppCompatActivity implements Callback{
                 if (text.length() > 0 && text.length() <= 3) {
                     floatingUsernameLabel.setErrorEnabled(true);
                 } else {
-                    floatingUsernameLabel.setErrorEnabled(false);
+                    if (floatingUsernameLabel.isErrorEnabled()) {
+                        floatingUsernameLabel.setErrorEnabled(false);
+                    }
                 }
             }
 
-            private boolean isThere(CharSequence cs, char c){
+            private boolean isThere(CharSequence cs, char c) {
                 boolean isThere = false;
-                for(int i = 0; cs.length() > i; i++){
-                    if(cs.charAt(i)==c){
+                for (int i = 0; cs.length() > i; i++) {
+                    if (cs.charAt(i) == c) {
                         isThere = true;
                     }
                 }
                 return isThere;
             }
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count,
                                           int after) {

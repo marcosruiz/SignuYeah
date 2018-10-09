@@ -18,7 +18,13 @@ import java.io.Writer;
 import java.util.List;
 import java.util.Map;
 
-public class StorageController extends AppCompatActivity {
+public class StorageController{
+
+    Context ctxOrigin;
+
+    public StorageController(Context context){
+        ctxOrigin = context;
+    }
 
     /**
      * Save a JSON
@@ -27,7 +33,7 @@ public class StorageController extends AppCompatActivity {
      */
     public void saveJSON(String fileName, JSONObject jsonObject){
         try {
-            FileOutputStream fos = this.getApplicationContext().openFileOutput(fileName, Context.MODE_PRIVATE);
+            FileOutputStream fos = ctxOrigin.getApplicationContext().openFileOutput(fileName, Context.MODE_PRIVATE);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(jsonObject);
             oos.close();
@@ -55,7 +61,7 @@ public class StorageController extends AppCompatActivity {
     public JSONObject getSavedJSON(String fileName){
         JSONObject result = null;
         try {
-            FileInputStream fis = this.getApplicationContext().openFileInput(fileName);
+            FileInputStream fis = ctxOrigin.getApplicationContext().openFileInput(fileName);
             ObjectInputStream ois = new ObjectInputStream(fis);
             result = (JSONObject) ois.readObject();
             ois.close();
@@ -70,9 +76,32 @@ public class StorageController extends AppCompatActivity {
         return result;
     }
 
+    /**
+     * Return a String with all info of the fileName. Null if file does not exist.
+     * @param fileName
+     * @return
+     */
+    public String getRawFile(String fileName){
+        String result = null;
+        try {
+            FileInputStream fis = ctxOrigin.getApplicationContext().openFileInput(fileName);
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            result = (String) ois.readObject();
+            ois.close();
+            fis.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
     public void saveMap(String fileName, Map<String, List<String>> list){
         try {
-            FileOutputStream fos = this.getApplicationContext().openFileOutput(fileName, Context.MODE_PRIVATE);
+            FileOutputStream fos = ctxOrigin.getApplicationContext().openFileOutput(fileName, Context.MODE_PRIVATE);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(list);
             oos.close();
@@ -85,7 +114,7 @@ public class StorageController extends AppCompatActivity {
     public Map<String, List<String>> getSavedMap(String fileName){
         Map<String, List<String>> result = null;
         try {
-            FileInputStream fis = this.getApplicationContext().openFileInput(fileName);
+            FileInputStream fis = ctxOrigin.getApplicationContext().openFileInput(fileName);
             ObjectInputStream ois = new ObjectInputStream(fis);
             result = (Map<String, List<String>>) ois.readObject();
             ois.close();

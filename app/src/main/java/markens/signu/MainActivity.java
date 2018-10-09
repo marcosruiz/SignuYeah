@@ -20,10 +20,15 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
-public class MainActivity extends AppCompatActivity implements Callback, LoaderManager.LoaderCallbacks<Object> {
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+public class MainActivity extends AppCompatActivity implements Callback, LoaderManager.LoaderCallbacks<Object> {
+    StorageController sc;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,12 +45,28 @@ public class MainActivity extends AppCompatActivity implements Callback, LoaderM
             }
         });
 
-        //Add items to the list
+        // Get token
+        sc = new StorageController(this);
+        JSONObject tokenJson = sc.getSavedJSON("myToken.data");
+        // Prepare data
+        Map<String,String> headers = new HashMap<String, String>();
+        headers.put("Content-Type", "application/json");
+        try {
+            headers.put("Authorization", "Bearer " + tokenJson.getString("access_token"));
+
+            CallAPISignu call = new CallAPISignu(MainActivity.this,"https://signu-server.herokuapp.com/api/users/info", "GET", headers);
+            JSONObject jsonParam = new JSONObject();
+            call.execute(jsonParam);
+            //Add items to the list
 //        StorageController sc = new StorageController();
 //        JSONObject user = sc.getSavedJSON("user.data");
 
-        //Carga datos
-        getLoaderManager().initLoader(2,null, this);
+            //Carga datos
+            getLoaderManager().initLoader(2,null, this);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
 
     }
@@ -74,6 +95,18 @@ public class MainActivity extends AppCompatActivity implements Callback, LoaderM
 
     @Override
     public void callback(JSONObject jsonInfo) {
+
+        try {
+            if(jsonInfo.getInt("code") == 0){
+                // Save data on myUser.data
+                sc.saveJSON("myUser.data", jsonInfo);
+                System.out.println(jsonInfo);
+                // Load info on screen
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
 
     }
 

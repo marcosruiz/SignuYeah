@@ -17,6 +17,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Marcos on 05/06/2018.
@@ -39,22 +41,22 @@ public class SignupActivity extends AppCompatActivity implements Callback{
                 final EditText et_email = (EditText) findViewById(R.id.edit_email);
                 final EditText et_name = (EditText) findViewById(R.id.edit_name);
                 final EditText et_lastname= (EditText) findViewById(R.id.edit_lastname);
-
-                CallAPISignu call = new CallAPISignu(SignupActivity.this,"http://10.0.3.2:3000/api/users/signup", "POST"); //TODO esto no deberia ir a pelo
+                final EditText et_password= (EditText) findViewById(R.id.edit_password);
+                Map<String,String> headers = new HashMap<String, String>();
+                headers.put("Content-Type", "application/json");
+                CallAPISignu call = new CallAPISignu(SignupActivity.this,"https://signu-server.herokuapp.com/api/users/signup", "POST", headers); //TODO esto no deberia ir a pelo
                 JSONObject jsonParam = new JSONObject();
                 try {
                     jsonParam.put("email", et_email.getText().toString());
                     jsonParam.put("name", et_name.getText().toString());
                     jsonParam.put("lastname", et_lastname.getText().toString());
+                    jsonParam.put("password", et_password.getText().toString());
                     call.execute(jsonParam);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
-
             }
         });
-
     }
 
     @Override

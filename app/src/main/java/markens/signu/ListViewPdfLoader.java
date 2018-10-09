@@ -43,7 +43,7 @@ public class ListViewPdfLoader extends ListActivity{
         root.addView(progressBar);
 
         //Get data
-        StorageController sc = new StorageController();
+        StorageController sc = new StorageController(this);
         JSONObject user = sc.getSavedJSON("myUser.data");
 
         // Show data pdfs_to_sign
@@ -54,9 +54,10 @@ public class ListViewPdfLoader extends ListActivity{
                 //I will mock pdfs
                 pdfsToSign.put("5b890186fb7ba53460b6dae4");
 
+                //This is for the else
                 for(int i=0; i < pdfsToSign.length(); i++){
                     String pdfId = pdfsToSign.getString(i);
-                    
+
                 }
 
             }
