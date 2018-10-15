@@ -28,6 +28,11 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
+import markens.signu.objects.Token;
+import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+
 /**
  * Created by marco on 05/06/2018.
  */
@@ -61,16 +66,28 @@ public class LoginActivity extends AppCompatActivity implements Callback {
                 JSONObject jsonParam = new JSONObject();
                 final EditText et_email = (EditText) findViewById(R.id.edit_email);
                 final EditText et_pass = (EditText) findViewById(R.id.edit_pass);
-                try {
-                    jsonParam.put("grant_type", "password");
-                    jsonParam.put("client_id", "application");
-                    jsonParam.put("client_secret", "secret");
-                    jsonParam.put("username", et_email.getText().toString());
-                    jsonParam.put("password", et_pass.getText().toString());
-                    call.execute(jsonParam);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    jsonParam.put("grant_type", "password");
+//                    jsonParam.put("client_id", "application");
+//                    jsonParam.put("client_secret", "secret");
+//                    jsonParam.put("username", et_email.getText().toString());
+//                    jsonParam.put("password", et_pass.getText().toString());
+//                    call.execute(jsonParam);
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl("https://signu-server.herokuapp.com/")
+                        .build();
+                SignuServerService service = retrofit.create(SignuServerService.class);
+                Call<Token> res = service.getToken(et_email.getText().toString(), et_pass.getText().toString(), "password", "application", "secret");
+
+                // Show info
+//                if(token.isSuccessful()){
+//                    Snackbar snackbar = Snackbar.make(coordinatorLayoutSignup, "Login working", Snackbar.LENGTH_LONG); //TODO
+//                    snackbar.show();
+//                }
             }
         });
     }

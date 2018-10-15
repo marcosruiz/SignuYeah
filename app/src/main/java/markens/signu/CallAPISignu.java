@@ -88,41 +88,10 @@ public class CallAPISignu extends AsyncTask<JSONObject, String, String> {
 
 
             // Write json
-            if (reqHeaders.get("Content-Type") == "application/json") {
-                String jsonRequest = jsonParam.toString();
-                byte[] postData = jsonRequest.getBytes(StandardCharsets.UTF_8);
-                try (DataOutputStream wr = new DataOutputStream(conn.getOutputStream())) {
-                    wr.write(postData);
-                }
-            }
+            writeJson(jsonParam, conn);
 
             // Write x-www-form-urlencoded
-            if (reqHeaders.get("Content-Type") == "application/x-www-form-urlencoded") {
-                Iterator<String> bodyKeys = jsonParam.keys();
-                String urlParameters = "";
-                boolean first = true;
-                while (bodyKeys.hasNext()) {
-                    try {
-                        String key = bodyKeys.next();
-                        String value = jsonParam.getString(key);
-                        if (!first) {
-                            urlParameters = urlParameters + "&";
-                        } else {
-                            first = false;
-                        }
-                        urlParameters = urlParameters + key + "=" + value;
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
-                int postDataLength = postData.length;
-                conn.setRequestProperty("Content-Length", Integer.toString(postDataLength));
-                try (DataOutputStream wr = new DataOutputStream(conn.getOutputStream())) {
-                    wr.write(postData);
-                }
-            }
+            writeFormUrlEncoded(jsonParam, conn);
 
             // Read
             StringBuilder sb = new StringBuilder();
@@ -157,6 +126,47 @@ public class CallAPISignu extends AsyncTask<JSONObject, String, String> {
             System.out.println(e.getMessage());
         }
         return response;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    private void writeJson(JSONObject jsonParam, HttpsURLConnection conn) throws IOException {
+        if (reqHeaders.get("Content-Type") == "application/json") {
+            String jsonRequest = jsonParam.toString();
+            byte[] postData = jsonRequest.getBytes(StandardCharsets.UTF_8);
+            try (DataOutputStream wr = new DataOutputStream(conn.getOutputStream())) {
+                wr.write(postData);
+            }
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    private void writeFormUrlEncoded(JSONObject jsonParam, HttpsURLConnection conn) throws IOException {
+        if (reqHeaders.get("Content-Type") == "application/x-www-form-urlencoded") {
+            Iterator<String> bodyKeys = jsonParam.keys();
+            String urlParameters = "";
+            boolean first = true;
+            while (bodyKeys.hasNext()) {
+                try {
+                    String key = bodyKeys.next();
+                    String value = jsonParam.getString(key);
+                    if (!first) {
+                        urlParameters = urlParameters + "&";
+                    } else {
+                        first = false;
+                    }
+                    urlParameters = urlParameters + key + "=" + value;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            byte[] postData = urlParameters.getBytes(StandardCharsets.UTF_8);
+            int postDataLength = postData.length;
+            conn.setRequestProperty("Content-Length", Integer.toString(postDataLength));
+            try (DataOutputStream wr = new DataOutputStream(conn.getOutputStream())) {
+                wr.write(postData);
+            }
+        }
     }
 
     /**
