@@ -1,6 +1,8 @@
 package markens.signu;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.TypeAdapterFactory;
 
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -8,6 +10,8 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import markens.signu.objects.SSResponse;
 import markens.signu.objects.Token;
@@ -19,6 +23,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static markens.signu.SSAPICommonUnitTest.getToken;
+import static markens.signu.SSAPICommonUnitTest.getUser;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 
@@ -32,6 +38,7 @@ public class SSAPIUsersUnitTest {
     private static final String URL_LOCAL = "http://192.168.1.6:3000/";
     private static final String URL_HEROKU = "https://signu-server.herokuapp.com/";
     private static final String USER_EMAIL = "marcosruizgarcia@gmail.com";
+    private static final String USER_EMAIL_2 = "sobrenombre@gmail.com";
     private static final String USER_PASS = "prueba";
     private static final String USER_NAME = "Marcos";
     private static final String USER_LASTNAME = "Ruiz";
@@ -271,10 +278,10 @@ public class SSAPIUsersUnitTest {
                 .baseUrl(URL_HEROKU)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        final SignuServerService signuServerService = retrofit.create(SignuServerService.class);
+        final SignuServerService sss = retrofit.create(SignuServerService.class);
 
         // Login: Get token
-        Call<Token> call = signuServerService.getToken(USER_EMAIL, USER_PASS, GRANT_TYPE, CLIENT_ID, CLIENT_SECRET);
+        Call<Token> call = sss.getToken(USER_EMAIL, USER_PASS, GRANT_TYPE, CLIENT_ID, CLIENT_SECRET);
         Response<Token> response1 = call.execute();
         assertTrue(response1.isSuccessful());
         Token token = response1.body();
@@ -283,7 +290,7 @@ public class SSAPIUsersUnitTest {
         assertTrue(token.getTokenType().equals(TOKEN_TYPE));
 
         // Delete user
-        Call<SSResponse> call2 = signuServerService.deleteUser("Bearer " + token.getAccessToken(), USER_PASS);
+        Call<SSResponse> call2 = sss.deleteUser("Bearer " + token.getAccessToken(), USER_PASS);
         Response<SSResponse> response2 = call2.execute();
         assertTrue(response2.isSuccessful());
         SSResponse ssResponse = response2.body();
@@ -340,6 +347,46 @@ public class SSAPIUsersUnitTest {
         assertNotNull(ssRes);
         assertEquals(0, ssRes.getCode());
         assertEquals("Email was sent to " + USER_EMAIL, ssRes.getMessage());
+
+    }
+
+    @Test
+    public void SSS_Pdf_API_Add_Related_Success() throws Exception {
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(URL_LOCAL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        final SignuServerService sss = retrofit.create(SignuServerService.class);
+
+        // Get token 1
+        Token token1 = getToken(sss, USER_EMAIL, USER_PASS);
+        String auth1 = "Bearer " + token1.getAccessToken();
+
+        // Get info user 1
+        User u1_1 = getUser(sss, token1);
+
+        // Get token 2
+        Token token2 = getToken(sss, USER_EMAIL_2, USER_PASS);
+        String auth2 = "Bearer " + token2.getAccessToken();
+
+        // Get info user 2
+        User u2_1 = getUser(sss, token2);
+
+        Call<SSResponse> call = sss.addRelatedUser(auth1, u2_1.getId());
+        Response<SSResponse> response2 = call.execute();
+        assertTrue(response2.isSuccessful());
+        SSResponse ssRes = response2.body();
+        assertTrue(ssRes.getCode() <= 200);
+        assertNotNull(ssRes.getData().getUser());
+
+        // Get info user
+        User u1_2 = getUser(sss, token1);
+        User u2_2 = getUser(sss, token2);
+
+        assertEquals(u1_1.getId(), u1_2.getId());
+        assertEquals(u2_1.getId(), u2_2.getId());
+        assertEquals(u1_1.getUsersRelated().size() + 1, u1_2.getUsersRelated().size());
 
     }
 

@@ -2,6 +2,9 @@ package markens.signu.objects;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class User {
     @SerializedName("_id")
     private String id;
@@ -16,11 +19,15 @@ public class User {
     @SerializedName("creation_date")
     private String creationDate;
     @SerializedName("pdfs_to_sign")
-    private Pdf[] pdfsToSign;
+    private List<String> pdfsToSign;
     @SerializedName("pdfs_signed")
-    private Pdf[] pdfsSigned;
+    private List<String> pdfsSigned;
     @SerializedName("pdfs_owned")
-    private Pdf[] pdfsOwned;
+    private List<String> pdfsOwned;
+    @SerializedName("users_related")
+    private List<String> usersRelated;
+    @SerializedName("activation")
+    private Activation activation;
 
     public String getId() {
         return id;
@@ -70,27 +77,35 @@ public class User {
         this.creationDate = creationDate;
     }
 
-    public Pdf[] getPdfsToSign() {
-        return pdfsToSign;
+    public List<String> getUsersRelated() {
+        return usersRelated;
     }
 
-    public void setPdfsToSign(Pdf[] pdfsToSign) {
-        this.pdfsToSign = pdfsToSign;
+    public void setUsersRelated(List<String> usersRelated) {
+        this.usersRelated = usersRelated;
     }
 
-    public Pdf[] getPdfsSigned() {
-        return pdfsSigned;
-    }
-
-    public void setPdfsSigned(Pdf[] pdfsSigned) {
-        this.pdfsSigned = pdfsSigned;
-    }
-
-    public Pdf[] getPdfsOwned() {
+    public List<String> getPdfsOwned() {
         return pdfsOwned;
     }
 
-    public void setPdfsOwned(Pdf[] pdfsOwned) {
+    public void setPdfsOwned(List<String> pdfsOwned) {
         this.pdfsOwned = pdfsOwned;
+    }
+
+    public List<String> getPdfsSigned() {
+        return pdfsSigned;
+    }
+
+    public void setPdfsSigned(List<String> pdfsSigned) {
+        this.pdfsSigned = pdfsSigned;
+    }
+
+    public List<String> getPdfsToSign() {
+        return pdfsToSign;
+    }
+
+    public void setPdfsToSign(List<String> pdfsToSign) {
+        this.pdfsToSign = pdfsToSign;
     }
 }
