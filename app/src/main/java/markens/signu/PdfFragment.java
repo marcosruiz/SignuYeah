@@ -9,10 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import markens.signu.dummy.DummyContent;
-import markens.signu.dummy.DummyContent.DummyItem;
 import markens.signu.objects.Pdf;
+import markens.signu.objects.ext.PdfExt;
 
 import java.util.List;
 
@@ -72,7 +70,7 @@ public class PdfFragment extends Fragment {
             }
             // Get pdfs
             GSonSavingMethods gSonSM = new GSonSavingMethods(this.getContext().getApplicationContext());
-            List<Pdf> pdfList = gSonSM.getUserExt().getPdfsToSign();
+            List<PdfExt> pdfList = gSonSM.getUserExt().getPdfsToSign();
             recyclerView.setAdapter(new MyPdfRecyclerViewAdapter(pdfList, mListener));
         }
         return view;
@@ -108,6 +106,6 @@ public class PdfFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(Pdf item);
+        void onListFragmentInteraction(PdfExt item);
     }
 }

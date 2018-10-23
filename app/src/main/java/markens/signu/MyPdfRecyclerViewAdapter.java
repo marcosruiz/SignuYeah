@@ -1,27 +1,26 @@
 package markens.signu;
 
+import android.database.DataSetObserver;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import markens.signu.PdfFragment.OnListFragmentInteractionListener;
-import markens.signu.objects.Pdf;
+import markens.signu.objects.ext.PdfExt;
+import markens.signu.objects.ext.SignerExt;
 
 import java.util.List;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
- */
 public class MyPdfRecyclerViewAdapter extends RecyclerView.Adapter<MyPdfRecyclerViewAdapter.ViewHolder> {
 
-    private final List<Pdf> mValues;
+    private final List<PdfExt> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public MyPdfRecyclerViewAdapter(List<Pdf> items, OnListFragmentInteractionListener listener) {
+    public MyPdfRecyclerViewAdapter(List<PdfExt> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -37,8 +36,13 @@ public class MyPdfRecyclerViewAdapter extends RecyclerView.Adapter<MyPdfRecycler
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).getOriginalName());
-        holder.mContentView.setText(mValues.get(position).getFileName());
+        holder.mPdfNameView.setText(mValues.get(position).getOriginalName());
+        holder.mPdfOwnerView.setText(mValues.get(position).getOwnerId().getEmail());
+        String signersStr = "";
+        for (SignerExt s : mValues.get(position).getSigners()) {
+            signersStr = signersStr + " " + s.getId().getEmail();
+        }
+        holder.mPdfSignersView.setText(signersStr);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,20 +63,22 @@ public class MyPdfRecyclerViewAdapter extends RecyclerView.Adapter<MyPdfRecycler
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
-        public Pdf mItem;
+        public final TextView mPdfNameView;
+        public final TextView mPdfOwnerView;
+        public final TextView mPdfSignersView;
+        public PdfExt mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.pdf_name);
-            mContentView = (TextView) view.findViewById(R.id.pdf_info);
+            mPdfNameView = (TextView) view.findViewById(R.id.pdf_name);
+            mPdfOwnerView = (TextView) view.findViewById(R.id.pdf_owner);
+            mPdfSignersView = (TextView) view.findViewById(R.id.pdf_signers);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + mPdfOwnerView.getText() + "'";
         }
     }
 }

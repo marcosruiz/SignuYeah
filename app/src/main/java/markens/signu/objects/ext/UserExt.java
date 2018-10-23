@@ -1,8 +1,13 @@
-package markens.signu.objects;
+package markens.signu.objects.ext;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
+
+import markens.signu.objects.Activation;
+import markens.signu.objects.NextEmail;
+import markens.signu.objects.Pdf;
+import markens.signu.objects.User;
 
 public class UserExt {
     @SerializedName("_id")
@@ -18,11 +23,11 @@ public class UserExt {
     @SerializedName("creation_date")
     private String creationDate;
     @SerializedName("pdfs_to_sign")
-    private List<Pdf> pdfsToSign;
+    private List<PdfExt> pdfsToSign;
     @SerializedName("pdfs_signed")
-    private List<Pdf> pdfsSigned;
+    private List<PdfExt> pdfsSigned;
     @SerializedName("pdfs_owned")
-    private List<Pdf> pdfsOwned;
+    private List<PdfExt> pdfsOwned;
     @SerializedName("users_related")
     private List<User> usersRelated;
     @SerializedName("activation")
@@ -78,27 +83,27 @@ public class UserExt {
         this.creationDate = creationDate;
     }
 
-    public List<Pdf> getPdfsToSign() {
+    public List<PdfExt> getPdfsToSign() {
         return pdfsToSign;
     }
 
-    public void setPdfsToSign(List<Pdf> pdfsToSign) {
+    public void setPdfsToSign(List<PdfExt> pdfsToSign) {
         this.pdfsToSign = pdfsToSign;
     }
 
-    public List<Pdf> getPdfsSigned() {
+    public List<PdfExt> getPdfsSigned() {
         return pdfsSigned;
     }
 
-    public void setPdfsSigned(List<Pdf> pdfsSigned) {
+    public void setPdfsSigned(List<PdfExt> pdfsSigned) {
         this.pdfsSigned = pdfsSigned;
     }
 
-    public List<Pdf> getPdfsOwned() {
+    public List<PdfExt> getPdfsOwned() {
         return pdfsOwned;
     }
 
-    public void setPdfsOwned(List<Pdf> pdfsOwned) {
+    public void setPdfsOwned(List<PdfExt> pdfsOwned) {
         this.pdfsOwned = pdfsOwned;
     }
 

@@ -103,6 +103,7 @@ public class LoginActivity extends AppCompatActivity implements Callback {
                             snackbar.show();
                             // Go to MainActivity
                             launchPdfList();
+                            launchActivityMain();
                         } else {
                             Gson g = new Gson();
                             TokenError myTokenError = g.fromJson(response.errorBody().charStream(), TokenError.class);

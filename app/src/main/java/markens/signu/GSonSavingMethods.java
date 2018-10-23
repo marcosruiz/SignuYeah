@@ -7,7 +7,7 @@ import com.google.gson.Gson;
 
 import markens.signu.objects.Token;
 import markens.signu.objects.User;
-import markens.signu.objects.UserExt;
+import markens.signu.objects.ext.UserExt;
 
 public class GSonSavingMethods {
     private static final String PREFS_NAME = "markens.signu.GSonSavingMethods";

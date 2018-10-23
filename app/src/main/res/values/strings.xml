@@ -7,7 +7,6 @@
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="preg_member">Still not in Signu\'s family?</string>
-    <string name="name">Name</string>
     <string name="lastname">Lastname</string>
 
     <!-- Error messages -->
@@ -17,6 +16,7 @@
     <!-- Info messages -->
     <string name="info_signup">Info: Signu will send you an email to confirm your email and give you a provisional password</string>
     <string name="todo">TODO</string>
-
-
+    <string name="name">Name</string>
+    <string name="signers">Signers</string>
+    <string name="owner">Owner</string>
 </resources>

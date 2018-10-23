@@ -1,6 +1,7 @@
 package markens.signu;
 
 import android.app.LoaderManager;
+import android.content.Context;
 import android.content.Loader;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -27,66 +28,84 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Object> {
+import markens.signu.adapters.PdfsToSignAdapter;
+import markens.signu.api.SignuServerService;
+import markens.signu.objects.SSResponse;
+import markens.signu.objects.Token;
+import markens.signu.objects.ext.PdfExt;
+import markens.signu.objects.ext.UserExt;
+import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+public class MainActivity extends AppCompatActivity {
     StorageController sc;
+    Context appCtx;
+    ListView lista;
+    Context activityCtx;
+    private static final String URL_LOCAL = "http://192.168.1.6:3000/";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        appCtx = this.getApplicationContext();
+        activityCtx = this;
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        lista = (ListView) findViewById(R.id.pdf_list);
+
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
+
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
+
+        // Get token from Shared preferences
+        final GSonSavingMethods gSonSM = new GSonSavingMethods(appCtx);
+        Token myToken = gSonSM.getToken();
+
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(URL_LOCAL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        SignuServerService sss = retrofit.create(SignuServerService.class);
+
+        String auth = "Bearer " + myToken.getAccessToken();
+        Call<SSResponse> call = sss.getUserExt(auth);
+        Response<SSResponse> response = null;
+
+        call.enqueue(new retrofit2.Callback<SSResponse>() {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            public void onResponse(Call<SSResponse> call, Response<SSResponse> response) {
+                if(response.isSuccessful()){
+                    UserExt myUserExt = response.body().getData().getUserExt();
+                    //Save myUserExt
+                    gSonSM.store(myUserExt);
+                    List<PdfExt> pdfList = myUserExt.getPdfsToSign();
+
+                    //UI
+                    lista.setAdapter(new PdfsToSignAdapter(activityCtx, myUserExt));
+
+                } else {
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<SSResponse> call, Throwable t) {
+
             }
         });
 
-        // Get token
-        // Get user
-        // Show list
 
-
-
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-//
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public Loader<Object> onCreateLoader(int id, Bundle args) {
-        return null;
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Object> loader, Object data) {
-
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Object> loader) {
 
     }
 }

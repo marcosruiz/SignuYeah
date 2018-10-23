@@ -53,7 +53,7 @@ public class ListViewContactsLoader extends ListActivity implements LoaderManage
 
         // For the cursor adapter, specify which columns go into which views
         String[] fromColumns = {ContactsContract.Data.DISPLAY_NAME, ContactsContract.Data._ID};
-        int[] toViews = {R.id.pdf_name, R.id.pdf_des}; // The TextView in simple_list_item_1
+        int[] toViews = {R.id.pdf_name, R.id.pdf_owner, R.id.pdf_signers}; // The TextView in simple_list_item_1
 
         // Create an empty adapter we will use to display the loaded data.
         // We pass null for the cursor, then update it in onLoadFinished()

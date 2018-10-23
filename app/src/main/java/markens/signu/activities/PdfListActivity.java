@@ -6,20 +6,17 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
 
 import markens.signu.GSonSavingMethods;
 import markens.signu.MyPdfRecyclerViewAdapter;
 import markens.signu.R;
 import markens.signu.api.SignuServerService;
-import markens.signu.dummy.DummyContent;
 import markens.signu.objects.Pdf;
 import markens.signu.objects.SSResponse;
 import markens.signu.objects.Token;
-import markens.signu.objects.User;
-import markens.signu.objects.UserExt;
+import markens.signu.objects.ext.PdfExt;
+import markens.signu.objects.ext.UserExt;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -75,7 +72,7 @@ public class PdfListActivity extends Activity{
                     //Save myUserExt
                     gSonSM.store(myUserExt);
 
-                    List<Pdf> pdfList = myUserExt.getPdfsToSign();
+                    List<PdfExt> pdfList = myUserExt.getPdfsToSign();
                     mAdapter = new MyPdfRecyclerViewAdapter(pdfList,null);
                     mRecyclerView.setAdapter(mAdapter);
                 } else {
