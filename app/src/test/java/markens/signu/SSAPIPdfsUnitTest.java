@@ -1,11 +1,5 @@
 package markens.signu;
 
-import android.provider.MediaStore;
-import android.util.Log;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
@@ -16,18 +10,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
 
+import markens.signu.api.SignuServerService;
 import markens.signu.objects.Pdf;
 import markens.signu.objects.SSResponse;
 import markens.signu.objects.Token;
-import markens.signu.objects.TokenError;
 import markens.signu.objects.User;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
-import okio.BufferedSink;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

@@ -2,6 +2,7 @@ package markens.signu;
 
 import java.io.IOException;
 
+import markens.signu.api.SignuServerService;
 import markens.signu.objects.Pdf;
 import markens.signu.objects.SSResponse;
 import markens.signu.objects.Token;

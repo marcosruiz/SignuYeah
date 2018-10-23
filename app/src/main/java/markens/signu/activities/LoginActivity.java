@@ -1,11 +1,8 @@
-package markens.signu;
+package markens.signu.activities;
 
-import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.Loader;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -17,21 +14,30 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.gson.Gson;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
+import markens.signu.CallAPISignu;
+import markens.signu.Callback;
+import markens.signu.GSonSavingMethods;
+import markens.signu.MainActivity;
+import markens.signu.R;
+import markens.signu.api.SignuServerService;
+import markens.signu.StorageController;
+import markens.signu.objects.SSResponse;
 import markens.signu.objects.Token;
+import markens.signu.objects.TokenError;
+import markens.signu.objects.User;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by marco on 05/06/2018.
@@ -41,9 +47,20 @@ public class LoginActivity extends AppCompatActivity implements Callback {
 
     CoordinatorLayout coordinatorLayoutSignup;
 
+    private static final String CLIENT_ID = "application";
+    private static final String CLIENT_SECRET = "secret";
+    private static final String GRANT_TYPE = "password";
+    private static final String TOKEN_TYPE = "bearer";
+    private static final String URL_LOCAL = "http://192.168.1.6:3000/";
+    private static final String URL_HEROKU = "https://signu-server.herokuapp.com/";
+    private static final String UNKNOWN_ERROR = "Something went wrong";
+    private Context appCtx;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        appCtx = this.getApplicationContext();
+
         setContentView(R.layout.activity_login);
         coordinatorLayoutSignup = (CoordinatorLayout) findViewById(R.id.coordinatorLayoutLogin);
 
@@ -59,35 +76,48 @@ public class LoginActivity extends AppCompatActivity implements Callback {
         final Button button_login = (Button) findViewById(R.id.button_login);
         button_login.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //Sending POST to login
-                Map<String, String> headers = new HashMap<String, String>();
-                headers.put("Content-Type", "application/x-www-form-urlencoded");
-                CallAPISignu call = new CallAPISignu(LoginActivity.this, "https://signu-server.herokuapp.com/oauth2/token", "POST", headers); //TODO esto no deberia ir a pelo
-                JSONObject jsonParam = new JSONObject();
                 final EditText et_email = (EditText) findViewById(R.id.edit_email);
-                final EditText et_pass = (EditText) findViewById(R.id.edit_pass);
-//                try {
-//                    jsonParam.put("grant_type", "password");
-//                    jsonParam.put("client_id", "application");
-//                    jsonParam.put("client_secret", "secret");
-//                    jsonParam.put("username", et_email.getText().toString());
-//                    jsonParam.put("password", et_pass.getText().toString());
-//                    call.execute(jsonParam);
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
+                final EditText et_password = (EditText) findViewById(R.id.edit_pass);
+
+                String emailStr = et_email.getText().toString();
+                String passStr = et_password.getText().toString();
 
                 Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl("https://signu-server.herokuapp.com/")
+                        .baseUrl(URL_LOCAL)
+                        .addConverterFactory(GsonConverterFactory.create())
                         .build();
-                SignuServerService service = retrofit.create(SignuServerService.class);
-                Call<Token> res = service.getToken(et_email.getText().toString(), et_pass.getText().toString(), "password", "application", "secret");
+                SignuServerService sss = retrofit.create(SignuServerService.class);
 
-                // Show info
-//                if(token.isSuccessful()){
-//                    Snackbar snackbar = Snackbar.make(coordinatorLayoutSignup, "Login working", Snackbar.LENGTH_LONG); //TODO
-//                    snackbar.show();
-//                }
+                Call<Token> call = sss.getToken(emailStr, passStr, GRANT_TYPE, CLIENT_ID, CLIENT_SECRET);
+                Response<SSResponse> response = null;
+
+                call.enqueue(new retrofit2.Callback<Token>() {
+                    @Override
+                    public void onResponse(Call<Token> call, Response<Token> response) {
+                        if(response.isSuccessful()){
+                            Token myToken = response.body();
+                            // TODO save myToken
+                            GSonSavingMethods gSonSM = new GSonSavingMethods(appCtx);
+                            gSonSM.store(myToken);
+                            Snackbar snackbar = Snackbar.make(coordinatorLayoutSignup, "Welcome!", Snackbar.LENGTH_LONG);
+                            snackbar.show();
+                            // Go to MainActivity
+                            launchPdfList();
+                        } else {
+                            Gson g = new Gson();
+                            TokenError myTokenError = g.fromJson(response.errorBody().charStream(), TokenError.class);
+                            Snackbar snackbar = Snackbar.make(coordinatorLayoutSignup, "Incorrect loggin", Snackbar.LENGTH_LONG);
+                            snackbar.show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Token> call, Throwable t) {
+                        Snackbar snackbar = Snackbar.make(coordinatorLayoutSignup, UNKNOWN_ERROR, Snackbar.LENGTH_LONG);
+                        snackbar.show();
+                    }
+                });
+
             }
         });
     }
@@ -123,6 +153,11 @@ public class LoginActivity extends AppCompatActivity implements Callback {
 
     private void launchActivityMain() {
         Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    private void launchPdfList() {
+        Intent intent = new Intent(this, PdfListActivity.class);
         startActivity(intent);
     }
 
@@ -197,7 +232,6 @@ public class LoginActivity extends AppCompatActivity implements Callback {
                     }
                 }
             }
-
             private boolean isThere(CharSequence cs, char c) {
                 boolean isThere = false;
                 for (int i = 0; cs.length() > i; i++) {

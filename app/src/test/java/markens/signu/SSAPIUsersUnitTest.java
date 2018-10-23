@@ -1,8 +1,6 @@
 package markens.signu;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.TypeAdapterFactory;
 
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -10,9 +8,8 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
+import markens.signu.api.SignuServerService;
 import markens.signu.objects.SSResponse;
 import markens.signu.objects.Token;
 import markens.signu.objects.TokenError;
@@ -240,10 +237,10 @@ public class SSAPIUsersUnitTest {
                 .baseUrl(URL_HEROKU)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        final SignuServerService signuServerService = retrofit.create(SignuServerService.class);
+        final SignuServerService sss = retrofit.create(SignuServerService.class);
 
         // Login: Get token
-        Call<Token> call = signuServerService.getToken(USER_EMAIL, USER_PASS, GRANT_TYPE, CLIENT_ID, CLIENT_SECRET);
+        Call<Token> call = sss.getToken(USER_EMAIL, USER_PASS, GRANT_TYPE, CLIENT_ID, CLIENT_SECRET);
         Response<Token> response1 = call.execute();
         assertTrue(response1.isSuccessful());
         Token token = response1.body();
@@ -419,6 +416,34 @@ public class SSAPIUsersUnitTest {
     }
 
     @Test
+    public void SSS_User_API_Info_Ext_Success() throws Exception {
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(URL_LOCAL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        final SignuServerService signuServerService = retrofit.create(SignuServerService.class);
+
+        // Login: Get token
+        Call<Token> call = signuServerService.getToken(USER_EMAIL, USER_PASS, GRANT_TYPE, CLIENT_ID, CLIENT_SECRET);
+        Response<Token> response1 = call.execute();
+        assertTrue(response1.isSuccessful());
+        Token token = response1.body();
+        assertNotNull(token);
+        assertTrue(token.getExpiresIn() == 3600);
+        assertTrue(token.getTokenType().equals(TOKEN_TYPE));
+
+        // Get info user
+        Call<SSResponse> call2 = signuServerService.getUserExt("Bearer " + token.getAccessToken());
+        Response<SSResponse> response2 = call2.execute();
+        assertTrue(response2.isSuccessful());
+        SSResponse ssResponse = response2.body();
+        assertEquals(0, ssResponse.getCode());
+        assertEquals("Success", ssResponse.getMessage());
+        assertNotNull(ssResponse.getData().getUserExt());
+    }
+
+    @Test
     public void SSS_User_API_Info_Fail() throws Exception {
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -490,6 +515,183 @@ public class SSAPIUsersUnitTest {
         SSResponse ssRes = g.fromJson(response2.errorBody().string(), SSResponse.class);
         assertEquals(1003, ssRes.getCode());
         assertEquals("The access token provided is invalid.", ssRes.getMessage());
+    }
+
+    @Test
+    public void SSS_User_API_Edit_Name_And_Lastname_Success() throws Exception {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(URL_LOCAL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        final SignuServerService sss = retrofit.create(SignuServerService.class);
+
+        // Login: Get token
+        Token token = getToken(sss, USER_EMAIL, USER_PASS);
+
+        // Get info user 1
+        User u1 = getUser(sss, token);
+
+        // Edit user
+        String auth = "Bearer " + token.getAccessToken();
+        Call<SSResponse> call = sss.editUser(auth, u1.getName() + "E", u1.getLastname() + "E");
+        Response<SSResponse> response = call.execute();
+        assertTrue(response.isSuccessful());
+        SSResponse ssResponse = response.body();
+        assertTrue(ssResponse.getCode() <= 200);
+
+        // Get info user 1
+        User u2 = getUser(sss, token);
+
+        assertNotNull(u1);
+        assertNotNull(u2);
+        assertEquals(u1.getId(), u2.getId());
+        assertEquals(u1.getName() + "E", u2.getName());
+        assertEquals(u1.getLastname() + "E", u2.getLastname());
+
+        // Edit user
+        String auth2 = "Bearer " + token.getAccessToken();
+        Call<SSResponse> call2 = sss.editUser(auth, USER_NAME, USER_LASTNAME);
+        Response<SSResponse> response2 = call2.execute();
+        assertTrue(response2.isSuccessful());
+        SSResponse ssResponse2 = response2.body();
+        assertTrue(ssResponse2.getCode() <= 200);
+    }
+
+    @Test
+    public void SSS_User_API_Edit_Email_Fail_Cause_It_exist() throws Exception {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(URL_LOCAL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        final SignuServerService sss = retrofit.create(SignuServerService.class);
+
+        // Login: Get token
+        Token token = getToken(sss, USER_EMAIL, USER_PASS);
+
+        // Get info user 1
+        User u1 = getUser(sss, token);
+
+        // Edit user email
+        String auth = "Bearer " + token.getAccessToken();
+        Call<SSResponse> call = sss.editUserEmail(auth, "sobrenombre@gmail.com");
+        Response<SSResponse> response = call.execute();
+        assertTrue(response.isSuccessful());
+        SSResponse ssResponse = response.body();
+        assertTrue(ssResponse.getCode() <= 200);
+
+        // Get info user 1
+        User u2 = getUser(sss, token);
+
+        assertNotNull(u1);
+        assertNotNull(u2);
+        assertEquals(u1.getId(), u2.getId());
+        assertEquals(u1.getName() + "E", u2.getName());
+        assertEquals(u1.getLastname() + "E", u2.getLastname());
+    }
+
+    @Test
+    public void SSS_User_API_Edit_Email_Fail_Cause_Wrong() throws Exception {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(URL_LOCAL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        final SignuServerService sss = retrofit.create(SignuServerService.class);
+
+        // Login: Get token
+        Token token = getToken(sss, USER_EMAIL, USER_PASS);
+
+        // Get info user 1
+        User u1 = getUser(sss, token);
+
+        // Edit user email
+        String auth = "Bearer " + token.getAccessToken();
+        Call<SSResponse> call = sss.editUserEmail(auth, "wrong@wrong");
+        Response<SSResponse> response = call.execute();
+        assertTrue(response.isSuccessful());
+        SSResponse ssResponse = response.body();
+        assertTrue(ssResponse.getCode() <= 200);
+
+        // Get info user 1
+        User u2 = getUser(sss, token);
+
+        assertNotNull(u1);
+        assertNotNull(u2);
+        assertEquals(u1.getId(), u2.getId());
+        assertEquals(u2.getNextEmail().getEmail(), "wrong@wrong");
+    }
+
+    @Test
+    public void SSS_User_API_Edit_Email_Success() throws Exception {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(URL_LOCAL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        final SignuServerService sss = retrofit.create(SignuServerService.class);
+
+        // Login: Get token
+        Token token = getToken(sss, USER_EMAIL, USER_PASS);
+
+        // Get info user 1
+        User u1 = getUser(sss, token);
+
+        // Edit user email
+        String auth = "Bearer " + token.getAccessToken();
+        Call<SSResponse> call = sss.editUserEmail(auth, "novel.in.this@gmail.com");
+        Response<SSResponse> response = call.execute();
+        assertTrue(response.isSuccessful());
+        SSResponse ssResponse = response.body();
+        assertTrue(ssResponse.getCode() <= 200);
+
+        // Get info user 1
+        User u2 = getUser(sss, token);
+
+        assertNotNull(u1);
+        assertNotNull(u2);
+        assertEquals(u1.getId(), u2.getId());
+        assertEquals(u1.getName(), u2.getName());
+        assertEquals(u1.getLastname(), u2.getLastname());
+        assertEquals(u1.getEmail(), u2.getEmail());
+        assertEquals("novel.in.this@gmail.com", u1.getNextEmail().getEmail());
+    }
+
+    @Test
+    public void SSS_User_API_Edit_Password_Success() throws Exception {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(URL_LOCAL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        final SignuServerService sss = retrofit.create(SignuServerService.class);
+
+        // Login: Get token
+        Token token = getToken(sss, USER_EMAIL, USER_PASS);
+
+        // Get info user 1
+        User u1 = getUser(sss, token);
+
+        // Edit user password
+        String auth = "Bearer " + token.getAccessToken();
+        Call<SSResponse> call = sss.editUserPassword(auth, "pruebaE");
+        Response<SSResponse> response = call.execute();
+        assertTrue(response.isSuccessful());
+        SSResponse ssResponse = response.body();
+        assertTrue(ssResponse.getCode() <= 200);
+
+        // Get info user 2
+        Token token2 = getToken(sss, USER_EMAIL, "pruebaE");
+        User u2 = getUser(sss, token2);
+
+        assertNotNull(u1);
+        assertNotNull(u2);
+        assertEquals(u1.getId(), u2.getId());
+        assertEquals(u1.getName(), u2.getName());
+
+        // Edit user password again
+        String auth2 = "Bearer " + token2.getAccessToken();
+        Call<SSResponse> call2 = sss.editUserPassword(auth2, USER_PASS);
+        Response<SSResponse> response2 = call2.execute();
+        assertTrue(response2.isSuccessful());
+        SSResponse ssResponse2 = response2.body();
+        assertTrue(ssResponse2.getCode() <= 200);
     }
 
     /**

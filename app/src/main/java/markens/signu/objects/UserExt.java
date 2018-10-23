@@ -2,10 +2,9 @@ package markens.signu.objects;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class User {
+public class UserExt {
     @SerializedName("_id")
     private String id;
     @SerializedName("name")
@@ -19,13 +18,13 @@ public class User {
     @SerializedName("creation_date")
     private String creationDate;
     @SerializedName("pdfs_to_sign")
-    private List<String> pdfsToSign;
+    private List<Pdf> pdfsToSign;
     @SerializedName("pdfs_signed")
-    private List<String> pdfsSigned;
+    private List<Pdf> pdfsSigned;
     @SerializedName("pdfs_owned")
-    private List<String> pdfsOwned;
+    private List<Pdf> pdfsOwned;
     @SerializedName("users_related")
-    private List<String> usersRelated;
+    private List<User> usersRelated;
     @SerializedName("activation")
     private Activation activation;
     @SerializedName("next_email")
@@ -79,36 +78,44 @@ public class User {
         this.creationDate = creationDate;
     }
 
-    public List<String> getUsersRelated() {
-        return usersRelated;
-    }
-
-    public void setUsersRelated(List<String> usersRelated) {
-        this.usersRelated = usersRelated;
-    }
-
-    public List<String> getPdfsOwned() {
-        return pdfsOwned;
-    }
-
-    public void setPdfsOwned(List<String> pdfsOwned) {
-        this.pdfsOwned = pdfsOwned;
-    }
-
-    public List<String> getPdfsSigned() {
-        return pdfsSigned;
-    }
-
-    public void setPdfsSigned(List<String> pdfsSigned) {
-        this.pdfsSigned = pdfsSigned;
-    }
-
-    public List<String> getPdfsToSign() {
+    public List<Pdf> getPdfsToSign() {
         return pdfsToSign;
     }
 
-    public void setPdfsToSign(List<String> pdfsToSign) {
+    public void setPdfsToSign(List<Pdf> pdfsToSign) {
         this.pdfsToSign = pdfsToSign;
+    }
+
+    public List<Pdf> getPdfsSigned() {
+        return pdfsSigned;
+    }
+
+    public void setPdfsSigned(List<Pdf> pdfsSigned) {
+        this.pdfsSigned = pdfsSigned;
+    }
+
+    public List<Pdf> getPdfsOwned() {
+        return pdfsOwned;
+    }
+
+    public void setPdfsOwned(List<Pdf> pdfsOwned) {
+        this.pdfsOwned = pdfsOwned;
+    }
+
+    public List<User> getUsersRelated() {
+        return usersRelated;
+    }
+
+    public void setUsersRelated(List<User> usersRelated) {
+        this.usersRelated = usersRelated;
+    }
+
+    public Activation getActivation() {
+        return activation;
+    }
+
+    public void setActivation(Activation activation) {
+        this.activation = activation;
     }
 
     public NextEmail getNextEmail() {

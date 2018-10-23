@@ -16,9 +16,7 @@
 
     <!-- Info messages -->
     <string name="info_signup">Info: Signu will send you an email to confirm your email and give you a provisional password</string>
-
-
-
+    <string name="todo">TODO</string>
 
 
 </resources>

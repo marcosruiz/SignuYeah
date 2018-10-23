@@ -7,9 +7,15 @@ public class Data {
     private User user;
     @SerializedName("pdf")
     private Pdf pdf;
+    @SerializedName("user_ext")
+    private UserExt userExt;
 
     public User getUser() {
         return user;
+    }
+
+    public UserExt getUserExt() {
+        return userExt;
     }
 
     public Pdf getPdf() {

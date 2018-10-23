@@ -1,4 +1,4 @@
-package markens.signu;
+package markens.signu.api;
 
 import android.widget.ArrayAdapter;
 
@@ -47,9 +47,11 @@ public interface SignuServerService {
     @POST("api/users/logout")
     Call<SSResponse> logOut(@Header("Authorization") String authorization);
 
-
     @GET("api/users/info")
     Call<SSResponse> getUser(@Header("Authorization") String authorization);
+
+    @GET("api/users/info/ext")
+    Call<SSResponse> getUserExt(@Header("Authorization") String authorization);
 
     @FormUrlEncoded
     @HTTP(method = "POST", path = "api/users/create", hasBody = true)
@@ -72,12 +74,12 @@ public interface SignuServerService {
                               @Field("name") String name, @Field("lastname") String lastname);
 
     @FormUrlEncoded
-    @PUT("api/users/")
+    @PUT("api/users/password/")
     Call<SSResponse> editUserPassword(@Header("Authorization") String authorization,
                                       @Field("password") String password);
 
     @FormUrlEncoded
-    @PUT("api/users/")
+    @PUT("api/users/email/")
     Call<SSResponse> editUserEmail(@Header("Authorization") String authorization,
                                    @Field("email") String email);
 
