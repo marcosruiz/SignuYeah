@@ -19,21 +19,14 @@ import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-import markens.signu.CallAPISignu;
 import markens.signu.Callback;
 import markens.signu.GSonSavingMethods;
-import markens.signu.MainActivity;
 import markens.signu.R;
 import markens.signu.api.SignuServerService;
 import markens.signu.StorageController;
 import markens.signu.objects.SSResponse;
 import markens.signu.objects.Token;
 import markens.signu.objects.TokenError;
-import markens.signu.objects.User;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -43,7 +36,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by marco on 05/06/2018.
  */
 
-public class LoginActivity extends AppCompatActivity implements Callback {
+public class LoginActivity extends AppCompatActivity {
 
     CoordinatorLayout coordinatorLayoutSignup;
 
@@ -94,15 +87,14 @@ public class LoginActivity extends AppCompatActivity implements Callback {
                 call.enqueue(new retrofit2.Callback<Token>() {
                     @Override
                     public void onResponse(Call<Token> call, Response<Token> response) {
-                        if(response.isSuccessful()){
+                        if (response.isSuccessful()) {
                             Token myToken = response.body();
-                            // TODO save myToken
+                            // save myToken
                             GSonSavingMethods gSonSM = new GSonSavingMethods(appCtx);
                             gSonSM.store(myToken);
                             Snackbar snackbar = Snackbar.make(coordinatorLayoutSignup, "Welcome!", Snackbar.LENGTH_LONG);
                             snackbar.show();
                             // Go to MainActivity
-                            launchPdfList();
                             launchActivityMain();
                         } else {
                             Gson g = new Gson();
@@ -123,30 +115,6 @@ public class LoginActivity extends AppCompatActivity implements Callback {
         });
     }
 
-    public void callback(JSONObject jsonInfo) {
-
-        try {
-            System.out.println(jsonInfo.toString());
-            String valueTokenType = jsonInfo.getString("token_type");
-            if (valueTokenType.equals("bearer")) {
-                //Save session
-                SharedPreferences preferences = getSharedPreferences("app.signu", Context.MODE_PRIVATE);
-                //Save user
-                StorageController sc = new StorageController(this);
-                sc.saveJSON("myToken.data", jsonInfo);
-                //Go to MainActivity
-                // launchActivityMain();
-                Snackbar snackbar = Snackbar.make(coordinatorLayoutSignup, "Login working", Snackbar.LENGTH_LONG); //TODO
-                snackbar.show();
-            } else {
-                //Show error message
-                showSnackBar(jsonInfo);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
     private void launchActivitySignup() {
         Intent intent = new Intent(this, SignupActivity.class);
         startActivity(intent);
@@ -154,11 +122,6 @@ public class LoginActivity extends AppCompatActivity implements Callback {
 
     private void launchActivityMain() {
         Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-    }
-
-    private void launchPdfList() {
-        Intent intent = new Intent(this, PdfListActivity.class);
         startActivity(intent);
     }
 
@@ -233,6 +196,7 @@ public class LoginActivity extends AppCompatActivity implements Callback {
                     }
                 }
             }
+
             private boolean isThere(CharSequence cs, char c) {
                 boolean isThere = false;
                 for (int i = 0; cs.length() > i; i++) {

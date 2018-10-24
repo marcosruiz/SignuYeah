@@ -61,8 +61,8 @@ public class GSonSavingMethods {
 
     public UserExt getUserExt(){
         Gson gson = new Gson();
-        String myUserStr = settings.getString(myUserId, "");
-        UserExt userExt = gson.fromJson(myUserStr, UserExt.class);
+        String myUserExtStr = settings.getString(myUserExtId, "");
+        UserExt userExt = gson.fromJson(myUserExtStr, UserExt.class);
         return userExt;
     }
 }

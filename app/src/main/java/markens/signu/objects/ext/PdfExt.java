@@ -2,12 +2,13 @@ package markens.signu.objects.ext;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 import markens.signu.objects.Signer;
 import markens.signu.objects.User;
 
-public class PdfExt {
+public class PdfExt implements Serializable {
     @SerializedName("_id")
     private String id;
     @SerializedName("original_name")
