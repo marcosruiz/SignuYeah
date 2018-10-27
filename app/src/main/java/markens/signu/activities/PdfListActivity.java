@@ -8,11 +8,10 @@ import android.support.v7.widget.RecyclerView;
 
 import java.util.List;
 
-import markens.signu.GSonSavingMethods;
+import markens.signu.storage.SharedPrefsCtrl;
 import markens.signu.MyPdfRecyclerViewAdapter;
 import markens.signu.R;
 import markens.signu.api.SignuServerService;
-import markens.signu.objects.Pdf;
 import markens.signu.objects.SSResponse;
 import markens.signu.objects.Token;
 import markens.signu.objects.ext.PdfExt;
@@ -50,7 +49,7 @@ public class PdfListActivity extends Activity{
 
 
         // Get token from Shared preferences
-        final GSonSavingMethods gSonSM = new GSonSavingMethods(appCtx);
+        final SharedPrefsCtrl gSonSM = new SharedPrefsCtrl(appCtx);
         Token myToken = gSonSM.getToken();
 
 

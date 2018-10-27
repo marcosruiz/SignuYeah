@@ -1,4 +1,4 @@
-package markens.signu;
+package markens.signu.storage;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -9,19 +9,30 @@ import markens.signu.objects.Token;
 import markens.signu.objects.User;
 import markens.signu.objects.ext.UserExt;
 
-public class GSonSavingMethods {
-    private static final String PREFS_NAME = "markens.signu.GSonSavingMethods";
+public class SharedPrefsCtrl {
+    //private static final String PREFS_NAME = "markens.signu.storage.SharedPrefsCtrl";
+    private static final String PREFS_NAME = "";
     private static SharedPreferences settings;
     private static SharedPreferences.Editor editor;
     private static String myTokenId = "TOKEN";
     private static String myUserId = "USER";
     private static String myUserExtId = "USER_EXT";
 
-    public GSonSavingMethods(Context ctx){
+    public SharedPrefsCtrl(Context ctx){
         if(settings == null){
             settings = ctx.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE );
         }
         editor = settings.edit();
+    }
+
+    public void store(String key, String value){
+        editor.putString(key, value);
+        editor.commit();
+    }
+
+    public String get(String key){
+        String value = settings.getString(key, null);
+        return value;
     }
 
     public void store(Token token) {

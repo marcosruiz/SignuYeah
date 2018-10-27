@@ -9,8 +9,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import markens.signu.objects.Pdf;
+
 import markens.signu.objects.ext.PdfExt;
+import markens.signu.storage.SharedPrefsCtrl;
 
 import java.util.List;
 
@@ -69,7 +70,7 @@ public class PdfFragment extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
             // Get pdfs
-            GSonSavingMethods gSonSM = new GSonSavingMethods(this.getContext().getApplicationContext());
+            SharedPrefsCtrl gSonSM = new SharedPrefsCtrl(this.getContext().getApplicationContext());
             List<PdfExt> pdfList = gSonSM.getUserExt().getPdfsToSign();
             recyclerView.setAdapter(new MyPdfRecyclerViewAdapter(pdfList, mListener));
         }

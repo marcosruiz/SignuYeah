@@ -2,7 +2,6 @@ package markens.signu.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -19,11 +18,9 @@ import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import markens.signu.Callback;
-import markens.signu.GSonSavingMethods;
+import markens.signu.storage.SharedPrefsCtrl;
 import markens.signu.R;
 import markens.signu.api.SignuServerService;
-import markens.signu.StorageController;
 import markens.signu.objects.SSResponse;
 import markens.signu.objects.Token;
 import markens.signu.objects.TokenError;
@@ -57,62 +54,81 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         coordinatorLayoutSignup = (CoordinatorLayout) findViewById(R.id.coordinatorLayoutLogin);
 
-        setupFloatingLabelErrorEmail();
-        setupFloatingLabelErrorPassword();
+        //Save global vars
+        SharedPrefsCtrl spc = new SharedPrefsCtrl(appCtx);
+        spc.store("URL_LOCAL", "http://192.168.1.6:3000/");
+        spc.store("URL_HEROKU", "https://signu-server.herokuapp.com/");
+        spc.store("GRANT_TYPE", "password");
+        spc.store("TOKEN_TYPE", "bearer");
+        spc.store("CLIENT_ID", "application");
+        spc.store("CLIENT_SECRET", "secret");
 
-        final Button button_signup = (Button) findViewById(R.id.button_signup);
-        button_signup.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                launchActivitySignup();
-            }
-        });
-        final Button button_login = (Button) findViewById(R.id.button_login);
-        button_login.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                final EditText et_email = (EditText) findViewById(R.id.edit_email);
-                final EditText et_password = (EditText) findViewById(R.id.edit_pass);
 
-                String emailStr = et_email.getText().toString();
-                String passStr = et_password.getText().toString();
+        // Check if we are already logged
+        spc.store((Token) null);
+        Token myToken = spc.getToken();
 
-                Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl(URL_LOCAL)
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .build();
-                SignuServerService sss = retrofit.create(SignuServerService.class);
 
-                Call<Token> call = sss.getToken(emailStr, passStr, GRANT_TYPE, CLIENT_ID, CLIENT_SECRET);
-                Response<SSResponse> response = null;
+        if(myToken != null){
+            launchActivityMain();
+        } else {
+            setupFloatingLabelErrorEmail();
+            setupFloatingLabelErrorPassword();
 
-                call.enqueue(new retrofit2.Callback<Token>() {
-                    @Override
-                    public void onResponse(Call<Token> call, Response<Token> response) {
-                        if (response.isSuccessful()) {
-                            Token myToken = response.body();
-                            // save myToken
-                            GSonSavingMethods gSonSM = new GSonSavingMethods(appCtx);
-                            gSonSM.store(myToken);
-                            Snackbar snackbar = Snackbar.make(coordinatorLayoutSignup, "Welcome!", Snackbar.LENGTH_LONG);
-                            snackbar.show();
-                            // Go to MainActivity
-                            launchActivityMain();
-                        } else {
-                            Gson g = new Gson();
-                            TokenError myTokenError = g.fromJson(response.errorBody().charStream(), TokenError.class);
-                            Snackbar snackbar = Snackbar.make(coordinatorLayoutSignup, "Incorrect loggin", Snackbar.LENGTH_LONG);
+            final Button button_signup = (Button) findViewById(R.id.button_signup);
+            button_signup.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    launchActivitySignup();
+                }
+            });
+            final Button button_login = (Button) findViewById(R.id.button_login);
+            button_login.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    final EditText et_email = (EditText) findViewById(R.id.edit_email);
+                    final EditText et_password = (EditText) findViewById(R.id.edit_pass);
+
+                    String emailStr = et_email.getText().toString();
+                    String passStr = et_password.getText().toString();
+
+                    Retrofit retrofit = new Retrofit.Builder()
+                            .baseUrl(URL_LOCAL)
+                            .addConverterFactory(GsonConverterFactory.create())
+                            .build();
+                    SignuServerService sss = retrofit.create(SignuServerService.class);
+
+                    Call<Token> call = sss.getToken(emailStr, passStr, GRANT_TYPE, CLIENT_ID, CLIENT_SECRET);
+                    Response<SSResponse> response = null;
+
+                    call.enqueue(new retrofit2.Callback<Token>() {
+                        @Override
+                        public void onResponse(Call<Token> call, Response<Token> response) {
+                            if (response.isSuccessful()) {
+                                Token myToken = response.body();
+                                // save myToken
+                                SharedPrefsCtrl gSonSM = new SharedPrefsCtrl(appCtx);
+                                gSonSM.store(myToken);
+                                Snackbar snackbar = Snackbar.make(coordinatorLayoutSignup, "Welcome!", Snackbar.LENGTH_LONG);
+                                snackbar.show();
+                                // Go to MainActivity
+                                launchActivityMain();
+                            } else {
+                                Gson g = new Gson();
+                                TokenError myTokenError = g.fromJson(response.errorBody().charStream(), TokenError.class);
+                                Snackbar snackbar = Snackbar.make(coordinatorLayoutSignup, "Incorrect loggin", Snackbar.LENGTH_LONG);
+                                snackbar.show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Token> call, Throwable t) {
+                            Snackbar snackbar = Snackbar.make(coordinatorLayoutSignup, UNKNOWN_ERROR, Snackbar.LENGTH_LONG);
                             snackbar.show();
                         }
-                    }
+                    });
 
-                    @Override
-                    public void onFailure(Call<Token> call, Throwable t) {
-                        Snackbar snackbar = Snackbar.make(coordinatorLayoutSignup, UNKNOWN_ERROR, Snackbar.LENGTH_LONG);
-                        snackbar.show();
-                    }
-                });
-
-            }
-        });
+                }
+            });
+        }
     }
 
     private void launchActivitySignup() {

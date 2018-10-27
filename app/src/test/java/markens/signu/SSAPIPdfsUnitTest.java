@@ -161,7 +161,7 @@ public class SSAPIPdfsUnitTest {
         final SignuServerService sss = retrofit.create(SignuServerService.class);
 
         // Login: Get token
-        Token token = getToken(sss, USER_EMAIL, USER_PASS);
+        Token token = getToken(sss, USER_EMAIL_2, USER_PASS);
 
         // Get info user 1
         User u1 = getUser(sss, token);
@@ -218,7 +218,7 @@ public class SSAPIPdfsUnitTest {
     }
 
     @Test
-    public void SSS_Pdf_API_Download_Success() throws Exception {
+    public void SSS_Pdf_API_Download_Success_Owned() throws Exception {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(URL_LOCAL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -233,7 +233,8 @@ public class SSAPIPdfsUnitTest {
 
         // Get info pdf
         String auth = "Bearer " + token.getAccessToken();
-        String pdfId = u1.getPdfsOwned().get((u1.getPdfsOwned().size() - 1));
+        int i = (u1.getPdfsOwned().size() - 1);
+        String pdfId = u1.getPdfsOwned().get(i);
         Call<ResponseBody> call = sss.downloadPdf(auth, pdfId);
         Response<ResponseBody> response = call.execute();
         assertTrue(response.isSuccessful());

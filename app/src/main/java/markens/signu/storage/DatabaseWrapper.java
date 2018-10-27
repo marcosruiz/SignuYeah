@@ -1,4 +1,4 @@
-package markens.signu.db;
+package markens.signu.storage;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
