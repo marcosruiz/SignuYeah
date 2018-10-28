@@ -1,5 +1,6 @@
 package markens.signu.activities;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -30,12 +31,13 @@ public class PdfListActivity extends Activity{
     private RecyclerView.LayoutManager mLayoutManager;
     private Context appCtx;
 
+    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         appCtx = this.getApplicationContext();
         setContentView(R.layout.fragment_pdf_list);
-        mRecyclerView = (RecyclerView) findViewById(R.id.list);
+        mRecyclerView = (RecyclerView) findViewById(R.id.pdf_list);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView

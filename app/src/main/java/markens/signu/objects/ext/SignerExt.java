@@ -2,9 +2,11 @@ package markens.signu.objects.ext;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 import markens.signu.objects.User;
 
-public class SignerExt {
+public class SignerExt implements Serializable{
     @SerializedName("_id")
     private User id;
     @SerializedName("signature_date")

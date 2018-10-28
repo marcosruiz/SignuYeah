@@ -1,8 +1,8 @@
 <resources>
 
     <style name="MyButtonStyle" parent="Widget.AppCompat.Button.Colored">
-        <item name="android:textColor">@color/textColorPrimary</item>
-        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="android:textColor">@color/textColor</item>
+        <item name="android:textColorPrimary">@color/textColor</item>
     </style>
 
     <style name="MyEditTextStyle" parent="Widget.AppCompat.EditText">
@@ -25,13 +25,13 @@
 
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/colorAccentDark</item>
         <item name="colorButtonNormal">@color/colorAccent</item>
         <item name="editTextColor">@color/textColor</item>
 
         <item name="android:textColorPrimaryDisableOnly">@color/textColorPrimaryDisableOnly</item>
         <item name="android:textColorHint">@color/textColor</item>
-        <item name="android:windowActionBar">@color/colorAccent</item>
+        <item name="android:windowActionBar">@color/colorAccentDark</item>
         <item name="android:textColor">@color/textColor</item>
         <item name="colorControlNormal">@color/textColor</item>
 

@@ -7,33 +7,19 @@
     android:layout_height="match_parent"
     tools:context="markens.signu.activities.MainActivity">
 
-    <ListView
-        android:id="@+id/pdf_list"
-        android:layout_width="wrap_content"
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_above="@id/bottom_navigation"/>
 
-    <!--<android.support.design.widget.FloatingActionButton-->
-        <!--android:id="@+id/floatingActionButton"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentEnd="true"-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:layout_alignParentTop="true"-->
-        <!--android:clickable="true"-->
-        <!--app:layout_constraintBottom_toBottomOf="@+id/pdf_list"-->
-        <!--app:layout_constraintEnd_toEndOf="@+id/pdf_list"-->
-        <!--app:srcCompat="@drawable/add"-->
-        <!--tools:ignore="MissingConstraints" />-->
 
     <android.support.design.widget.BottomNavigationView
-        android:id="@+id/navigation_pdf"
+        android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="?android:attr/windowBackground"
+        android:background="@color/colorAccentLight"
         app:menu="@menu/bottom_navigation"/>
 
 

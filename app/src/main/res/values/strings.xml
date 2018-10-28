@@ -33,4 +33,5 @@
     <string name="title_dashboard">Title dashboard</string>
     <string name="title_notifications">Title notifications</string>
     <string name="upload_pdf">Upload PDF</string>
+    <string name="users_related">Users Related</string>
 </resources>

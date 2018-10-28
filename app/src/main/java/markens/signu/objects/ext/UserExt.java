@@ -2,6 +2,7 @@ package markens.signu.objects.ext;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 import markens.signu.objects.Activation;
@@ -9,7 +10,7 @@ import markens.signu.objects.NextEmail;
 import markens.signu.objects.Pdf;
 import markens.signu.objects.User;
 
-public class UserExt {
+public class UserExt implements Serializable{
     @SerializedName("_id")
     private String id;
     @SerializedName("name")
