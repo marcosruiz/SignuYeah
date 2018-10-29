@@ -1,10 +1,15 @@
 package markens.signu.activities;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,13 +26,11 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import markens.signu.R;
-import markens.signu.adapters.PdfsExtListAdapter;
 import markens.signu.adapters.UserListCheckboxAdapter;
 import markens.signu.api.SignuServerService;
 import markens.signu.objects.SSResponse;
 import markens.signu.objects.Token;
 import markens.signu.objects.User;
-import markens.signu.objects.ext.PdfExt;
 import markens.signu.objects.ext.UserExt;
 import markens.signu.storage.SharedPrefsCtrl;
 import okhttp3.MediaType;
@@ -70,15 +73,25 @@ public class FragmentPdfUpload extends Fragment {
 
 
         final Button buttonSelectPdf = (Button) view.findViewById(R.id.buttonSelectPdf);
+
         buttonSelectPdf.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                new MaterialFilePicker()
-                        .withSupportFragment(fragment)
-                        .withRequestCode(1)
-                        .withFilter(Pattern.compile(".*\\.pdf$")) // Filtering files and directories by file name using regexp
-                        .withFilterDirectories(false) // Set directories filterable (false by default)
-                        .withHiddenFiles(true) // Show hidden files and folders
-                        .start();
+                if (ContextCompat.checkSelfPermission(getActivity(),
+                        Manifest.permission.READ_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED) {
+
+                    ActivityCompat.requestPermissions(getActivity(),
+                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 0);
+
+                } else {
+                    new MaterialFilePicker()
+                            .withSupportFragment(fragment)
+                            .withRequestCode(1)
+                            .withFilter(Pattern.compile(".*\\.pdf$")) // Filtering files and directories by file name using regexp
+                            .withFilterDirectories(false) // Set directories filterable (false by default)
+                            .withHiddenFiles(true) // Show hidden files and folders
+                            .start();
+                }
             }
         });
 
@@ -115,6 +128,15 @@ public class FragmentPdfUpload extends Fragment {
         }
     }
 
+    public boolean isExternalStorageReadable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state) ||
+                Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+            return true;
+        }
+        return false;
+    }
+
     private void uploadPdf() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(URL_LOCAL)
@@ -122,7 +144,7 @@ public class FragmentPdfUpload extends Fragment {
                 .build();
         final SignuServerService sss = retrofit.create(SignuServerService.class);
 
-        //Upload
+        //Upload to server
         String auth = "Bearer " + token.getAccessToken();
         RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
         MultipartBody.Part body = MultipartBody.Part.createFormData("pdf", file.getName(), requestFile);

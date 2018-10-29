@@ -250,6 +250,25 @@ public class SSAPIUsersUnitTest {
     }
 
     @Test
+    public void SSS_User_API_Search_Success() throws Exception {
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(URL_LOCAL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        final SignuServerService sss = retrofit.create(SignuServerService.class);
+
+        Token token = getToken(sss, USER_EMAIL, USER_PASS);
+        String auth = "Bearer " + token.getAccessToken();
+
+        Call<SSResponse> call =  sss.searchUsers(auth, "sobre");
+        Response<SSResponse> response = call.execute();
+        assertTrue(response.isSuccessful());
+        assertNotNull(response.body().getData().getUsers());
+
+    }
+
+    @Test
     public void SSS_User_API_Login_Fail() throws Exception {
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -293,7 +312,7 @@ public class SSAPIUsersUnitTest {
         SSResponse ssResponse = response2.body();
         System.out.println(ssResponse.getCode());
         assertEquals(3, ssResponse.getCode());
-        assertEquals("User deleted successfully", ssResponse.getMessage());
+        assertEquals("PdfExt deleted successfully", ssResponse.getMessage());
     }
 
     @Test
@@ -495,7 +514,7 @@ public class SSAPIUsersUnitTest {
         assertTrue(response2.isSuccessful());
         SSResponse ssResponse = response2.body();
         assertEquals(7, ssResponse.getCode());
-        assertEquals("User logged out successfully", ssResponse.getMessage());
+        assertEquals("PdfExt logged out successfully", ssResponse.getMessage());
     }
 
     @Test

@@ -7,8 +7,6 @@ import java.util.List;
 
 import markens.signu.objects.Activation;
 import markens.signu.objects.NextEmail;
-import markens.signu.objects.Pdf;
-import markens.signu.objects.User;
 
 public class UserExt implements Serializable{
     @SerializedName("_id")
@@ -30,7 +28,7 @@ public class UserExt implements Serializable{
     @SerializedName("pdfs_owned")
     private List<PdfExt> pdfsOwned;
     @SerializedName("users_related")
-    private List<User> usersRelated;
+    private List<markens.signu.objects.User> usersRelated;
     @SerializedName("activation")
     private Activation activation;
     @SerializedName("next_email")
@@ -108,11 +106,11 @@ public class UserExt implements Serializable{
         this.pdfsOwned = pdfsOwned;
     }
 
-    public List<User> getUsersRelated() {
+    public List<markens.signu.objects.User> getUsersRelated() {
         return usersRelated;
     }
 
-    public void setUsersRelated(List<User> usersRelated) {
+    public void setUsersRelated(List<markens.signu.objects.User> usersRelated) {
         this.usersRelated = usersRelated;
     }
 

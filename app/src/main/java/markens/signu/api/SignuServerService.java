@@ -47,11 +47,14 @@ public interface SignuServerService {
     @POST("api/users/logout")
     Call<SSResponse> logOut(@Header("Authorization") String authorization);
 
-    @GET("api/users/info")
-    Call<SSResponse> getUser(@Header("Authorization") String authorization);
+    @GET("api/users/search")
+    Call<SSResponse> searchUsers(@Header("Authorization") String authorization, @Query("email") String email);
 
     @GET("api/users/info/ext")
     Call<SSResponse> getUserExt(@Header("Authorization") String authorization);
+
+    @GET("api/users/info")
+    Call<SSResponse> getUser(@Header("Authorization") String authorization);
 
     @FormUrlEncoded
     @HTTP(method = "POST", path = "api/users/create", hasBody = true)

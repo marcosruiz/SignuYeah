@@ -22,11 +22,11 @@ public class PdfExt implements Serializable {
     @SerializedName("creation_date")
     private String creationDate;
     @SerializedName("owner_id")
-    private User ownerId;
+    private markens.signu.objects.User ownerId;
     @SerializedName("signers")
     private List<SignerExt> signers;
 
-    public PdfExt(String id, String originalName, String mimeType, String fileName, String lastEditionDate, String creationDate, User ownerId, List<SignerExt> signers) {
+    public PdfExt(String id, String originalName, String mimeType, String fileName, String lastEditionDate, String creationDate, markens.signu.objects.User ownerId, List<SignerExt> signers) {
         this.id = id;
         this.originalName = originalName;
         this.mimeType = mimeType;
@@ -77,11 +77,11 @@ public class PdfExt implements Serializable {
         this.creationDate = creationDate;
     }
 
-    public User getOwnerId() {
+    public markens.signu.objects.User getOwnerId() {
         return ownerId;
     }
 
-    public void setOwnerId(User ownerId) {
+    public void setOwnerId(markens.signu.objects.User ownerId) {
         this.ownerId = ownerId;
     }
 

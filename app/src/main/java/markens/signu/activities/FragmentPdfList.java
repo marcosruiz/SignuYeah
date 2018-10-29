@@ -1,7 +1,5 @@
 package markens.signu.activities;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -9,14 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import markens.signu.R;
 import markens.signu.adapters.PdfsExtListAdapter;
-import markens.signu.objects.User;
 import markens.signu.objects.ext.PdfExt;
-import markens.signu.objects.ext.SignerExt;
 
 public class FragmentPdfList extends android.support.v4.app.Fragment {
 

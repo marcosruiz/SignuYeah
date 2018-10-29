@@ -67,21 +67,21 @@
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline11"
-        app:layout_constraintStart_toEndOf="@id/checkBox"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_account_circle_black_24dp" />
 
-    <CheckBox
-        android:id="@+id/checkBox"
+    <Button
+        android:id="@+id/buttonAddUser"
         android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="18dp"
-        android:clickable="false"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="12dp"
+        android:text="Add"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
