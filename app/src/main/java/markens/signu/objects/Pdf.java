@@ -2,9 +2,10 @@ package markens.signu.objects;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Pdf {
+public class Pdf  implements Serializable {
     @SerializedName("_id")
     private String id;
     @SerializedName("original_name")

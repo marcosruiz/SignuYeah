@@ -92,7 +92,7 @@ public interface SignuServerService {
     Call<SSResponse> uploadPdf(@Header("Authorization") String authorization,
                                @Part MultipartBody.Part pdf);
 
-    @FormUrlEncoded
+    @Multipart
     @POST("api/pdfs/")
     Call<SSResponse> uploadPdfWithSigners(@Header("Authorization") String authorization,
                                           @Part MultipartBody.Part pdf,

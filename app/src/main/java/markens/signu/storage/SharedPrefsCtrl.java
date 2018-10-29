@@ -29,6 +29,15 @@ public class SharedPrefsCtrl {
         editor.putString(key, value);
         editor.commit();
     }
+    public void store(String key, boolean value){
+        editor.putBoolean(key, value);
+        editor.commit();
+    }
+
+    public boolean getBoolean(String key){
+        boolean value = settings.getBoolean(key, false);
+        return value;
+    }
 
     public String get(String key){
         String value = settings.getString(key, null);

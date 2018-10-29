@@ -2,7 +2,9 @@ package markens.signu.objects;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Token {
+import java.io.Serializable;
+
+public class Token implements Serializable{
     @SerializedName("access_token")
     private String accessToken;
     @SerializedName("token_type")

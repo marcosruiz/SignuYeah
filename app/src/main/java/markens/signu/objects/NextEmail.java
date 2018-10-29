@@ -2,7 +2,9 @@ package markens.signu.objects;
 
 import com.google.gson.annotations.SerializedName;
 
-public class NextEmail {
+import java.io.Serializable;
+
+public class NextEmail  implements Serializable {
     @SerializedName("email")
     private String email;
     @SerializedName("code")

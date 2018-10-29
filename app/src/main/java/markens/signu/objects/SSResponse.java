@@ -2,7 +2,9 @@ package markens.signu.objects;
 
 import com.google.gson.annotations.SerializedName;
 
-public class SSResponse {
+import java.io.Serializable;
+
+public class SSResponse  implements Serializable {
     @SerializedName("code")
     private int code;
     @SerializedName("message")

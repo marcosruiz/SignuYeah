@@ -2,9 +2,11 @@ package markens.signu.objects;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 import markens.signu.objects.ext.UserExt;
 
-public class Data {
+public class Data implements Serializable{
     @SerializedName("user")
     private User user;
     @SerializedName("pdf")

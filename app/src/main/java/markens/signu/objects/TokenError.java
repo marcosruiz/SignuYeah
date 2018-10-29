@@ -2,7 +2,9 @@ package markens.signu.objects;
 
 import com.google.gson.annotations.SerializedName;
 
-public class TokenError {
+import java.io.Serializable;
+
+public class TokenError  implements Serializable {
     @SerializedName("error")
     private String error;
 

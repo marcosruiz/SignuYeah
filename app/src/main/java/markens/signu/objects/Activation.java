@@ -2,7 +2,9 @@ package markens.signu.objects;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Activation {
+import java.io.Serializable;
+
+public class Activation  implements Serializable {
     @SerializedName("is_activated")
     private boolean isActivated;
     @SerializedName("when")
