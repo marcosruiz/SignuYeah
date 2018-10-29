@@ -80,7 +80,7 @@ public class UserListAdapter extends BaseAdapter {
             buttonAddUser.setEnabled(false);
             buttonAddUser.setText("Added");
         }
-        
+
         buttonAddUser.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 TextView userId = (TextView) view.findViewById(R.id.textViewUserId);
