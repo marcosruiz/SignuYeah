@@ -18,10 +18,10 @@ public class StoragePdfCtrl {
         myCtx = context;
     }
 
-    public boolean writeResponseBodyToDisk(ResponseBody body, PdfExt pdfExt) {
+    public boolean writeResponseBodyToDisk(ResponseBody body, String pdfName) {
         try {
 //            File file = new File(getExternalFilesDir(null) + File.separator + "Future Studio Icon.png");
-            File file = new File(myCtx.getApplicationContext().getFilesDir().getAbsolutePath() + File.separator + pdfExt.getId() + ".pdf");
+            File file = new File(myCtx.getApplicationContext().getFilesDir().getAbsolutePath() + File.separator + pdfName);
             InputStream inputStream = null;
             OutputStream outputStream = null;
             try {

@@ -70,12 +70,14 @@ public class PdfsExtListAdapter extends BaseAdapter {
         // Lo interesante se hace aqui
         final View view = inflater.inflate(R.layout.pdf_item, null);
         TextView pdfName = (TextView) view.findViewById(R.id.textViewNameValue);
+        TextView pdfId = (TextView) view.findViewById(R.id.textViewIdValue);
         TextView pdfOwner = (TextView) view.findViewById(R.id.textViewOwnerValue);
         TextView pdfSigners = (TextView) view.findViewById(R.id.textViewSignersValue);
         Button buttonDetails = (Button) view.findViewById(R.id.buttonInfoPdf);
 
         pdfName.setText(currentPdfExt.getOriginalName());
         pdfOwner.setText(currentPdfExt.getOwnerId().getEmail());
+        pdfId.setText(currentPdfExt.getId());
 
         String signersStr = "";
         for (SignerExt s : currentPdfExt.getSigners()) {
@@ -83,82 +85,17 @@ public class PdfsExtListAdapter extends BaseAdapter {
         }
         pdfSigners.setText(signersStr);
 
-        // Add button functionality
-        buttonDetails.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(myCtx, PdfVisorActivity.class);
-                intent.putExtra("index", position);
-                // pdf_to_sign = 0
-                intent.putExtra("list", 0);
-                myCtx.startActivity(intent);
-            }
-        });
-
 
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                currentPdfExt = pdfExtList.get(position);
-                // Check if is downloaded
-
-                // Download pdf and show it
-                SharedPrefsCtrl spc = new SharedPrefsCtrl(appCtx);
-                Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl(spc.get("URL_LOCAL"))
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .build();
-                SignuServerService sss = retrofit.create(SignuServerService.class);
-                Token myToken = spc.getToken();
-                String auth = "Bearer " + myToken.getAccessToken();
-
-                Call<ResponseBody> call = sss.downloadPdf(auth, currentPdfExt.getId());
-                call.enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        if (response.isSuccessful()) {
-                            ResponseBody rb = response.body();
-                            StoragePdfCtrl sPdfC = new StoragePdfCtrl(myCtx);
-                            boolean isOk = sPdfC.writeResponseBodyToDisk(rb, currentPdfExt);
-                            if (isOk) {
-                                File file = new File(appCtx.getFilesDir().getAbsolutePath() + File.separator + currentPdfExt.getId() + ".pdf");
-//                                System.out.println(file.getAbsolutePath());
-                                Intent intent = new Intent(Intent.ACTION_VIEW);
-                                Uri pdfURI = Uri.parse(GenericFileProvider.CONTENT_URI + currentPdfExt.getId() + ".pdf");
-                                intent.setDataAndType(pdfURI, "application/pdf");
-//                                intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-//                                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                                try {
-                                    myCtx.startActivity(intent);
-                                } catch (ActivityNotFoundException e) {
-                                    Snackbar.make(view, "Install a PDF reader", Snackbar.LENGTH_LONG)
-                                            .setAction("Action", null).show();
-                                    e.printStackTrace();
-                                }
-                            }
-                        } else {
-                            String errBody = null;
-                            try {
-                                errBody = response.errorBody().string();
-                                Gson g = new Gson();
-                                SSResponse ssRes = g.fromJson(errBody, SSResponse.class);
-                                Snackbar.make(view, ssRes.getMessage(), Snackbar.LENGTH_LONG)
-                                        .setAction("Action", null).show();
-                            } catch (IOException e) {
-                                Snackbar.make(view, "Something went wrong", Snackbar.LENGTH_LONG)
-                                        .setAction("Action", null).show();
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        Snackbar.make(view, "Something went wrong", Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
-                    }
-                });
-
+//                TextView textViewPdfId = (TextView) view.findViewById(R.id.textViewIdValue);
+//                TextView textViewPdfPosition = (TextView) view.findViewById(R.id.textViewPositionValue);
+//                int pdfPosition = Integer.parseInt(textViewPdfPosition.getText().toString());
+                Intent intent = new Intent(myCtx, PdfVisorActivity.class);
+                intent.putExtra("position", position);
+                intent.putExtra("pdf_ext", pdfExtList.get(position));
+                myCtx.startActivity(intent);
             }
         });
 

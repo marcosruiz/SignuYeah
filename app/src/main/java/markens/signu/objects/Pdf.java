@@ -22,6 +22,8 @@ public class Pdf  implements Serializable {
     private String ownerId;
     @SerializedName("signers")
     private List<Signer> signers;
+    @SerializedName("with_stamp")
+    private boolean withStamp;
 
     public Pdf(String id, String originalName, String mimeType, String fileName, String lastEditionDate, String creationDate, String ownerId, List<Signer> signers) {
         this.id = id;

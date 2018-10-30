@@ -25,6 +25,8 @@ public class PdfExt implements Serializable {
     private markens.signu.objects.User ownerId;
     @SerializedName("signers")
     private List<SignerExt> signers;
+    @SerializedName("with_stamp")
+    private boolean withStamp;
 
     public PdfExt(String id, String originalName, String mimeType, String fileName, String lastEditionDate, String creationDate, markens.signu.objects.User ownerId, List<SignerExt> signers) {
         this.id = id;
@@ -99,5 +101,13 @@ public class PdfExt implements Serializable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public boolean isWithStamp() {
+        return withStamp;
+    }
+
+    public void setWithStamp(boolean withStamp) {
+        this.withStamp = withStamp;
     }
 }
