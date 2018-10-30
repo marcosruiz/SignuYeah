@@ -62,7 +62,7 @@ public class PdfsExtListAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        return Long.parseLong(pdfExtList.get(position).getId());
+        return position;
     }
 
     @Override

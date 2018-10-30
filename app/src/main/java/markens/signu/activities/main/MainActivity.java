@@ -4,10 +4,12 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
@@ -37,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
     public UserExt myUserExt;
     public Token myToken;
+    SharedPrefsCtrl spc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,10 +55,26 @@ public class MainActivity extends AppCompatActivity {
 //        setSupportActionBar(toolbar);
 
         // Get token from Shared preferences
-        final SharedPrefsCtrl gSonSM = new SharedPrefsCtrl(appCtx);
-        myToken = gSonSM.getToken();
+        spc = new SharedPrefsCtrl(appCtx);
+        myToken = spc.getToken();
+
+        getInfoUserExt();
 
 
+        FloatingActionButton buttonUpdate = (FloatingActionButton) findViewById(R.id.floatingActionButtonUpdate);
+        buttonUpdate.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                getInfoUserExt();
+            }
+        });
+
+        BottomNavigationView bottomNav = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        bottomNav.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+
+    }
+
+    private void getInfoUserExt(){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(URL_LOCAL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -71,10 +90,8 @@ public class MainActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     myUserExt = response.body().getData().getUserExt();
                     //Save myUserExt
-                    gSonSM.store(myUserExt);
+                    spc.store(myUserExt);
 
-                    BottomNavigationView bottomNav = (BottomNavigationView) findViewById(R.id.bottom_navigation);
-                    bottomNav.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
                     // Default fragment
                     Bundle bundle = new Bundle();
                     List<PdfExt> pdfList = myUserExt.getPdfsOwned();
@@ -82,7 +99,6 @@ public class MainActivity extends AppCompatActivity {
                     FragmentPdfList selectedFragment = new FragmentPdfList();
                     selectedFragment.setArguments(bundle);
                     getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
-
 
                 } else {
                     Snackbar.make(layoutMain, "Response not successful", Snackbar.LENGTH_LONG)
@@ -97,8 +113,6 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-
-
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener

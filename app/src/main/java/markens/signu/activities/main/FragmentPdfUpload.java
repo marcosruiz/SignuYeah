@@ -22,6 +22,7 @@ import com.nbsp.materialfilepicker.MaterialFilePicker;
 import com.nbsp.materialfilepicker.ui.FilePickerActivity;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -41,6 +42,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Multipart;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -150,14 +152,14 @@ public class FragmentPdfUpload extends Fragment {
         MultipartBody.Part body = MultipartBody.Part.createFormData("pdf", file.getName(), requestFile);
 
         //Signers
-        MultipartBody.Part signers = null;
+        ArrayList<MultipartBody.Part> signers = new ArrayList<MultipartBody.Part>();
         int i = 0;
         for (String id : userListCheckboxAdapter.getUsersIdSelected()) {
-            signers = MultipartBody.Part.createFormData("signers[" + i + "]", id);
+            signers.add(MultipartBody.Part.createFormData("signers[" + i + "]", id));
             i++;
         }
 
-        if (signers == null) {
+        if (signers.size()==0) {
             Call<SSResponse> call = sss.uploadPdf(auth, body);
             call.enqueue(new Callback<SSResponse>() {
                 @Override
