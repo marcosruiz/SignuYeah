@@ -37,35 +37,19 @@
             android:label="@string/app_name"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".activities.main.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme" />
-        <activity
-            android:name=".ListViewPdfLoader"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".activities.PdfVisorActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme" />
-        <activity android:name=".activities.PdfUpdate" />
         <activity
             android:name=".activities.NavigationActivity"
             android:label="@string/title_activity_navigation"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".activities.BottomNavigationActivity"
-            android:label="@string/title_activity_bottom_navigation">
-
-        </activity>
+            android:name=".activities.main.SearchUserActivity"
+            android:label="@string/app_name"></activity>
         <activity
-            android:name=".activities.SearchUserActivity"
-            android:label="@string/app_name">
-        </activity>
-        <activity
-            android:name=".activities.PdfViewActivity"
-            android:label="@string/app_name">
-        </activity>
+            android:name=".activities.pdf.PdfActivity"
+            android:label="@string/app_name"></activity>
     </application>
 
 </manifest>

@@ -5,7 +5,7 @@
     android:id="@+id/layoutUserSearch"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="markens.signu.activities.MainActivity">
+    tools:context="markens.signu.activities.main.MainActivity">
 
 
     <LinearLayout

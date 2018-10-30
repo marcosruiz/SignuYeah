@@ -34,4 +34,9 @@
     <string name="title_notifications">Title notifications</string>
     <string name="upload_pdf">Upload PDF</string>
     <string name="users_related">Users Related</string>
+    <string name="see_pdf">See PDF</string>
+    <string name="info_pdf">Info PDF</string>
+    <string name="sign_pdf">Sign PDF</string>
+    <string name="add_signers">Add signers</string>
+    <string name="edit_pdf">Edit PDF</string>
 </resources>

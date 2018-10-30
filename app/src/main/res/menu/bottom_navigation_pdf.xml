@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_info_pdf"
+        android:icon="@drawable/ic_info_outline_black_24dp"
+        android:title="@string/info_pdf"></item>
+    <item
+        android:id="@+id/nav_see_pdf"
+        android:icon="@drawable/ic_picture_as_pdf_black_24dp"
+        android:title="@string/see_pdf"></item>
+    <item
+        android:id="@+id/nav_add_signers"
+        android:icon="@drawable/ic_person_add_black_24dp"
+        android:title="@string/add_signers"></item>
+    <item
+        android:id="@+id/nav_sign_pdf"
+        android:icon="@drawable/ic_fingerprint_black_24dp"
+        android:title="@string/sign_pdf"></item>
+    <item
+        android:id="@+id/nav_edit_pdf"
+        android:icon="@drawable/ic_edit_black_24dp"
+        android:title="@string/edit_pdf"></item>
+
+</menu>

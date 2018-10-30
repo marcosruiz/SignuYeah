@@ -57,4 +57,9 @@ public class StoragePdfCtrl {
             return false;
         }
     }
+
+    public boolean itExists(String pdfName){
+        File file = new File(myCtx.getApplicationContext().getFilesDir().getAbsolutePath() + File.separator + pdfName);
+        return file.exists();
+    }
 }

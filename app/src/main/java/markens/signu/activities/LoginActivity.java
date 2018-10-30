@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import markens.signu.activities.main.MainActivity;
 import markens.signu.storage.SharedPrefsCtrl;
 import markens.signu.R;
 import markens.signu.api.SignuServerService;

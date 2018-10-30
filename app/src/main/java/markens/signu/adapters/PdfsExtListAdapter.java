@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.List;
 
 import markens.signu.R;
+import markens.signu.activities.pdf.PdfActivity;
 import markens.signu.objects.SSResponse;
 import markens.signu.objects.ext.PdfExt;
 import markens.signu.storage.GenericFileProvider;
@@ -73,7 +74,7 @@ public class PdfsExtListAdapter extends BaseAdapter {
         TextView pdfId = (TextView) view.findViewById(R.id.textViewIdValue);
         TextView pdfOwner = (TextView) view.findViewById(R.id.textViewOwnerValue);
         TextView pdfSigners = (TextView) view.findViewById(R.id.textViewSignersValue);
-        Button buttonDetails = (Button) view.findViewById(R.id.buttonInfoPdf);
+        // Button buttonDetails = (Button) view.findViewById(R.id.buttonInfoPdf);
 
         pdfName.setText(currentPdfExt.getOriginalName());
         pdfOwner.setText(currentPdfExt.getOwnerId().getEmail());
@@ -92,7 +93,7 @@ public class PdfsExtListAdapter extends BaseAdapter {
 //                TextView textViewPdfId = (TextView) view.findViewById(R.id.textViewIdValue);
 //                TextView textViewPdfPosition = (TextView) view.findViewById(R.id.textViewPositionValue);
 //                int pdfPosition = Integer.parseInt(textViewPdfPosition.getText().toString());
-                Intent intent = new Intent(myCtx, PdfVisorActivity.class);
+                Intent intent = new Intent(myCtx, PdfActivity.class);
                 intent.putExtra("position", position);
                 intent.putExtra("pdf_ext", pdfExtList.get(position));
                 myCtx.startActivity(intent);

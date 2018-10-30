@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/layoutPdfVisor"
+    android:id="@+id/fragmentPdfInfo"
     tools:context=".activities.PdfVisorActivity">
 
     <LinearLayout
@@ -133,39 +133,11 @@
             android:text="delete" />
 
         <Button
-            android:id="@+id/buttonEditPdf"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="2dp"
-            android:text="edit"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <Button
-            android:id="@+id/buttonSeePdf"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="2dp"
-            android:text="see" />
-
-        <Button
-            android:id="@+id/buttonSignPdf"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="2dp"
-            android:text="sign" />
-
-        <Button
             android:id="@+id/buttonExportPdf"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="2dp"
             android:text="export" />
-
-        <Button
-            android:id="@+id/buttonAddSignersPdf"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="add signers" />
 
     </LinearLayout>
 

@@ -1,4 +1,4 @@
-package markens.signu.activities;
+package markens.signu.activities.main;
 
 import android.content.Intent;
 import android.os.Bundle;
