@@ -1,8 +1,10 @@
 package markens.signu.activities;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,11 +14,38 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+
+import java.io.Serializable;
+import java.util.List;
 
 import markens.signu.R;
+import markens.signu.StorageController;
+import markens.signu.activities.main.FragmentMain;
+import markens.signu.activities.main.FragmentPdfList;
+import markens.signu.activities.main.FragmentSimple;
+import markens.signu.activities.main.MainActivity;
+import markens.signu.api.SignuServerService;
+import markens.signu.objects.SSResponse;
+import markens.signu.objects.Token;
+import markens.signu.objects.ext.PdfExt;
+import markens.signu.objects.ext.UserExt;
+import markens.signu.storage.SharedPrefsCtrl;
+import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    Context appCtx;
+    private static final String URL_LOCAL = "http://192.168.1.6:3000/";
+    RelativeLayout layoutMain;
+
+    public UserExt myUserExt;
+    public Token myToken;
+    SharedPrefsCtrl spc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,14 +54,10 @@ public class NavigationActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        // Get token from Shared preferences
+        spc = new SharedPrefsCtrl(appCtx);
+        myToken = spc.getToken();
+        getInfoUserExt();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -42,6 +67,7 @@ public class NavigationActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
     }
 
     @Override
@@ -81,23 +107,59 @@ public class NavigationActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        Fragment selectedFragment = null;
+        Bundle bundle = new Bundle();
+        List<PdfExt> pdfList;
+        if (id == R.id.nav_user) {
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
+        } else if (id == R.id.nav_cert) {
+            selectedFragment = new FragmentSimple();
+        } else if (id == R.id.nav_settings) {
+            selectedFragment = new FragmentSimple();
         } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+            selectedFragment = new FragmentSimple();
+        } else if (id == R.id.nav_about) {
+            selectedFragment = new FragmentSimple();
+        } else if (id == R.id.nav_pdf){
+            selectedFragment = new FragmentMain();
         }
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_main, selectedFragment).commit();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void getInfoUserExt(){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(URL_LOCAL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        SignuServerService sss = retrofit.create(SignuServerService.class);
+
+        String auth = "Bearer " + myToken.getAccessToken();
+        Call<SSResponse> call = sss.getUserExt(auth);
+
+        call.enqueue(new retrofit2.Callback<SSResponse>() {
+            @Override
+            public void onResponse(Call<SSResponse> call, Response<SSResponse> response) {
+                if (response.isSuccessful()) {
+                    myUserExt = response.body().getData().getUserExt();
+                    //Save myUserExt
+                    spc.store(myUserExt);
+
+                } else {
+//                    Snackbar.make(layoutMain, "Response not successful", Snackbar.LENGTH_LONG)
+//                            .setAction("Action", null).show();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<SSResponse> call, Throwable t) {
+//                Snackbar.make(layoutMain, "PdfExt not getted", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+            }
+        });
     }
 }

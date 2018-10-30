@@ -13,7 +13,6 @@ import java.util.List;
 
 import markens.signu.R;
 import markens.signu.objects.User;
-import markens.signu.objects.ext.UserExt;
 
 public class UserListCheckboxAdapter extends BaseAdapter {
     private static LayoutInflater inflater = null;
@@ -49,8 +48,8 @@ public class UserListCheckboxAdapter extends BaseAdapter {
         final View view = inflater.inflate(R.layout.user_item_selectable, null);
 
         TextView userId = (TextView) view.findViewById(R.id.textViewUserId);
-        TextView userEmail = (TextView) view.findViewById(R.id.textViewUserEmail);
-        TextView userName = (TextView) view.findViewById(R.id.textViewUserName);
+        TextView userEmail = (TextView) view.findViewById(R.id.textViewCert);
+        TextView userName = (TextView) view.findViewById(R.id.textViewCertDes);
         TextView userLastname = (TextView) view.findViewById(R.id.textViewUserLastname);
         CheckBox checkBox = (CheckBox) view.findViewById(R.id.checkBox);
 

@@ -111,7 +111,7 @@ public class LoginActivity extends AppCompatActivity {
                                 Snackbar snackbar = Snackbar.make(coordinatorLayoutSignup, "Welcome!", Snackbar.LENGTH_LONG);
                                 snackbar.show();
                                 // Go to MainActivity
-                                launchActivityMain();
+                                launchActivityNavigation();
                             } else {
                                 Gson g = new Gson();
                                 TokenError myTokenError = g.fromJson(response.errorBody().charStream(), TokenError.class);
@@ -139,6 +139,11 @@ public class LoginActivity extends AppCompatActivity {
 
     private void launchActivityMain() {
         Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    private void launchActivityNavigation() {
+        Intent intent = new Intent(this, NavigationActivity.class);
         startActivity(intent);
     }
 

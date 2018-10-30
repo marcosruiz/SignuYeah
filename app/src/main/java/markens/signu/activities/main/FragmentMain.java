@@ -1,41 +1,39 @@
 package markens.signu.activities.main;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import java.io.Serializable;
 import java.util.List;
 
-import markens.signu.objects.ext.PdfExt;
-import markens.signu.storage.SharedPrefsCtrl;
 import markens.signu.R;
 import markens.signu.StorageController;
 import markens.signu.api.SignuServerService;
 import markens.signu.objects.SSResponse;
 import markens.signu.objects.Token;
+import markens.signu.objects.ext.PdfExt;
 import markens.signu.objects.ext.UserExt;
+import markens.signu.storage.SharedPrefsCtrl;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends AppCompatActivity{
+public class FragmentMain extends android.support.v4.app.Fragment{
     StorageController sc;
     Context appCtx;
     ListView list;
@@ -47,14 +45,15 @@ public class MainActivity extends AppCompatActivity{
     public Token myToken;
     SharedPrefsCtrl spc;
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        appCtx = this.getApplicationContext();
-        activityCtx = this;
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.activity_main, container, false);
 
-        layoutMain = (RelativeLayout) findViewById(R.id.layoutMain);
-        setContentView(R.layout.activity_main);
+        appCtx = getActivity().getApplicationContext();
+        activityCtx = getActivity();
+
+        layoutMain = (RelativeLayout) view.findViewById(R.id.layoutMain);
 
         // Get token from Shared preferences
         spc = new SharedPrefsCtrl(appCtx);
@@ -62,16 +61,18 @@ public class MainActivity extends AppCompatActivity{
 
         getInfoUserExt();
 
-        FloatingActionButton buttonUpdate = (FloatingActionButton) findViewById(R.id.floatingActionButtonUpdate);
+
+        FloatingActionButton buttonUpdate = (FloatingActionButton) view.findViewById(R.id.floatingActionButtonUpdate);
         buttonUpdate.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 getInfoUserExt();
             }
         });
 
-        BottomNavigationView bottomNav = (BottomNavigationView) findViewById(R.id.bottom_navigation);
+        BottomNavigationView bottomNav = (BottomNavigationView) view.findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+        return view;
     }
 
     private void getInfoUserExt(){
@@ -98,7 +99,7 @@ public class MainActivity extends AppCompatActivity{
                     bundle.putSerializable("list_pdf", (Serializable) pdfList);
                     FragmentPdfList selectedFragment = new FragmentPdfList();
                     selectedFragment.setArguments(bundle);
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+                    getFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
 
                 } else {
                     Snackbar.make(layoutMain, "Response not successful", Snackbar.LENGTH_LONG)
@@ -154,7 +155,7 @@ public class MainActivity extends AppCompatActivity{
                     selectedFragment.setArguments(bundle);
                     break;
             }
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+            getFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
 
             return true;
         }

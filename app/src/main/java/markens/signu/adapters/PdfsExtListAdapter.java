@@ -24,7 +24,6 @@ import markens.signu.objects.SSResponse;
 import markens.signu.objects.ext.PdfExt;
 import markens.signu.storage.GenericFileProvider;
 import markens.signu.storage.SharedPrefsCtrl;
-import markens.signu.activities.PdfVisorActivity;
 import markens.signu.api.SignuServerService;
 import markens.signu.objects.Token;
 import markens.signu.objects.ext.SignerExt;

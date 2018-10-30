@@ -33,8 +33,9 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="ic_update_black_24dp" />
-                            <entry key="sourceFile" value="C:\Users\marco\AndroidStudioProjects\Signu\app\src\main\res\drawable\svg\pdf.svg" />
+                            <entry key="assetSourceType" value="FILE" />
+                            <entry key="outputName" value="ic_medal" />
+                            <entry key="sourceFile" value="C:\Users\marco\AndroidStudioProjects\Signu\app\src\main\res\drawable\svg\medal.svg" />
                           </map>
                         </option>
                       </PersistentState>

@@ -9,5 +9,21 @@
     tools:context=".activities.pdf.PdfActivity">
 
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
+        <ListView
+            android:id="@+id/listCerts"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <Button
+            android:id="@+id/buttonSignPdf"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sign PDF" />
+
+    </LinearLayout>
 </RelativeLayout>

@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -17,7 +16,6 @@ import markens.signu.api.SignuServerService;
 import markens.signu.objects.SSResponse;
 import markens.signu.objects.Token;
 import markens.signu.objects.User;
-import markens.signu.objects.ext.SignerExt;
 import markens.signu.objects.ext.UserExt;
 import markens.signu.storage.SharedPrefsCtrl;
 import retrofit2.Call;
@@ -62,8 +60,8 @@ public class UserListAdapter extends BaseAdapter {
         view = inflater.inflate(R.layout.user_item, null);
 
         TextView userId = (TextView) view.findViewById(R.id.textViewUserId);
-        TextView userEmail = (TextView) view.findViewById(R.id.textViewUserEmail);
-        TextView userName = (TextView) view.findViewById(R.id.textViewUserName);
+        TextView userEmail = (TextView) view.findViewById(R.id.textViewCert);
+        TextView userName = (TextView) view.findViewById(R.id.textViewCertDes);
         TextView userLastname = (TextView) view.findViewById(R.id.textViewUserLastname);
         Button buttonAddUser = (Button) view.findViewById(R.id.buttonAddUser);
 

@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/textViewUserEmail"
+        android:id="@+id/textViewCert"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
@@ -14,7 +14,7 @@
         android:layout_marginTop="12dp"
         android:text="TextView"
         android:textSize="18sp"
-        app:layout_constraintStart_toEndOf="@+id/imageViewUser"
+        app:layout_constraintStart_toEndOf="@+id/imageCert"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -25,14 +25,14 @@
         android:visibility="invisible" />
 
     <TextView
-        android:id="@+id/textViewUserName"
+        android:id="@+id/textViewCertDes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="4dp"
         android:text="TextView"
-        app:layout_constraintStart_toEndOf="@+id/imageViewUser"
+        app:layout_constraintStart_toEndOf="@+id/imageCert"
         app:layout_constraintTop_toTopOf="@+id/guideline10" />
 
     <TextView
@@ -43,7 +43,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="4dp"
         android:text="TextView"
-        app:layout_constraintStart_toEndOf="@+id/textViewUserName"
+        app:layout_constraintStart_toEndOf="@+id/textViewCertDes"
         app:layout_constraintTop_toTopOf="@+id/guideline10" />
 
     <android.support.constraint.Guideline
@@ -61,7 +61,7 @@
         app:layout_constraintGuide_begin="66dp" />
 
     <ImageView
-        android:id="@+id/imageViewUser"
+        android:id="@+id/imageCert"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginBottom="8dp"
