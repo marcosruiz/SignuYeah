@@ -31,12 +31,14 @@ public class UserListAdapter extends BaseAdapter {
     Context myCtx;
     Context appCtx;
     View view;
+    SharedPrefsCtrl spc;
 
     public UserListAdapter(Context context, List<User> users) {
         this.users = users;
         myCtx = context;
         appCtx = context.getApplicationContext();
         inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
+        spc = new SharedPrefsCtrl(appCtx);
     }
 
     @Override

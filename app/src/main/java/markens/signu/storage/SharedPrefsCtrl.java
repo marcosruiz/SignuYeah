@@ -5,6 +5,10 @@ import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import markens.signu.objects.Token;
 import markens.signu.objects.User;
 import markens.signu.objects.ext.UserExt;
@@ -17,6 +21,8 @@ public class SharedPrefsCtrl {
     private static String myTokenId = "TOKEN";
     private static String myUserId = "USER";
     private static String myUserExtId = "USER_EXT";
+    private static String certsId = "CERTS";
+    private List<String> certs;
 
     public SharedPrefsCtrl(Context ctx){
         if(settings == null){
@@ -84,5 +90,17 @@ public class SharedPrefsCtrl {
         String myUserExtStr = settings.getString(myUserExtId, "");
         UserExt userExt = gson.fromJson(myUserExtStr, UserExt.class);
         return userExt;
+    }
+
+    public Set<String> getCerts() {
+        Set<String> hashSet = new HashSet<String>();
+        return settings.getStringSet(certsId, hashSet);
+    }
+
+    public void storeCert(String routeCert){
+        Set<String> certs = getCerts();
+        certs.add(routeCert);
+        editor.putStringSet(certsId, certs);
+        editor.commit();
     }
 }

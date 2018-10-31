@@ -3,7 +3,6 @@ package markens.signu.activities.pdf;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,18 +19,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.channels.FileChannel;
-import java.util.List;
 
 import markens.signu.R;
-import markens.signu.adapters.PdfsExtListAdapter;
 import markens.signu.adapters.SignerListAdapter;
 import markens.signu.objects.ext.PdfExt;
 import markens.signu.objects.ext.UserExt;
 import markens.signu.storage.SharedPrefsCtrl;
+import markens.signu.storage.StorageCtrl;
 
 public class FragmentPdfInfo extends android.support.v4.app.Fragment {
 
@@ -109,7 +104,7 @@ public class FragmentPdfInfo extends android.support.v4.app.Fragment {
 
                     try {
                         RelativeLayout layoutPdf = (RelativeLayout) getActivity().findViewById(R.id.layoutPdf);
-                        copy(fileInternalStorage, fileExternalStorage);
+                        StorageCtrl.copy(fileInternalStorage, fileExternalStorage);
                         Snackbar.make(layoutPdf, "See your Downloads folder", Snackbar.LENGTH_LONG)
                                 .setAction("Action", null).show();
                     } catch (IOException e) {
@@ -132,13 +127,5 @@ public class FragmentPdfInfo extends android.support.v4.app.Fragment {
         return view;
     }
 
-    private void copy(File src, File dst) throws IOException{
-        FileInputStream inStream = new FileInputStream(src);
-        FileOutputStream outStream = new FileOutputStream(dst);
-        FileChannel inChannel = inStream.getChannel();
-        FileChannel outChannel = outStream.getChannel();
-        inChannel.transferTo(0, inChannel.size(), outChannel);
-        inStream.close();
-        outStream.close();
-    }
+
 }

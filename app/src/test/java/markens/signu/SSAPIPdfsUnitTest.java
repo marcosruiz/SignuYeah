@@ -10,6 +10,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import markens.signu.api.SignuServerService;
 import markens.signu.objects.Pdf;
@@ -127,7 +129,8 @@ public class SSAPIPdfsUnitTest {
         MultipartBody.Part body = MultipartBody.Part.createFormData("pdf", file.getName(), requestFile);
 
         // Signers
-        MultipartBody.Part signers = MultipartBody.Part.createFormData("signers[0]", u2_1.getId());
+        List<MultipartBody.Part> signers = new ArrayList<>();
+        signers.add(MultipartBody.Part.createFormData("signers[0]", u2_1.getId()));
 
         Call<SSResponse> call2 = sss.uploadPdfWithSigners(auth1, body, signers);
         Response<SSResponse> response2 = call2.execute();

@@ -32,6 +32,9 @@ public class User implements Serializable {
     @SerializedName("next_email")
     private NextEmail nextEmail;
 
+    public User() {
+    }
+
     public String getId() {
         return id;
     }

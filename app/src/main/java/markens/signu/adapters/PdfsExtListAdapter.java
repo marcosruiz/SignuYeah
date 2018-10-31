@@ -1,39 +1,19 @@
 package markens.signu.adapters;
 
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
-import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 import markens.signu.R;
 import markens.signu.activities.pdf.PdfActivity;
-import markens.signu.objects.SSResponse;
 import markens.signu.objects.ext.PdfExt;
-import markens.signu.storage.GenericFileProvider;
-import markens.signu.storage.SharedPrefsCtrl;
-import markens.signu.api.SignuServerService;
-import markens.signu.objects.Token;
 import markens.signu.objects.ext.SignerExt;
-import markens.signu.storage.StoragePdfCtrl;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PdfsExtListAdapter extends BaseAdapter {
     private static LayoutInflater inflater = null;

@@ -8,22 +8,15 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.RelativeLayout;
 
-import com.github.barteksc.pdfviewer.PDFView;
 import com.google.gson.Gson;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.List;
 
 import markens.signu.R;
-import markens.signu.activities.main.FragmentPdfList;
-import markens.signu.activities.main.FragmentPdfUpload;
-import markens.signu.activities.main.FragmentUsersRelated;
 import markens.signu.api.SignuServerService;
 import markens.signu.objects.SSResponse;
 import markens.signu.objects.Token;
@@ -31,7 +24,7 @@ import markens.signu.objects.ext.PdfExt;
 import markens.signu.objects.ext.SignerExt;
 import markens.signu.objects.ext.UserExt;
 import markens.signu.storage.SharedPrefsCtrl;
-import markens.signu.storage.StoragePdfCtrl;
+import markens.signu.storage.StorageCtrl;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -120,7 +113,7 @@ public class PdfActivity extends AppCompatActivity {
     };
 
     private void downloadPdf() {
-        StoragePdfCtrl sPdfCtrl = new StoragePdfCtrl(appCtx);
+        StorageCtrl sPdfCtrl = new StorageCtrl(appCtx);
         String pdfName = pdfExt.getFileName() + ".pdf";
         if (!sPdfCtrl.itExists(pdfName)) {
             SharedPrefsCtrl spc = new SharedPrefsCtrl(appCtx);
@@ -138,7 +131,7 @@ public class PdfActivity extends AppCompatActivity {
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     if (response.isSuccessful()) {
                         ResponseBody rb = response.body();
-                        StoragePdfCtrl sPdfC = new StoragePdfCtrl(myCtx);
+                        StorageCtrl sPdfC = new StorageCtrl(myCtx);
                         String fileName = pdfExt.getFileName() + ".pdf";
                         boolean isOk = sPdfC.writeResponseBodyToDisk(rb, fileName);
                     } else {

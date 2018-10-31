@@ -111,16 +111,16 @@ public class NavigationActivity extends AppCompatActivity
         Bundle bundle = new Bundle();
         List<PdfExt> pdfList;
         if (id == R.id.nav_user) {
-
-        } else if (id == R.id.nav_cert) {
             selectedFragment = new FragmentSimple();
+        } else if (id == R.id.nav_cert) {
+            selectedFragment = new FragmentCertList();
         } else if (id == R.id.nav_settings) {
             selectedFragment = new FragmentSimple();
         } else if (id == R.id.nav_share) {
             selectedFragment = new FragmentSimple();
         } else if (id == R.id.nav_about) {
             selectedFragment = new FragmentSimple();
-        } else if (id == R.id.nav_pdf){
+        } else if (id == R.id.nav_pdf) {
             selectedFragment = new FragmentMain();
         }
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_main, selectedFragment).commit();
@@ -130,7 +130,7 @@ public class NavigationActivity extends AppCompatActivity
         return true;
     }
 
-    private void getInfoUserExt(){
+    private void getInfoUserExt() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(URL_LOCAL)
                 .addConverterFactory(GsonConverterFactory.create())
