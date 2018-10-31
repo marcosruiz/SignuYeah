@@ -1,6 +1,7 @@
 package markens.signu.activities.main;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -52,7 +53,11 @@ public class FragmentPdfUpload extends Fragment {
     File file;
     Token token;
     UserExt userExt;
-    private static final String URL_LOCAL = "http://192.168.1.6:3000/";
+
+    Context myCtx;
+    Context appCtx;
+    SharedPrefsCtrl spc;
+
     UserListCheckboxAdapter userListCheckboxAdapter;
 
     @Nullable
@@ -66,6 +71,9 @@ public class FragmentPdfUpload extends Fragment {
         userExt = (UserExt) bundle.getSerializable("user_ext");
         token = (Token) bundle.getSerializable("token");
 
+        myCtx = getContext();
+        appCtx = getContext().getApplicationContext();
+        spc = new SharedPrefsCtrl(appCtx);
 
         // List signers
         ListView list = (ListView) view.findViewById(R.id.listViewUsers);
@@ -141,7 +149,7 @@ public class FragmentPdfUpload extends Fragment {
 
     private void uploadPdf() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(URL_LOCAL)
+                .baseUrl(spc.get("URL_HEROKU"))
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         final SignuServerService sss = retrofit.create(SignuServerService.class);

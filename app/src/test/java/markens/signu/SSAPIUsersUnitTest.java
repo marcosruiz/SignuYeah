@@ -8,12 +8,14 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import java.io.IOException;
+import java.util.BitSet;
 
 import markens.signu.api.SignuServerService;
 import markens.signu.objects.SSResponse;
 import markens.signu.objects.Token;
 import markens.signu.objects.TokenError;
 import markens.signu.objects.User;
+import markens.signu.storage.SharedPrefsCtrl;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -32,8 +34,9 @@ import static org.mockito.ArgumentMatchers.any;
  */
 public class SSAPIUsersUnitTest {
     private static final String TAG = "TEST";
-    private static final String URL_LOCAL = "http://192.168.1.6:3000/";
+
     private static final String URL_HEROKU = "https://signu-server.herokuapp.com/";
+    private static final String URL_LOCAL = "http://localhost:3000/";
     private static final String USER_EMAIL = "marcosruizgarcia@gmail.com";
     private static final String USER_EMAIL_2 = "sobrenombre@gmail.com";
     private static final String USER_PASS = "prueba";
@@ -251,7 +254,6 @@ public class SSAPIUsersUnitTest {
 
     @Test
     public void SSS_User_API_Search_Success() throws Exception {
-
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(URL_LOCAL)
                 .addConverterFactory(GsonConverterFactory.create())

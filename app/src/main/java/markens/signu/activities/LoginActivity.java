@@ -42,11 +42,10 @@ public class LoginActivity extends AppCompatActivity {
     private static final String CLIENT_SECRET = "secret";
     private static final String GRANT_TYPE = "password";
     private static final String TOKEN_TYPE = "bearer";
-    private static final String URL_LOCAL = "http://192.168.1.6:3000/";
     private static final String URL_HEROKU = "https://signu-server.herokuapp.com/";
     private static final String UNKNOWN_ERROR = "Something went wrong";
     private Context appCtx;
-
+    SharedPrefsCtrl spc;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,9 +55,12 @@ public class LoginActivity extends AppCompatActivity {
         coordinatorLayoutSignup = (CoordinatorLayout) findViewById(R.id.coordinatorLayoutLogin);
 
         //Save global vars
-        SharedPrefsCtrl spc = new SharedPrefsCtrl(appCtx);
+        spc = new SharedPrefsCtrl(appCtx);
         spc.store("URL_LOCAL", "http://192.168.1.6:3000/");
         spc.store("URL_HEROKU", "https://signu-server.herokuapp.com/");
+        spc.store("URL_TSA", "https://signu-tsa.herokuapp.com/");
+        spc.store("URL_CA", "https://signu-ca.herokuapp.com");
+
         spc.store("GRANT_TYPE", "password");
         spc.store("TOKEN_TYPE", "bearer");
         spc.store("CLIENT_ID", "application");
@@ -92,7 +94,7 @@ public class LoginActivity extends AppCompatActivity {
                     String passStr = et_password.getText().toString();
 
                     Retrofit retrofit = new Retrofit.Builder()
-                            .baseUrl(URL_LOCAL)
+                            .baseUrl(spc.get("URL_HEROKU"))
                             .addConverterFactory(GsonConverterFactory.create())
                             .build();
                     SignuServerService sss = retrofit.create(SignuServerService.class);

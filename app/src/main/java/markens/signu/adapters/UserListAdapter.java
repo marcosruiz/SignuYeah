@@ -25,7 +25,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class UserListAdapter extends BaseAdapter {
-    private static final String URL_LOCAL = "http://192.168.1.6:3000/";
+
     private static LayoutInflater inflater = null;
     List<User> users;
     Context myCtx;
@@ -97,7 +97,7 @@ public class UserListAdapter extends BaseAdapter {
         Token token = spc.getToken();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(URL_LOCAL)
+                .baseUrl(spc.get("URL_HEROKU"))
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         final SignuServerService sss = retrofit.create(SignuServerService.class);

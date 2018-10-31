@@ -1,5 +1,6 @@
 package markens.signu.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
@@ -21,6 +22,7 @@ import markens.signu.api.SignuServerService;
 import markens.signu.objects.SSResponse;
 import markens.signu.objects.Token;
 import markens.signu.objects.User;
+import markens.signu.storage.SharedPrefsCtrl;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -35,9 +37,11 @@ public class SignupActivity extends AppCompatActivity {
 
     CoordinatorLayout coordinatorLayoutSignup;
 
-    private static final String URL_LOCAL = "http://192.168.1.6:3000/";
+
     private static final String URL_HEROKU = "https://signu-server.herokuapp.com/";
     private static final String UNKNOWN_ERROR = "This error should not appear";
+    Context myCtx;
+    Context appCtx;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +49,8 @@ public class SignupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_signup);
         coordinatorLayoutSignup = (CoordinatorLayout) findViewById(R.id.coordinatorLayoutSignup);
 
+        myCtx = this;
+        appCtx = this.getApplicationContext();
 
         final Button button = (Button) findViewById(R.id.button_finish_signup);
         button.setOnClickListener(new View.OnClickListener() {
@@ -58,9 +64,9 @@ public class SignupActivity extends AppCompatActivity {
                 String passStr = et_password.getText().toString();
                 String nameStr = et_name.getText().toString();
                 String lastnameStr = et_lastname.getText().toString();
-
+                SharedPrefsCtrl spc = new SharedPrefsCtrl(appCtx);
                 Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl(URL_LOCAL)
+                        .baseUrl(spc.get("URL_HEROKU"))
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
                 SignuServerService sss = retrofit.create(SignuServerService.class);

@@ -40,7 +40,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class NavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     Context appCtx;
-    private static final String URL_LOCAL = "http://192.168.1.6:3000/";
+
     RelativeLayout layoutMain;
 
     public UserExt myUserExt;
@@ -132,7 +132,7 @@ public class NavigationActivity extends AppCompatActivity
 
     private void getInfoUserExt() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(URL_LOCAL)
+                .baseUrl(spc.get("URL_HEROKU"))
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         SignuServerService sss = retrofit.create(SignuServerService.class);

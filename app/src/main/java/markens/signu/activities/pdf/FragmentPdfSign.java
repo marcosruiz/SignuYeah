@@ -49,7 +49,7 @@ public class FragmentPdfSign extends android.support.v4.app.Fragment {
     String[] certs;
     String certPathSelected;
 
-    private static final String URL_LOCAL = "http://192.168.1.6:3000/";
+
 
     Token token;
 
@@ -105,7 +105,7 @@ public class FragmentPdfSign extends android.support.v4.app.Fragment {
                 String pdfSrc = appCtx.getFilesDir().getAbsolutePath() + File.separator + pdfExt.getFileName() + ".pdf";
                 String pdfDst = appCtx.getFilesDir().getAbsolutePath() + File.separator + "signed.pdf";
                 try {
-                    Signature.signWithCrl(certPathSelected, pdfSrc, pdfDst, pass, "http://192.168.1.6:3000/tsr", "http://192.168.1.6:3000/ca.crl");
+                    Signature.signWithCrl(certPathSelected, pdfSrc, pdfDst, pass, "https://signu-tsa.heroku.com/tsr", "https://signu-ca.heroku.com/ca.crl");
                     updateSignedFile(pdfDst);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -122,7 +122,7 @@ public class FragmentPdfSign extends android.support.v4.app.Fragment {
 
     private void updateSignedFile(String pdfRoute) {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(URL_LOCAL)
+                .baseUrl(spc.get("URL_HEROKU"))
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         final SignuServerService sss = retrofit.create(SignuServerService.class);

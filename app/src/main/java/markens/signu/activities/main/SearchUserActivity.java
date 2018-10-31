@@ -29,13 +29,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SearchUserActivity extends AppCompatActivity {
 
-    private static final String URL_LOCAL = "http://192.168.1.6:3000/";
+
     private RelativeLayout myLayout;
     private Context appCtx;
     private Context myCtx;
 
     private Token token;
     private UserExt userExt;
+    SharedPrefsCtrl spc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +48,7 @@ public class SearchUserActivity extends AppCompatActivity {
         myLayout = (RelativeLayout) findViewById(R.id.layoutUserSearch);
 
         // Get token
-        SharedPrefsCtrl spc = new SharedPrefsCtrl(appCtx);
+        spc = new SharedPrefsCtrl(appCtx);
         token = spc.getToken();
 
         final Button button_signup = (Button) findViewById(R.id.buttonSearchUser);
@@ -61,7 +62,7 @@ public class SearchUserActivity extends AppCompatActivity {
 
     private void searchUsers(){
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(URL_LOCAL)
+                .baseUrl(spc.get("URL_HEROKU"))
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         final SignuServerService sss = retrofit.create(SignuServerService.class);

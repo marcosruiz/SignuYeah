@@ -39,4 +39,5 @@
     <string name="sign_pdf">Sign PDF</string>
     <string name="add_signers">Add signers</string>
     <string name="edit_pdf">Edit PDF</string>
+
 </resources>

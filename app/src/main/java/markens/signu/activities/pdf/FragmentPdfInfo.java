@@ -37,7 +37,7 @@ public class FragmentPdfInfo extends android.support.v4.app.Fragment {
     PdfExt pdfExt;
     UserExt myUserExt;
 
-    private static final String URL_LOCAL = "http://192.168.1.6:3000/";
+
 
     @Nullable
     @Override

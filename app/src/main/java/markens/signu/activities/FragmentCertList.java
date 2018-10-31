@@ -38,7 +38,7 @@ public class FragmentCertList extends Fragment {
     Fragment fragment;
     Token token;
     UserExt userExt;
-    private static final String URL_LOCAL = "http://192.168.1.6:3000/";
+
     CertListAdapter certListAdapter;
     Context myCtx;
     Context appCtx;

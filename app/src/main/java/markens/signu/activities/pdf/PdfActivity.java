@@ -118,7 +118,7 @@ public class PdfActivity extends AppCompatActivity {
         if (!sPdfCtrl.itExists(pdfName)) {
             SharedPrefsCtrl spc = new SharedPrefsCtrl(appCtx);
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(spc.get("URL_LOCAL"))
+                    .baseUrl(spc.get("URL_HEROKU"))
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
             SignuServerService sss = retrofit.create(SignuServerService.class);
