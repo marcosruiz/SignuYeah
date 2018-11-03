@@ -24,7 +24,6 @@ import java.io.IOException;
 import java.util.regex.Pattern;
 
 import markens.signu.R;
-import markens.signu.StorageController;
 import markens.signu.adapters.CertListAdapter;
 import markens.signu.objects.Token;
 import markens.signu.objects.ext.UserExt;

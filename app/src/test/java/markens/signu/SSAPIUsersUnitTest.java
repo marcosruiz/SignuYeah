@@ -516,7 +516,7 @@ public class SSAPIUsersUnitTest {
         assertTrue(response2.isSuccessful());
         SSResponse ssResponse = response2.body();
         assertEquals(7, ssResponse.getCode());
-        assertEquals("PdfExt logged out successfully", ssResponse.getMessage());
+        assertEquals("User logged out successfully", ssResponse.getMessage());
     }
 
     @Test

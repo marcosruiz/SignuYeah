@@ -23,6 +23,7 @@ import com.nbsp.materialfilepicker.MaterialFilePicker;
 import com.nbsp.materialfilepicker.ui.FilePickerActivity;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -30,6 +31,7 @@ import java.util.regex.Pattern;
 import markens.signu.R;
 import markens.signu.adapters.UserListCheckboxAdapter;
 import markens.signu.api.SignuServerService;
+import markens.signu.api.SignuServerServiceCtrl;
 import markens.signu.objects.SSResponse;
 import markens.signu.objects.Token;
 import markens.signu.objects.User;
@@ -43,13 +45,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.Multipart;
 
 import static android.app.Activity.RESULT_OK;
 
 public class FragmentPdfUpload extends Fragment {
 
-    Fragment fragment;
+    Fragment myFragment;
     File file;
     Token token;
     UserExt userExt;
@@ -65,22 +66,18 @@ public class FragmentPdfUpload extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_pdf_upload, container, false);
 
-        fragment = this;
-
-        Bundle bundle = getArguments();
-        userExt = (UserExt) bundle.getSerializable("user_ext");
-        token = (Token) bundle.getSerializable("token");
-
+        myFragment = this;
         myCtx = getContext();
         appCtx = getContext().getApplicationContext();
         spc = new SharedPrefsCtrl(appCtx);
+        userExt = spc.getUserExt();
+        token = spc.getToken();
 
         // List signers
         ListView list = (ListView) view.findViewById(R.id.listViewUsers);
         List<User> listUsersRelated = userExt.getUsersRelated();
         userListCheckboxAdapter = new UserListCheckboxAdapter(getContext(), listUsersRelated);
         list.setAdapter(userListCheckboxAdapter);
-
 
         final Button buttonSelectPdf = (Button) view.findViewById(R.id.buttonSelectPdf);
 
@@ -95,7 +92,7 @@ public class FragmentPdfUpload extends Fragment {
 
                 } else {
                     new MaterialFilePicker()
-                            .withSupportFragment(fragment)
+                            .withSupportFragment(myFragment)
                             .withRequestCode(1)
                             .withFilter(Pattern.compile(".*\\.pdf$")) // Filtering files and directories by file name using regexp
                             .withFilterDirectories(false) // Set directories filterable (false by default)
@@ -109,7 +106,7 @@ public class FragmentPdfUpload extends Fragment {
         buttonUploadPdf.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (file == null) {
-                    RelativeLayout layoutMain = (RelativeLayout) getActivity().findViewById(R.id.layoutMain);
+                    RelativeLayout layoutMain = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfContainer);
                     Snackbar.make(layoutMain, "You need to select a PDF", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                 } else {
@@ -167,30 +164,25 @@ public class FragmentPdfUpload extends Fragment {
             i++;
         }
 
-        if (signers.size()==0) {
+        if (signers.size() == 0) {
             Call<SSResponse> call = sss.uploadPdf(auth, body);
             call.enqueue(new Callback<SSResponse>() {
                 @Override
                 public void onResponse(Call<SSResponse> call, Response<SSResponse> response) {
-                    RelativeLayout layoutMain = (RelativeLayout) getActivity().findViewById(R.id.layoutMain);
-                    if (response.isSuccessful()) {
-                        Snackbar.make(layoutMain, "PDF uploaded", Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
+                    RelativeLayout myLayout = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfContainer);
+                    Snackbar.make(myLayout, response.body().getMessage(), Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
 
-                        // Flag IS_MODIFIED true
-                        SharedPrefsCtrl spc = new SharedPrefsCtrl(getActivity().getApplicationContext());
-                        spc.store("IS_MODIFIED", true);
-                    } else {
-                        Snackbar.make(layoutMain, "PDF not uploaded", Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
+                    if (response.isSuccessful()) {
+                        new SignuServerServiceCtrl(new SharedPrefsCtrl(appCtx)).updateUserExt();
                     }
 
                 }
 
                 @Override
                 public void onFailure(Call<SSResponse> call, Throwable t) {
-                    RelativeLayout layoutMain = (RelativeLayout) getActivity().findViewById(R.id.layoutMain);
-                    Snackbar.make(layoutMain, "Something went wrong", Snackbar.LENGTH_LONG)
+                    RelativeLayout layoutMain = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfContainer);
+                    Snackbar.make(layoutMain, spc.get("UNKNOWN_ERROR"), Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                 }
             });
@@ -201,25 +193,19 @@ public class FragmentPdfUpload extends Fragment {
             call.enqueue(new Callback<SSResponse>() {
                 @Override
                 public void onResponse(Call<SSResponse> call, Response<SSResponse> response) {
-                    RelativeLayout layoutMain = (RelativeLayout) getActivity().findViewById(R.id.layoutMain);
+                    RelativeLayout layoutMain = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfContainer);
+                    Snackbar.make(layoutMain, response.body().getMessage(), Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+
                     if (response.isSuccessful()) {
-                        Snackbar.make(layoutMain, "PDF uploaded", Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
-
-                        // Flag IS_MODIFIED true
-                        SharedPrefsCtrl spc = new SharedPrefsCtrl(getActivity().getApplicationContext());
-                        spc.store("IS_MODIFIED", true);
-                    } else {
-                        Snackbar.make(layoutMain, "PDF not uploaded", Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
+                        new SignuServerServiceCtrl(new SharedPrefsCtrl(appCtx)).updateUserExt();
                     }
-
                 }
 
                 @Override
                 public void onFailure(Call<SSResponse> call, Throwable t) {
-                    RelativeLayout layoutMain = (RelativeLayout) getActivity().findViewById(R.id.layoutMain);
-                    Snackbar.make(layoutMain, "Something went wrong", Snackbar.LENGTH_LONG)
+                    RelativeLayout layoutMain = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfContainer);
+                    Snackbar.make(layoutMain, spc.get("UNKNOWN_ERROR"), Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                 }
             });

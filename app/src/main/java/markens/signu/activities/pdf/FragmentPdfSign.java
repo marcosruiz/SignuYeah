@@ -47,7 +47,6 @@ public class FragmentPdfSign extends android.support.v4.app.Fragment {
     View view;
     SharedPrefsCtrl spc;
     String[] certs;
-    String certPathSelected;
 
 
 
@@ -59,11 +58,6 @@ public class FragmentPdfSign extends android.support.v4.app.Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_pdf_sign, container, false);
-//        ListView list = (ListView) view.findViewById(R.id.pdf_list);
-//        // Get data owned pdf_list
-//        Bundle bundle = getArguments();
-//        List<PdfExt> listPdf = (List<PdfExt>) bundle.getSerializable("list_pdf");
-//        list.setAdapter(new PdfsExtListAdapter(getContext(), listPdf));
 
         myCtx = getContext();
         appCtx = myCtx.getApplicationContext();
@@ -86,9 +80,6 @@ public class FragmentPdfSign extends android.support.v4.app.Fragment {
             RadioButton radioButton = new RadioButton(myCtx);
             radioButton.setId(i);
             File file = new File(certPath);
-            if (file.getName().equals("personal1.p12")) {
-                certPathSelected = certPath;
-            }
             radioButton.setText(file.getName());
             radioGroup.addView(radioButton, i);
             i++;
@@ -99,6 +90,9 @@ public class FragmentPdfSign extends android.support.v4.app.Fragment {
         buttonSignPdf.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 RadioGroup radioGroup = (RadioGroup) view.findViewById(R.id.radioGroupCerts);
+                RadioButton radioButtonSelected = (RadioButton) view.findViewById(radioGroup.getCheckedRadioButtonId());
+                String certPathSelected = certs[radioButtonSelected.getId()];
+
                 EditText editTextPass = (EditText) view.findViewById(R.id.editTextPass);
                 String pass = editTextPass.getText().toString();
 

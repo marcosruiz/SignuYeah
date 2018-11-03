@@ -43,11 +43,6 @@ public class FragmentPdfInfo extends android.support.v4.app.Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_pdf_info, container, false);
-//        ListView list = (ListView) view.findViewById(R.id.pdf_list);
-//        // Get data owned pdf_list
-//        Bundle bundle = getArguments();
-//        List<PdfExt> listPdf = (List<PdfExt>) bundle.getSerializable("list_pdf");
-//        list.setAdapter(new PdfsExtListAdapter(getContext(), listPdf));
         appCtx = getContext().getApplicationContext();
         myCtx = getContext();
         myActivity = getActivity();
@@ -64,7 +59,7 @@ public class FragmentPdfInfo extends android.support.v4.app.Fragment {
         TextView pdfId = (TextView) view.findViewById(R.id.textViewPdfIdValue);
         TextView pdfOriginalName = (TextView) view.findViewById(R.id.textViewOriginalNameValue);
         TextView pdfOwnerEmail = (TextView) view.findViewById(R.id.textViewOwnerEmailValue);
-        TextView pdfOwnerName = (TextView) view.findViewById(R.id.textViewOwnerNameValue);
+        TextView pdfOwnerName = (TextView) view.findViewById(R.id.textViewCAValue);
         TextView pdfOwnerLastname = (TextView) view.findViewById(R.id.textViewOwnerLastnameValue);
         ListView signersList = (ListView) view.findViewById(R.id.listSigners);
 

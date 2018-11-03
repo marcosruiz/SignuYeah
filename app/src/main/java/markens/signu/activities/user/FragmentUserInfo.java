@@ -1,0 +1,53 @@
+package markens.signu.activities.user;
+
+import android.content.Context;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import markens.signu.R;
+import markens.signu.objects.ext.UserExt;
+import markens.signu.storage.SharedPrefsCtrl;
+
+public class FragmentUserInfo extends android.support.v4.app.Fragment {
+
+    Context appCtx;
+    Context myCtx;
+
+    UserExt myUserExt;
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_user_info, container, false);
+
+        myCtx = getContext();
+        appCtx = getContext().getApplicationContext();
+
+        // Get myUserExt
+        SharedPrefsCtrl spc = new SharedPrefsCtrl(appCtx);
+        myUserExt = spc.getUserExt();
+
+        // Get text view
+        TextView userId = (TextView) view.findViewById(R.id.textViewIdValue);
+        TextView userEmail = (TextView) view.findViewById(R.id.textViewEmailValue);
+        TextView userName = (TextView) view.findViewById(R.id.textViewNameValue);
+        TextView userLastname = (TextView) view.findViewById(R.id.textViewLastnameValue);
+        TextView userCD = (TextView) view.findViewById(R.id.textViewCAValue);
+        TextView userLED = (TextView) view.findViewById(R.id.textViewLastEditionDateValue);
+
+        userId.setText(myUserExt.getId());
+        userEmail.setText(myUserExt.getEmail());
+        userName.setText(myUserExt.getName());
+        userLastname.setText(myUserExt.getLastname());
+        userCD.setText(myUserExt.getCreationDate());
+        userLED.setText(myUserExt.getLastEditionDate());
+
+        return view;
+    }
+
+
+}

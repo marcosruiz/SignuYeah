@@ -24,7 +24,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class UserListAdapter extends BaseAdapter {
+public class UserToAddListAdapter extends BaseAdapter {
 
     private static LayoutInflater inflater = null;
     List<User> users;
@@ -33,7 +33,7 @@ public class UserListAdapter extends BaseAdapter {
     View view;
     SharedPrefsCtrl spc;
 
-    public UserListAdapter(Context context, List<User> users) {
+    public UserToAddListAdapter(Context context, List<User> users) {
         this.users = users;
         myCtx = context;
         appCtx = context.getApplicationContext();
@@ -59,21 +59,33 @@ public class UserListAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         User u = users.get(position);
-        view = inflater.inflate(R.layout.user_item_with_email, null);
+        view = inflater.inflate(R.layout.user_item, null);
 
         TextView userId = (TextView) view.findViewById(R.id.textViewUserId);
         TextView userEmail = (TextView) view.findViewById(R.id.textViewCert);
         TextView userName = (TextView) view.findViewById(R.id.textViewCertDes);
         TextView userLastname = (TextView) view.findViewById(R.id.textViewUserLastname);
+        Button buttonAddUser = (Button) view.findViewById(R.id.buttonAddUser);
 
 
         userId.setText(u.getId());
-        userEmail.setText(u.getEmail());
         userName.setText(u.getName());
         userLastname.setText(u.getLastname());
 
         // Check if is already an user related
         SharedPrefsCtrl spc = new SharedPrefsCtrl(appCtx);
+        UserExt userExt = spc.getUserExt();
+        if (isIdThere(u.getId(), userExt.getUsersRelated())) {
+            buttonAddUser.setEnabled(false);
+            buttonAddUser.setText("Added");
+        }
+
+        buttonAddUser.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                TextView userId = (TextView) view.findViewById(R.id.textViewUserId);
+                addUser(userId.getText().toString());
+            }
+        });
 
         return view;
     }

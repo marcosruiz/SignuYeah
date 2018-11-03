@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_cert_list"
+        android:icon="@drawable/ic_certificate_box"
+        android:title="@string/list_cert"></item>
+    <item
+        android:id="@+id/nav_add_cert"
+        android:icon="@drawable/add"
+        android:title="@string/create_cert"></item>
+</menu>

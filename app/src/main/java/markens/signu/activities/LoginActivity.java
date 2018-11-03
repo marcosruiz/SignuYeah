@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -18,7 +19,7 @@ import com.google.gson.Gson;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import markens.signu.activities.main.MainActivity;
+import markens.signu.objects.ext.UserExt;
 import markens.signu.storage.SharedPrefsCtrl;
 import markens.signu.R;
 import markens.signu.api.SignuServerService;
@@ -43,95 +44,104 @@ public class LoginActivity extends AppCompatActivity {
     private static final String GRANT_TYPE = "password";
     private static final String TOKEN_TYPE = "bearer";
     private static final String URL_HEROKU = "https://signu-server.herokuapp.com/";
+    private static final String URL_LOCAL = "http://192.168.1.6:3000/";
+    private static final String URL_TSA = "https://signu-tsa.herokuapp.com/";
+    private static final String URL_CA = "https://signu-ca.herokuapp.com/";
     private static final String UNKNOWN_ERROR = "Something went wrong";
+
+    private Context myCtx;
     private Context appCtx;
-    SharedPrefsCtrl spc;
+
+    /**
+     * Save global variables
+     * @param spc
+     */
+    private void saveGlobalVars(SharedPrefsCtrl spc){
+        spc.store("URL_LOCAL", URL_LOCAL);
+        spc.store("URL_HEROKU", URL_HEROKU);
+        spc.store("URL_TSA", URL_TSA);
+        spc.store("URL_CA", URL_CA);
+        spc.store("GRANT_TYPE", GRANT_TYPE);
+        spc.store("TOKEN_TYPE", TOKEN_TYPE);
+        spc.store("CLIENT_ID", CLIENT_ID);
+        spc.store("CLIENT_SECRET", CLIENT_SECRET);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        myCtx = this;
         appCtx = this.getApplicationContext();
 
         setContentView(R.layout.activity_login);
         coordinatorLayoutSignup = (CoordinatorLayout) findViewById(R.id.coordinatorLayoutLogin);
 
         //Save global vars
-        spc = new SharedPrefsCtrl(appCtx);
-        spc.store("URL_LOCAL", "http://192.168.1.6:3000/");
-        spc.store("URL_HEROKU", "https://signu-server.herokuapp.com/");
-        spc.store("URL_TSA", "https://signu-tsa.herokuapp.com/");
-        spc.store("URL_CA", "https://signu-ca.herokuapp.com");
-
-        spc.store("GRANT_TYPE", "password");
-        spc.store("TOKEN_TYPE", "bearer");
-        spc.store("CLIENT_ID", "application");
-        spc.store("CLIENT_SECRET", "secret");
-
+        SharedPrefsCtrl spc = new SharedPrefsCtrl(appCtx);
+        saveGlobalVars(spc);
 
         // Check if we are already logged
-        spc.store((Token) null);
         Token myToken = spc.getToken();
 
-
         if(myToken != null){
-            launchActivityMain();
+            launchActivityNavigation();
         } else {
             setupFloatingLabelErrorEmail();
             setupFloatingLabelErrorPassword();
 
-            final Button button_signup = (Button) findViewById(R.id.button_signup);
-            button_signup.setOnClickListener(new View.OnClickListener() {
+            final Button buttonSignup = (Button) findViewById(R.id.button_signup);
+            buttonSignup.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     launchActivitySignup();
                 }
             });
-            final Button button_login = (Button) findViewById(R.id.button_login);
-            button_login.setOnClickListener(new View.OnClickListener() {
+            final Button buttonLogin = (Button) findViewById(R.id.button_login);
+            buttonLogin.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     final EditText et_email = (EditText) findViewById(R.id.edit_email);
                     final EditText et_password = (EditText) findViewById(R.id.edit_pass);
 
                     String emailStr = et_email.getText().toString();
                     String passStr = et_password.getText().toString();
-
-                    Retrofit retrofit = new Retrofit.Builder()
-                            .baseUrl(spc.get("URL_HEROKU"))
-                            .addConverterFactory(GsonConverterFactory.create())
-                            .build();
-                    SignuServerService sss = retrofit.create(SignuServerService.class);
-
-                    Call<Token> call = sss.getToken(emailStr, passStr, GRANT_TYPE, CLIENT_ID, CLIENT_SECRET);
-                    Response<SSResponse> response = null;
-
-                    call.enqueue(new retrofit2.Callback<Token>() {
-                        @Override
-                        public void onResponse(Call<Token> call, Response<Token> response) {
-                            if (response.isSuccessful()) {
-                                Token myToken = response.body();
-                                // save myToken
-                                SharedPrefsCtrl gSonSM = new SharedPrefsCtrl(appCtx);
-                                gSonSM.store(myToken);
-                                Snackbar snackbar = Snackbar.make(coordinatorLayoutSignup, "Welcome!", Snackbar.LENGTH_LONG);
-                                snackbar.show();
-                                // Go to MainActivity
-                                launchActivityNavigation();
-                            } else {
-                                Gson g = new Gson();
-                                TokenError myTokenError = g.fromJson(response.errorBody().charStream(), TokenError.class);
-                                Snackbar snackbar = Snackbar.make(coordinatorLayoutSignup, "Incorrect loggin", Snackbar.LENGTH_LONG);
-                                snackbar.show();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<Token> call, Throwable t) {
-                            Snackbar snackbar = Snackbar.make(coordinatorLayoutSignup, UNKNOWN_ERROR, Snackbar.LENGTH_LONG);
-                            snackbar.show();
-                        }
-                    });
-
+                    getToken(emailStr, passStr);
                 }
             });
         }
+    }
+
+    private void getToken(String email, String password){
+        SharedPrefsCtrl spc = new SharedPrefsCtrl(appCtx);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(spc.get("URL_HEROKU"))
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        SignuServerService sss = retrofit.create(SignuServerService.class);
+
+        Call<Token> call = sss.getToken(email, password, GRANT_TYPE, CLIENT_ID, CLIENT_SECRET);
+        Response<SSResponse> response = null;
+
+        call.enqueue(new retrofit2.Callback<Token>() {
+            @Override
+            public void onResponse(Call<Token> call, Response<Token> response) {
+                if (response.isSuccessful()) {
+                    Token myToken = response.body();
+                    // save myToken
+                    SharedPrefsCtrl spc = new SharedPrefsCtrl(appCtx);
+                    spc.store(myToken);
+                    getUserExt(myToken);
+                } else {
+                    Gson g = new Gson();
+                    TokenError myTokenError = g.fromJson(response.errorBody().charStream(), TokenError.class);
+                    Snackbar snackbar = Snackbar.make(coordinatorLayoutSignup, "Incorrect loggin", Snackbar.LENGTH_LONG);
+                    snackbar.show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Token> call, Throwable t) {
+                Snackbar snackbar = Snackbar.make(coordinatorLayoutSignup, UNKNOWN_ERROR, Snackbar.LENGTH_LONG);
+                snackbar.show();
+            }
+        });
     }
 
     private void launchActivitySignup() {
@@ -139,25 +149,10 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void launchActivityMain() {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-    }
-
     private void launchActivityNavigation() {
         Intent intent = new Intent(this, NavigationActivity.class);
         startActivity(intent);
-    }
-
-    public void showSnackBar(JSONObject jsonInfo) {
-        String info = "Incorrect login";
-        try {
-            info = jsonInfo.getString("message");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        Snackbar snackbar = Snackbar.make(coordinatorLayoutSignup, info, Snackbar.LENGTH_LONG); //TODO
-        snackbar.show();
+        finish();
     }
 
     /**
@@ -240,6 +235,50 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
 
+            }
+        });
+    }
+
+
+    /**
+     * Get info user from server and save it in sharedprefs and launch NavigationActivity
+     * @param token
+     */
+    private void getUserExt(Token token) {
+        SharedPrefsCtrl spc = new SharedPrefsCtrl(appCtx);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(spc.get("URL_HEROKU"))
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        SignuServerService sss = retrofit.create(SignuServerService.class);
+
+        String auth = "Bearer " + token.getAccessToken();
+        Call<SSResponse> call = sss.getUserExt(auth);
+
+        call.enqueue(new retrofit2.Callback<SSResponse>() {
+            @Override
+            public void onResponse(Call<SSResponse> call, Response<SSResponse> response) {
+                if (response.isSuccessful()) {
+                    UserExt myUserExt = response.body().getData().getUserExt();
+                    //Save myUserExt
+                    SharedPrefsCtrl spc = new SharedPrefsCtrl(appCtx);
+                    spc.store(myUserExt);
+                    // Launch ActivityNavigation
+                    launchActivityNavigation();
+                } else {
+                    DrawerLayout myLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+                    Snackbar.make(myLayout, "Response not successful", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<SSResponse> call, Throwable t) {
+                DrawerLayout myLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+                SharedPrefsCtrl spc = new SharedPrefsCtrl(appCtx);
+                Snackbar.make(myLayout, spc.get("UNKNOWN_ERROR"), Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
         });
     }

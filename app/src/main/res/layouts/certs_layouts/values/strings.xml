@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="list_cert">My Certificates</string>
+    <string name="create_cert">Create certificate</string>
+    <string name="info_user">Info user</string>
+    <string name="edit_user">Edit user</string>
+    <string name="original_name">Original name</string>
+</resources>

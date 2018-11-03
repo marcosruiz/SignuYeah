@@ -36,7 +36,6 @@ public class PdfActivity extends AppCompatActivity {
 
     Context appCtx;
     Context myCtx;
-    RelativeLayout myLayout;
 
     PdfExt pdfExt;
     UserExt myUserExt;
@@ -47,7 +46,7 @@ public class PdfActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         appCtx = this.getApplicationContext();
         myCtx = this;
-        myLayout = (RelativeLayout) findViewById(R.id.layoutPdf);
+        RelativeLayout myLayout = (RelativeLayout) findViewById(R.id.layoutPdf);
         setContentView(R.layout.activity_pdf);
 
         Intent intent = getIntent();
@@ -140,9 +139,11 @@ public class PdfActivity extends AppCompatActivity {
                             errBody = response.errorBody().string();
                             Gson g = new Gson();
                             SSResponse ssRes = g.fromJson(errBody, SSResponse.class);
+                            RelativeLayout myLayout = (RelativeLayout) findViewById(R.id.layoutPdf);
                             Snackbar.make(myLayout, ssRes.getMessage(), Snackbar.LENGTH_LONG)
                                     .setAction("Action", null).show();
                         } catch (IOException e) {
+                            RelativeLayout myLayout = (RelativeLayout) findViewById(R.id.layoutPdf);
                             Snackbar.make(myLayout, "Something went wrong", Snackbar.LENGTH_LONG)
                                     .setAction("Action", null).show();
                             e.printStackTrace();
@@ -152,6 +153,7 @@ public class PdfActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    RelativeLayout myLayout = (RelativeLayout) findViewById(R.id.layoutPdf);
                     Snackbar.make(myLayout, "Something went wrong", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                 }

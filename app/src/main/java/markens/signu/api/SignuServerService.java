@@ -43,7 +43,6 @@ public interface SignuServerService {
                          @Field("grant_type") String grantType, @Field("client_id") String clientId,
                          @Field("client_secret") String clientSecret);
 
-    @FormUrlEncoded
     @POST("api/users/logout")
     Call<SSResponse> logOut(@Header("Authorization") String authorization);
 

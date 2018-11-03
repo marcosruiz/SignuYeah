@@ -18,11 +18,24 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    sourceSets {
+        main {
+            res.srcDirs = [
+                    'src/main/res/layouts/certs_layouts',
+                    'src/main/res/layouts/pdf_layouts',
+                    'src/main/res/layouts/user_layouts',
+                    'src/main/res/layouts/main_layouts',
+                    'src/main/res/layouts/navigation_layouts',
+                    'src/main/res/layouts',
+                    'src/main/res',
+            ]
+        }
+    }
 }
 
 repositories {
     maven {
-        url  "http://dl.bintray.com/lukaville/maven"
+        url "http://dl.bintray.com/lukaville/maven"
     }
 }
 

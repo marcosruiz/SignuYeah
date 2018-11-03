@@ -5,7 +5,10 @@
     <string name="login">Log in</string>
     <string name="signup">Sign up</string>
     <string name="email">Email</string>
+    <string name="new_email">New email</string>
     <string name="password">Password</string>
+    <string name="old_password">Old password</string>
+    <string name="new_password">New password</string>
     <string name="preg_member">Still not in Signu\'s family?</string>
     <string name="lastname">Lastname</string>
 
@@ -17,13 +20,15 @@
     <string name="info_signup">Info: Signu will send you an email to confirm your email and give you a provisional password</string>
     <string name="todo">TODO</string>
     <string name="name">Name</string>
+    <string name="new_name">New name</string>
+    <string name="new_lastname">New lastname</string>
     <string name="signers">Signers</string>
     <string name="owner">Owner</string>
     <string name="title_activity_navigation">Signu</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_title">Signu</string>
+    <string name="nav_header_subtitle">Keep calm and sign</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="title_activity_bottom_navigation">BottomNavigationActivity</string>
     <string name="pdfs_owned">PDFs Owned</string>
