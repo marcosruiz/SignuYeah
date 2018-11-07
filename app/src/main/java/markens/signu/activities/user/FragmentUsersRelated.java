@@ -18,6 +18,7 @@ import markens.signu.objects.Token;
 import markens.signu.objects.User;
 import markens.signu.objects.ext.UserExt;
 import markens.signu.storage.SharedPrefsCtrl;
+import markens.signu.storage.SharedPrefsGeneralCtrl;
 
 public class FragmentUsersRelated extends android.support.v4.app.Fragment {
 
@@ -27,6 +28,8 @@ public class FragmentUsersRelated extends android.support.v4.app.Fragment {
 
     Context myCtx;
     Context appCtx;
+    private SharedPrefsGeneralCtrl spgc;
+    private SharedPrefsCtrl spc;
 
     @Nullable
     @Override
@@ -37,7 +40,8 @@ public class FragmentUsersRelated extends android.support.v4.app.Fragment {
         // Get data
         myCtx = getContext();
         appCtx = getContext().getApplicationContext();
-        SharedPrefsCtrl spc = new SharedPrefsCtrl(appCtx);
+        spgc = new SharedPrefsGeneralCtrl(appCtx);
+        spc = new SharedPrefsCtrl(appCtx, spgc.getUserId());
         myUserExt = spc.getUserExt();
         myToken = spc.getToken();
 

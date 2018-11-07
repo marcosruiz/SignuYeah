@@ -1,12 +1,13 @@
 package markens.signu.api;
 
 import android.content.Context;
-import android.support.design.widget.Snackbar;
-import android.widget.RelativeLayout;
+import android.support.v4.app.FragmentManager;
 
-import markens.signu.R;
+import markens.signu.activities.main.FragmentPdfContainer;
 import markens.signu.objects.SSResponse;
+import markens.signu.objects.ext.UserExt;
 import markens.signu.storage.SharedPrefsCtrl;
+import markens.signu.storage.SharedPrefsGeneralCtrl;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -14,9 +15,17 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SignuServerServiceCtrl {
-    SharedPrefsCtrl spc;
-    public SignuServerServiceCtrl(SharedPrefsCtrl spc){
-        this.spc = spc;
+    private SharedPrefsGeneralCtrl spgc;
+    private SharedPrefsCtrl spc;
+    Context context;
+    FragmentManager fm;
+
+    public SignuServerServiceCtrl(Context context, FragmentManager fm) {
+
+        spgc = new SharedPrefsGeneralCtrl(context);
+        spc = new SharedPrefsCtrl(context, spgc.getUserId());
+        this.context = context;
+        this.fm = fm;
     }
 
     public void updateUserExt() {
@@ -32,7 +41,13 @@ public class SignuServerServiceCtrl {
             @Override
             public void onResponse(Call<SSResponse> call, Response<SSResponse> response) {
                 if (response.isSuccessful()) {
-                    spc.store(response.body().getData().getUserExt());
+                    UserExt ueNew = response.body().getData().getUserExt();
+                    UserExt ueOld = spc.getUserExt();
+                    spc.store(ueNew);
+
+                    // Update notifications on bottom navigation bar
+                    FragmentPdfContainer fragment = (FragmentPdfContainer) fm.findFragmentByTag("selected_fragment_main");
+                    fragment.uploadNotifications();
                 }
             }
 

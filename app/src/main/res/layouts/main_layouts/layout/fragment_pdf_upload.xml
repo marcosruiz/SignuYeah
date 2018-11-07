@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragmentPdfUpload"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -9,41 +10,54 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textViewPathPdfKey"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Selection" />
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textViewPathPdf"
+            <TextView
+                android:id="@+id/textViewPathPdfKey"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Selection" />
+
+            <TextView
+                android:id="@+id/textViewPathPdf"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="None" />
+
+            <Button
+                android:id="@+id/buttonSelectPdf"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Select PDF file" />
+
+            <TextView
+                android:id="@+id/textViewSelectSignersKey"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Select signers" />
+
+            <ListView
+                android:id="@+id/listViewUsers"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"></ListView>
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="None" />
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="bottom">
 
-        <Button
-            android:id="@+id/buttonSelectPdf"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Select PDF file" />
-
-        <TextView
-            android:id="@+id/textViewSelectSignersKey"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Select signers" />
-
-        <ListView
-            android:id="@+id/listViewUsers"
-            android:layout_width="match_parent"
-            android:layout_height="200dp" >
-        </ListView>
-
-        <Button
-            android:id="@+id/buttonUploadPdf"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Upload Pdf" />
-
+            <Button
+                android:id="@+id/buttonUploadPdf"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Upload Pdf" />
+        </LinearLayout>
     </LinearLayout>
+
 </RelativeLayout>

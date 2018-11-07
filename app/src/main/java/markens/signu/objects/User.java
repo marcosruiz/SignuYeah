@@ -6,6 +6,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import markens.signu.objects.ext.UserExt;
+
 public class User implements Serializable {
     @SerializedName("_id")
     private String id;
@@ -33,6 +35,12 @@ public class User implements Serializable {
     private NextEmail nextEmail;
 
     public User() {
+    }
+
+    @Override
+    public boolean equals(Object object){
+        User user = (User) object;
+        return id.equals(user.getId());
     }
 
     public String getId() {

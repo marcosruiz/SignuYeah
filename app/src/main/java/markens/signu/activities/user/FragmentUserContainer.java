@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -13,24 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import java.io.Serializable;
-import java.util.List;
-
 import markens.signu.R;
-import markens.signu.activities.main.FragmentPdfOwnedList;
-import markens.signu.activities.main.FragmentPdfSignedList;
-import markens.signu.activities.main.FragmentPdfToSignList;
-import markens.signu.activities.main.FragmentPdfUpload;
-import markens.signu.api.SignuServerService;
-import markens.signu.objects.SSResponse;
 import markens.signu.objects.Token;
-import markens.signu.objects.ext.PdfExt;
 import markens.signu.objects.ext.UserExt;
 import markens.signu.storage.SharedPrefsCtrl;
-import retrofit2.Call;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import markens.signu.storage.SharedPrefsGeneralCtrl;
 
 public class FragmentUserContainer extends Fragment{
     Context appCtx;
@@ -38,7 +24,9 @@ public class FragmentUserContainer extends Fragment{
 
     public UserExt myUserExt;
     public Token myToken;
-    SharedPrefsCtrl spc;
+    private SharedPrefsGeneralCtrl spgc;
+    private SharedPrefsCtrl spc;
+
 
     @Nullable
     @Override
@@ -51,7 +39,8 @@ public class FragmentUserContainer extends Fragment{
         RelativeLayout myLayout = (RelativeLayout) view.findViewById(R.id.fragmentUserContainer);
 
         // Get myToken from Shared preferences
-        spc = new SharedPrefsCtrl(appCtx);
+        spgc = new SharedPrefsGeneralCtrl(appCtx);
+        spc = new SharedPrefsCtrl(appCtx, spgc.getUserId());
         myToken = spc.getToken();
 
         BottomNavigationView bottomNav = (BottomNavigationView) view.findViewById(R.id.bottom_navigation_user);

@@ -49,9 +49,9 @@ public class SignerListAdapter extends BaseAdapter {
         TextView signerLastname = (TextView) view.findViewById(R.id.textViewUserLastname);
         ImageView signerImg = (ImageView) view.findViewById(R.id.imageIsSigned);
 
-        signerEmail.setText(se.getId().getEmail());
-        signerName.setText(se.getId().getName());
-        signerLastname.setText(se.getId().getLastname());
+        signerEmail.setText(se.getUser().getEmail());
+        signerName.setText(se.getUser().getName());
+        signerLastname.setText(se.getUser().getLastname());
         if(se.getIsSigned()){
             signerImg.setImageResource(R.drawable.ic_done_black_24dp);
         }

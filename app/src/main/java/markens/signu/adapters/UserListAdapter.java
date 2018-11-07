@@ -16,8 +16,8 @@ import markens.signu.api.SignuServerService;
 import markens.signu.objects.SSResponse;
 import markens.signu.objects.Token;
 import markens.signu.objects.User;
-import markens.signu.objects.ext.UserExt;
 import markens.signu.storage.SharedPrefsCtrl;
+import markens.signu.storage.SharedPrefsGeneralCtrl;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -31,14 +31,16 @@ public class UserListAdapter extends BaseAdapter {
     Context myCtx;
     Context appCtx;
     View view;
-    SharedPrefsCtrl spc;
+    private SharedPrefsGeneralCtrl spgc;
+    private SharedPrefsCtrl spc;
 
     public UserListAdapter(Context context, List<User> users) {
         this.users = users;
         myCtx = context;
         appCtx = context.getApplicationContext();
         inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
-        spc = new SharedPrefsCtrl(appCtx);
+        spgc = new SharedPrefsGeneralCtrl(appCtx);
+        spc = new SharedPrefsCtrl(appCtx, spgc.getUserId());
     }
 
     @Override
@@ -73,14 +75,14 @@ public class UserListAdapter extends BaseAdapter {
         userLastname.setText(u.getLastname());
 
         // Check if is already an user related
-        SharedPrefsCtrl spc = new SharedPrefsCtrl(appCtx);
+
 
         return view;
     }
 
     private void addUser(String userId) {
         // Get token
-        SharedPrefsCtrl spc = new SharedPrefsCtrl(appCtx);
+
         Token token = spc.getToken();
 
         Retrofit retrofit = new Retrofit.Builder()

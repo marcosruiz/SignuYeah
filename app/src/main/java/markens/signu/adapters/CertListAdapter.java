@@ -1,7 +1,6 @@
 package markens.signu.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +12,9 @@ import java.util.List;
 import java.util.Set;
 
 import markens.signu.R;
-import markens.signu.activities.pdf.PdfActivity;
-import markens.signu.objects.User;
 import markens.signu.objects.ext.PdfExt;
-import markens.signu.objects.ext.SignerExt;
 import markens.signu.storage.SharedPrefsCtrl;
+import markens.signu.storage.SharedPrefsGeneralCtrl;
 
 public class CertListAdapter extends BaseAdapter {
     private static LayoutInflater inflater = null;
@@ -26,14 +23,16 @@ public class CertListAdapter extends BaseAdapter {
     Context appCtx;
     List<PdfExt> pdfExtList;
     View view;
-    SharedPrefsCtrl spc;
+    private SharedPrefsGeneralCtrl spgc;
+    private SharedPrefsCtrl spc;
     String[] certs;
     public CertListAdapter(Context context) {
         this.pdfExtList = pdfExtList;
         myCtx = context;
         appCtx = context.getApplicationContext();
         inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
-        spc = new SharedPrefsCtrl(appCtx);
+        spgc = new SharedPrefsGeneralCtrl(appCtx);
+        spc = new SharedPrefsCtrl(appCtx, spgc.getUserId());
         Set<String> setCerts = spc.getCerts();
         certs = setCerts.toArray(new String[setCerts.size()]);
     }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +13,8 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.itextpdf.text.DocumentException;
-
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,13 +23,13 @@ import java.util.Set;
 
 import markens.signu.R;
 import markens.signu.api.SignuServerService;
+import markens.signu.api.SignuServerServiceCtrl;
 import markens.signu.engine.Signature;
-import markens.signu.objects.Pdf;
 import markens.signu.objects.SSResponse;
 import markens.signu.objects.Token;
-import markens.signu.objects.User;
 import markens.signu.objects.ext.PdfExt;
 import markens.signu.storage.SharedPrefsCtrl;
+import markens.signu.storage.SharedPrefsGeneralCtrl;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -45,7 +43,8 @@ public class FragmentPdfSign extends android.support.v4.app.Fragment {
     Context myCtx;
     Context appCtx;
     View view;
-    SharedPrefsCtrl spc;
+    private SharedPrefsGeneralCtrl spgc;
+    private SharedPrefsCtrl spc;
     String[] certs;
 
 
@@ -65,10 +64,11 @@ public class FragmentPdfSign extends android.support.v4.app.Fragment {
         Bundle b = getArguments();
         pdfExt = (PdfExt) b.getSerializable("pdf_ext");
 
-        RelativeLayout myLayout = (RelativeLayout) view.findViewById(R.layout.fragment_pdf_sign);
+        RelativeLayout myLayout = (RelativeLayout) view.findViewById(R.id.fragmentPdfSign);
 
 
-        spc = new SharedPrefsCtrl(appCtx);
+        spgc = new SharedPrefsGeneralCtrl(appCtx);
+        spc = new SharedPrefsCtrl(appCtx, spgc.getUserId());
         Set<String> setCerts = spc.getCerts();
         token = spc.getToken();
         certs = setCerts.toArray(new String[setCerts.size()]);
@@ -130,20 +130,19 @@ public class FragmentPdfSign extends android.support.v4.app.Fragment {
         call2.enqueue(new Callback<SSResponse>() {
             @Override
             public void onResponse(Call<SSResponse> call, Response<SSResponse> response) {
-                RelativeLayout layoutPdf = (RelativeLayout) getActivity().findViewById(R.id.layoutPdf);
                 if (response.isSuccessful()) {
-                    Snackbar.make(layoutPdf, "PDF updated", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                } else {
-                    Snackbar.make(layoutPdf, "PDF uploaded", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
+                    FragmentManager fm = getFragmentManager();
+                    new SignuServerServiceCtrl(appCtx, fm).updateUserExt();
                 }
+                RelativeLayout layoutPdf = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfSign);
+                Snackbar.make(layoutPdf, response.body().getMessage(), Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
 
             @Override
             public void onFailure(Call<SSResponse> call, Throwable t) {
-                RelativeLayout layoutPdf = (RelativeLayout) getActivity().findViewById(R.id.layoutPdf);
-                Snackbar.make(layoutPdf, "Something went wrong", Snackbar.LENGTH_LONG)
+                RelativeLayout layoutPdf = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfSign);
+                Snackbar.make(layoutPdf, spc.get("UNKNOWN_ERROR"), Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });

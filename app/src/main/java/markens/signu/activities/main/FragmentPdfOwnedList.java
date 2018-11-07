@@ -12,9 +12,9 @@ import java.util.List;
 
 import markens.signu.R;
 import markens.signu.adapters.PdfsExtListAdapter;
-import markens.signu.objects.ext.PdfExt;
 import markens.signu.objects.ext.UserExt;
 import markens.signu.storage.SharedPrefsCtrl;
+import markens.signu.storage.SharedPrefsGeneralCtrl;
 
 public class FragmentPdfOwnedList extends android.support.v4.app.Fragment {
 
@@ -26,9 +26,12 @@ public class FragmentPdfOwnedList extends android.support.v4.app.Fragment {
         // Get data
         Context myCtx = getContext();
         Context appCtx = myCtx.getApplicationContext();
-        SharedPrefsCtrl spc = new SharedPrefsCtrl(appCtx);
+        SharedPrefsGeneralCtrl spgc = new SharedPrefsGeneralCtrl(appCtx);
+        SharedPrefsCtrl spc = new SharedPrefsCtrl(appCtx, spgc.getUserId());
+
         UserExt myUserExt = spc.getUserExt();
-        list.setAdapter(new PdfsExtListAdapter(getContext(), myUserExt.getPdfsToSign()));
+        List<Boolean> listNot = spc.getListBoolean("LIST_PDF_NOTIFICATION_OWNED");
+        list.setAdapter(new PdfsExtListAdapter(getContext(), myUserExt.getPdfsOwned(), listNot, "LIST_PDF_NOTIFICATION_OWNED"));
 
         return view;
     }

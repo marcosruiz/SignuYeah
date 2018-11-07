@@ -3,7 +3,6 @@ package markens.signu.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.design.widget.NavigationView;
@@ -14,22 +13,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.RelativeLayout;
-
-import java.util.List;
 
 import markens.signu.R;
 import markens.signu.activities.main.FragmentPdfContainer;
-import markens.signu.activities.main.FragmentExample;
-import markens.signu.activities.main.FragmentPdfOwnedList;
-import markens.signu.activities.main.FragmentPdfToSignList;
 import markens.signu.activities.user.FragmentUserContainer;
 import markens.signu.api.SignuServerService;
 import markens.signu.objects.SSResponse;
 import markens.signu.objects.Token;
-import markens.signu.objects.ext.PdfExt;
 import markens.signu.objects.ext.UserExt;
 import markens.signu.storage.SharedPrefsCtrl;
+import markens.signu.storage.SharedPrefsGeneralCtrl;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -42,7 +35,8 @@ public class NavigationActivity extends AppCompatActivity
 
     public UserExt myUserExt;
     public Token myToken;
-    SharedPrefsCtrl spc;
+    private SharedPrefsGeneralCtrl spgc;
+    private SharedPrefsCtrl spc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +46,8 @@ public class NavigationActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         // Get token from Shared preferences
-        spc = new SharedPrefsCtrl(appCtx);
+        spgc = new SharedPrefsGeneralCtrl(appCtx);
+        spc = new SharedPrefsCtrl(appCtx, spgc.getUserId());
         myToken = spc.getToken();
         myUserExt = spc.getUserExt();
 
@@ -69,7 +64,8 @@ public class NavigationActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_main, new FragmentPdfContainer()).commit();
+//        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_main, new FragmentPdfContainer()).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container_main, new FragmentPdfContainer(), "selected_fragment_main").commit();
 
     }
 
@@ -128,7 +124,7 @@ public class NavigationActivity extends AppCompatActivity
             selectedFragment = new FragmentPdfContainer();
             logOut();
         }
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_main, selectedFragment).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container_main, selectedFragment, "selected_fragment_main").commit();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -147,10 +143,10 @@ public class NavigationActivity extends AppCompatActivity
         call.enqueue(new Callback<SSResponse>() {
             @Override
             public void onResponse(Call<SSResponse> call, Response<SSResponse> response) {
-                SharedPrefsCtrl spc = new SharedPrefsCtrl(appCtx);
+
                 if (response.isSuccessful()) {
                     spc.store((Token) null);
-                    spc.store((UserExt) null);
+//                    spc.store((UserExt) null);
                     launchLoginActivity();
                 }
                 DrawerLayout myLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -160,7 +156,7 @@ public class NavigationActivity extends AppCompatActivity
 
             @Override
             public void onFailure(Call<SSResponse> call, Throwable t) {
-                SharedPrefsCtrl spc = new SharedPrefsCtrl(appCtx);
+
                 DrawerLayout myLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
                 Snackbar.make(myLayout, spc.get("UNKNOWN_ERROR"), Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();

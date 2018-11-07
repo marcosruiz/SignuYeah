@@ -8,17 +8,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import markens.signu.R;
 import markens.signu.objects.ext.UserExt;
 import markens.signu.storage.SharedPrefsCtrl;
+import markens.signu.storage.SharedPrefsGeneralCtrl;
 
 public class FragmentUserEdit extends android.support.v4.app.Fragment {
 
     Context appCtx;
     Context myCtx;
     Activity myActivity;
+    private SharedPrefsGeneralCtrl spgc;
+    private SharedPrefsCtrl spc;
 
     UserExt myUserExt;
 
@@ -32,7 +34,8 @@ public class FragmentUserEdit extends android.support.v4.app.Fragment {
         myActivity = getActivity();
 
         // Get myUserExt
-        final SharedPrefsCtrl spc = new SharedPrefsCtrl(appCtx);
+        spgc = new SharedPrefsGeneralCtrl(appCtx);
+        spc = new SharedPrefsCtrl(appCtx, spgc.getUserId());
         myUserExt = spc.getUserExt();
 
         // Get EditText

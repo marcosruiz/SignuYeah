@@ -26,6 +26,7 @@ import markens.signu.adapters.SignerListAdapter;
 import markens.signu.objects.ext.PdfExt;
 import markens.signu.objects.ext.UserExt;
 import markens.signu.storage.SharedPrefsCtrl;
+import markens.signu.storage.SharedPrefsGeneralCtrl;
 import markens.signu.storage.StorageCtrl;
 
 public class FragmentPdfInfo extends android.support.v4.app.Fragment {
@@ -36,7 +37,8 @@ public class FragmentPdfInfo extends android.support.v4.app.Fragment {
 
     PdfExt pdfExt;
     UserExt myUserExt;
-
+    private SharedPrefsGeneralCtrl spgc;
+    private SharedPrefsCtrl spc;
 
 
     @Nullable
@@ -51,7 +53,8 @@ public class FragmentPdfInfo extends android.support.v4.app.Fragment {
         pdfExt = (PdfExt) b.getSerializable("pdf_ext");
 
         // Get myUserExt
-        final SharedPrefsCtrl spc = new SharedPrefsCtrl(appCtx);
+        spgc = new SharedPrefsGeneralCtrl(appCtx);
+        spc = new SharedPrefsCtrl(appCtx, spgc.getUserId());
         myUserExt = spc.getUserExt();
         // PdfExt myPdfExt = myUserExt.getPdfsOwned().get(index);
 

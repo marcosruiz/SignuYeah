@@ -13,8 +13,6 @@ import android.widget.RelativeLayout;
 import java.util.List;
 
 import markens.signu.R;
-import markens.signu.adapters.PdfsExtListAdapter;
-import markens.signu.adapters.UserListAdapter;
 import markens.signu.adapters.UserToAddListAdapter;
 import markens.signu.api.SignuServerService;
 import markens.signu.objects.SSResponse;
@@ -22,6 +20,7 @@ import markens.signu.objects.Token;
 import markens.signu.objects.User;
 import markens.signu.objects.ext.UserExt;
 import markens.signu.storage.SharedPrefsCtrl;
+import markens.signu.storage.SharedPrefsGeneralCtrl;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -35,7 +34,8 @@ public class SearchUserActivity extends AppCompatActivity {
 
     private Token token;
     private UserExt userExt;
-    SharedPrefsCtrl spc;
+    private SharedPrefsGeneralCtrl spgc;
+    private SharedPrefsCtrl spc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +46,8 @@ public class SearchUserActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_search);
 
         // Get myToken
-        spc = new SharedPrefsCtrl(appCtx);
+        spgc = new SharedPrefsGeneralCtrl(appCtx);
+        spc = new SharedPrefsCtrl(appCtx, spgc.getUserId());
         token = spc.getToken();
 
         final Button button_signup = (Button) findViewById(R.id.buttonSearchUser);

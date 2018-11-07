@@ -34,6 +34,12 @@ public class UserExt implements Serializable{
     @SerializedName("next_email")
     private NextEmail nextEmail;
 
+    @Override
+    public boolean equals(Object object){
+        UserExt userExt = (UserExt) object;
+        return id.equals(userExt.getId());
+    }
+
     public String getId() {
         return id;
     }

@@ -8,18 +8,18 @@ import markens.signu.objects.User;
 
 public class SignerExt implements Serializable{
     @SerializedName("_id")
-    private User id;
+    private User user;
     @SerializedName("signature_date")
     private String signatureDate;
     @SerializedName("is_signed")
     private boolean isSigned;
 
-    public User getId() {
-        return id;
+    public User getUser() {
+        return user;
     }
 
-    public void setId(User id) {
-        this.id = id;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public boolean getIsSigned() {
@@ -38,8 +38,8 @@ public class SignerExt implements Serializable{
         this.signatureDate = signatureDate;
     }
 
-    public SignerExt(User id, boolean isSigned, String signatureDate) {
-        this.id = id;
+    public SignerExt(User user, boolean isSigned, String signatureDate) {
+        this.user = user;
         this.isSigned = isSigned;
         this.signatureDate = signatureDate;
     }

@@ -16,9 +16,6 @@ import android.widget.EditText;
 
 import com.google.gson.Gson;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import markens.signu.objects.ext.UserExt;
 import markens.signu.storage.SharedPrefsCtrl;
 import markens.signu.R;
@@ -26,6 +23,7 @@ import markens.signu.api.SignuServerService;
 import markens.signu.objects.SSResponse;
 import markens.signu.objects.Token;
 import markens.signu.objects.TokenError;
+import markens.signu.storage.SharedPrefsGeneralCtrl;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -52,6 +50,9 @@ public class LoginActivity extends AppCompatActivity {
     private Context myCtx;
     private Context appCtx;
 
+    private SharedPrefsGeneralCtrl spgc;
+    private SharedPrefsCtrl spc;
+
     /**
      * Save global variables
      * @param spc
@@ -76,13 +77,15 @@ public class LoginActivity extends AppCompatActivity {
         coordinatorLayoutSignup = (CoordinatorLayout) findViewById(R.id.coordinatorLayoutLogin);
 
         //Save global vars
-        SharedPrefsCtrl spc = new SharedPrefsCtrl(appCtx);
+        spgc = new SharedPrefsGeneralCtrl(appCtx);
+        spc = new SharedPrefsCtrl(appCtx, spgc.getUserId());
         saveGlobalVars(spc);
 
         // Check if we are already logged
         Token myToken = spc.getToken();
+        UserExt myUserExt = spc.getUserExt();
 
-        if(myToken != null){
+        if(myToken != null && myUserExt != null){
             launchActivityNavigation();
         } else {
             setupFloatingLabelErrorEmail();
@@ -109,7 +112,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void getToken(String email, String password){
-        SharedPrefsCtrl spc = new SharedPrefsCtrl(appCtx);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(spc.get("URL_HEROKU"))
                 .addConverterFactory(GsonConverterFactory.create())
@@ -125,7 +127,6 @@ public class LoginActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     Token myToken = response.body();
                     // save myToken
-                    SharedPrefsCtrl spc = new SharedPrefsCtrl(appCtx);
                     spc.store(myToken);
                     getUserExt(myToken);
                 } else {
@@ -245,7 +246,6 @@ public class LoginActivity extends AppCompatActivity {
      * @param token
      */
     private void getUserExt(Token token) {
-        SharedPrefsCtrl spc = new SharedPrefsCtrl(appCtx);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(spc.get("URL_HEROKU"))
                 .addConverterFactory(GsonConverterFactory.create())
@@ -261,7 +261,6 @@ public class LoginActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     UserExt myUserExt = response.body().getData().getUserExt();
                     //Save myUserExt
-                    SharedPrefsCtrl spc = new SharedPrefsCtrl(appCtx);
                     spc.store(myUserExt);
                     // Launch ActivityNavigation
                     launchActivityNavigation();
@@ -276,7 +275,6 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<SSResponse> call, Throwable t) {
                 DrawerLayout myLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-                SharedPrefsCtrl spc = new SharedPrefsCtrl(appCtx);
                 Snackbar.make(myLayout, spc.get("UNKNOWN_ERROR"), Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }

@@ -28,6 +28,7 @@ import markens.signu.adapters.CertListAdapter;
 import markens.signu.objects.Token;
 import markens.signu.objects.ext.UserExt;
 import markens.signu.storage.SharedPrefsCtrl;
+import markens.signu.storage.SharedPrefsGeneralCtrl;
 import markens.signu.storage.StorageCtrl;
 
 import static android.app.Activity.RESULT_OK;
@@ -41,6 +42,9 @@ public class FragmentCertList extends Fragment {
     CertListAdapter certListAdapter;
     Context myCtx;
     Context appCtx;
+    private SharedPrefsGeneralCtrl spgc;
+    private SharedPrefsCtrl spc;
+
 
     @Nullable
     @Override
@@ -49,6 +53,8 @@ public class FragmentCertList extends Fragment {
 
         myCtx = getContext();
         appCtx = getContext().getApplicationContext();
+        spgc = new SharedPrefsGeneralCtrl(appCtx);
+        spc = new SharedPrefsCtrl(appCtx, spgc.getUserId());
 
         fragment = this;
 
@@ -93,7 +99,7 @@ public class FragmentCertList extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == 1 && resultCode == RESULT_OK) {
-            SharedPrefsCtrl spc = new SharedPrefsCtrl(appCtx);
+
 
             String filePath = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
             //Get file

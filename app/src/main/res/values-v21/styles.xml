@@ -1,7 +1,0 @@
-<resources>
-
-    <style name="MyEditTextStyle" parent="Widget.AppCompat.EditText">
-        <item name="android:textColor">@color/textColor</item>
-        <item name="android:colorAccent">@color/colorAccentDark</item>
-    </style>
-</resources>

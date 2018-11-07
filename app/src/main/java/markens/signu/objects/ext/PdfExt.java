@@ -5,8 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.List;
 
-import markens.signu.objects.Signer;
-import markens.signu.objects.User;
+import markens.signu.objects.Pdf;
 
 public class PdfExt implements Serializable {
     @SerializedName("_id")
@@ -37,6 +36,16 @@ public class PdfExt implements Serializable {
         this.creationDate = creationDate;
         this.ownerId = ownerId;
         this.signers = signers;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        boolean result = false;
+        PdfExt p = (PdfExt) object;
+        if (id.equals(p.getId()) && lastEditionDate.equals(p.getLastEditionDate()) && signers.size() == p.getSigners().size()) {
+            result =  true;
+        }
+        return result;
     }
 
     public String getOriginalName() {

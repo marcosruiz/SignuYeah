@@ -11,11 +11,14 @@ import android.widget.TextView;
 import markens.signu.R;
 import markens.signu.objects.ext.UserExt;
 import markens.signu.storage.SharedPrefsCtrl;
+import markens.signu.storage.SharedPrefsGeneralCtrl;
 
 public class FragmentUserInfo extends android.support.v4.app.Fragment {
 
     Context appCtx;
     Context myCtx;
+    private SharedPrefsGeneralCtrl spgc;
+    private SharedPrefsCtrl spc;
 
     UserExt myUserExt;
 
@@ -28,7 +31,8 @@ public class FragmentUserInfo extends android.support.v4.app.Fragment {
         appCtx = getContext().getApplicationContext();
 
         // Get myUserExt
-        SharedPrefsCtrl spc = new SharedPrefsCtrl(appCtx);
+        spgc = new SharedPrefsGeneralCtrl(appCtx);
+        spc = new SharedPrefsCtrl(appCtx, spgc.getUserId());
         myUserExt = spc.getUserExt();
 
         // Get text view

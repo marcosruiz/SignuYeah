@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +24,6 @@ import com.nbsp.materialfilepicker.MaterialFilePicker;
 import com.nbsp.materialfilepicker.ui.FilePickerActivity;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -37,6 +37,7 @@ import markens.signu.objects.Token;
 import markens.signu.objects.User;
 import markens.signu.objects.ext.UserExt;
 import markens.signu.storage.SharedPrefsCtrl;
+import markens.signu.storage.SharedPrefsGeneralCtrl;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -57,7 +58,8 @@ public class FragmentPdfUpload extends Fragment {
 
     Context myCtx;
     Context appCtx;
-    SharedPrefsCtrl spc;
+    private SharedPrefsGeneralCtrl spgc;
+    private SharedPrefsCtrl spc;
 
     UserListCheckboxAdapter userListCheckboxAdapter;
 
@@ -69,7 +71,8 @@ public class FragmentPdfUpload extends Fragment {
         myFragment = this;
         myCtx = getContext();
         appCtx = getContext().getApplicationContext();
-        spc = new SharedPrefsCtrl(appCtx);
+        spgc = new SharedPrefsGeneralCtrl(appCtx);
+        spc = new SharedPrefsCtrl(appCtx, spgc.getUserId());
         userExt = spc.getUserExt();
         token = spc.getToken();
 
@@ -106,8 +109,8 @@ public class FragmentPdfUpload extends Fragment {
         buttonUploadPdf.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (file == null) {
-                    RelativeLayout layoutMain = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfContainer);
-                    Snackbar.make(layoutMain, "You need to select a PDF", Snackbar.LENGTH_LONG)
+                    RelativeLayout myLayout = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfUpload);
+                    Snackbar.make(myLayout, "You need to select a PDF", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                 } else {
                     uploadPdf();
@@ -157,7 +160,7 @@ public class FragmentPdfUpload extends Fragment {
         MultipartBody.Part body = MultipartBody.Part.createFormData("pdf", file.getName(), requestFile);
 
         //Signers
-        ArrayList<MultipartBody.Part> signers = new ArrayList<MultipartBody.Part>();
+        ArrayList<MultipartBody.Part> signers = new ArrayList<>();
         int i = 0;
         for (String id : userListCheckboxAdapter.getUsersIdSelected()) {
             signers.add(MultipartBody.Part.createFormData("signers[" + i + "]", id));
@@ -165,47 +168,28 @@ public class FragmentPdfUpload extends Fragment {
         }
 
         if (signers.size() == 0) {
-            Call<SSResponse> call = sss.uploadPdf(auth, body);
-            call.enqueue(new Callback<SSResponse>() {
-                @Override
-                public void onResponse(Call<SSResponse> call, Response<SSResponse> response) {
-                    RelativeLayout myLayout = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfContainer);
-                    Snackbar.make(myLayout, response.body().getMessage(), Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-
-                    if (response.isSuccessful()) {
-                        new SignuServerServiceCtrl(new SharedPrefsCtrl(appCtx)).updateUserExt();
-                    }
-
-                }
-
-                @Override
-                public void onFailure(Call<SSResponse> call, Throwable t) {
-                    RelativeLayout layoutMain = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfContainer);
-                    Snackbar.make(layoutMain, spc.get("UNKNOWN_ERROR"), Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                }
-            });
-
-
+            RelativeLayout layoutMain = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfUpload);
+            Snackbar.make(layoutMain, "You need to choose at least one signer", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
         } else {
             Call<SSResponse> call = sss.uploadPdfWithSigners(auth, body, signers);
             call.enqueue(new Callback<SSResponse>() {
                 @Override
                 public void onResponse(Call<SSResponse> call, Response<SSResponse> response) {
-                    RelativeLayout layoutMain = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfContainer);
-                    Snackbar.make(layoutMain, response.body().getMessage(), Snackbar.LENGTH_LONG)
+                    RelativeLayout myLayout = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfUpload);
+                    Snackbar.make(myLayout, response.body().getMessage(), Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
 
                     if (response.isSuccessful()) {
-                        new SignuServerServiceCtrl(new SharedPrefsCtrl(appCtx)).updateUserExt();
+                        FragmentManager fm = getActivity().getSupportFragmentManager();
+                        new SignuServerServiceCtrl(appCtx, fm).updateUserExt();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<SSResponse> call, Throwable t) {
-                    RelativeLayout layoutMain = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfContainer);
-                    Snackbar.make(layoutMain, spc.get("UNKNOWN_ERROR"), Snackbar.LENGTH_LONG)
+                    RelativeLayout myLayout = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfUpload);
+                    Snackbar.make(myLayout, spc.get("UNKNOWN_ERROR"), Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                 }
             });

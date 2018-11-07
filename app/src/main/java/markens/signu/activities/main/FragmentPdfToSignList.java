@@ -8,10 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import java.util.List;
+
 import markens.signu.R;
 import markens.signu.adapters.PdfsExtListAdapter;
 import markens.signu.objects.ext.UserExt;
 import markens.signu.storage.SharedPrefsCtrl;
+import markens.signu.storage.SharedPrefsGeneralCtrl;
 
 public class FragmentPdfToSignList extends android.support.v4.app.Fragment {
 
@@ -23,9 +26,11 @@ public class FragmentPdfToSignList extends android.support.v4.app.Fragment {
         // Get data
         Context myCtx = getContext();
         Context appCtx = myCtx.getApplicationContext();
-        SharedPrefsCtrl spc = new SharedPrefsCtrl(appCtx);
+        SharedPrefsGeneralCtrl spgc = new SharedPrefsGeneralCtrl(appCtx);
+        SharedPrefsCtrl spc = new SharedPrefsCtrl(appCtx, spgc.getUserId());
         UserExt myUserExt = spc.getUserExt();
-        list.setAdapter(new PdfsExtListAdapter(getContext(), myUserExt.getPdfsToSign()));
+        List<Boolean> listNot = spc.getListBoolean("LIST_PDF_NOTIFICATION_TO_SIGN");
+        list.setAdapter(new PdfsExtListAdapter(getContext(), myUserExt.getPdfsToSign(), listNot, "LIST_PDF_NOTIFICATION_TO_SIGN"));
 
         return view;
     }

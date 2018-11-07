@@ -24,6 +24,7 @@ import markens.signu.objects.ext.PdfExt;
 import markens.signu.objects.ext.SignerExt;
 import markens.signu.objects.ext.UserExt;
 import markens.signu.storage.SharedPrefsCtrl;
+import markens.signu.storage.SharedPrefsGeneralCtrl;
 import markens.signu.storage.StorageCtrl;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -36,7 +37,8 @@ public class PdfActivity extends AppCompatActivity {
 
     Context appCtx;
     Context myCtx;
-
+    private SharedPrefsGeneralCtrl spgc;
+    private SharedPrefsCtrl spc;
     PdfExt pdfExt;
     UserExt myUserExt;
 
@@ -51,7 +53,9 @@ public class PdfActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
-        myUserExt = new SharedPrefsCtrl(appCtx).getUserExt();
+        spgc = new SharedPrefsGeneralCtrl(appCtx);
+        spc = new SharedPrefsCtrl(appCtx, spgc.getUserId());
+        myUserExt = spc.getUserExt();
         pdfExt = (PdfExt) b.getSerializable("pdf_ext");
 
         //Download pdf
@@ -115,7 +119,7 @@ public class PdfActivity extends AppCompatActivity {
         StorageCtrl sPdfCtrl = new StorageCtrl(appCtx);
         String pdfName = pdfExt.getFileName() + ".pdf";
         if (!sPdfCtrl.itExists(pdfName)) {
-            SharedPrefsCtrl spc = new SharedPrefsCtrl(appCtx);
+
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(spc.get("URL_HEROKU"))
                     .addConverterFactory(GsonConverterFactory.create())
@@ -164,7 +168,7 @@ public class PdfActivity extends AppCompatActivity {
     private boolean isSigner(String id, List<SignerExt> signers) {
         boolean isSigner = false;
         for (SignerExt signer : signers) {
-            if (signer.getId().getId().equals(id)) {
+            if (signer.getUser().getId().equals(id)) {
                 isSigner = true;
             }
         }
