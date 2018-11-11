@@ -51,5 +51,10 @@
     <string name="sign_pdf">Sign PDF</string>
     <string name="add_signers">Add signers</string>
     <string name="edit_pdf">Edit PDF</string>
+    
+    <!-- Snackbar -->
+    <string name="check_downloads">Check your Downloads folder</string>
+    <string name="wrong">Something went wrong</string>
+    <string name="exception">An exception ocurred</string>
 
 </resources>

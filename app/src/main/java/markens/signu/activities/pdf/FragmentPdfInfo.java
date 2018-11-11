@@ -9,6 +9,7 @@ import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,11 +24,20 @@ import java.io.IOException;
 
 import markens.signu.R;
 import markens.signu.adapters.SignerListAdapter;
+import markens.signu.api.SignuServerService;
+import markens.signu.api.SignuServerServiceCtrl;
+import markens.signu.objects.SSResponse;
+import markens.signu.objects.Token;
 import markens.signu.objects.ext.PdfExt;
 import markens.signu.objects.ext.UserExt;
 import markens.signu.storage.SharedPrefsCtrl;
 import markens.signu.storage.SharedPrefsGeneralCtrl;
 import markens.signu.storage.StorageCtrl;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class FragmentPdfInfo extends android.support.v4.app.Fragment {
 
@@ -37,6 +47,7 @@ public class FragmentPdfInfo extends android.support.v4.app.Fragment {
 
     PdfExt pdfExt;
     UserExt myUserExt;
+    Token myToken;
     private SharedPrefsGeneralCtrl spgc;
     private SharedPrefsCtrl spc;
 
@@ -56,11 +67,12 @@ public class FragmentPdfInfo extends android.support.v4.app.Fragment {
         spgc = new SharedPrefsGeneralCtrl(appCtx);
         spc = new SharedPrefsCtrl(appCtx, spgc.getUserId());
         myUserExt = spc.getUserExt();
+        myToken = spc.getToken();
         // PdfExt myPdfExt = myUserExt.getPdfsOwned().get(index);
 
         // Get text view
         TextView pdfId = (TextView) view.findViewById(R.id.textViewPdfIdValue);
-        TextView pdfOriginalName = (TextView) view.findViewById(R.id.textViewOriginalNameValue);
+        final TextView pdfOriginalName = (TextView) view.findViewById(R.id.textViewOriginalNameValue);
         TextView pdfOwnerEmail = (TextView) view.findViewById(R.id.textViewOwnerEmailValue);
         TextView pdfOwnerName = (TextView) view.findViewById(R.id.textViewCAValue);
         TextView pdfOwnerLastname = (TextView) view.findViewById(R.id.textViewOwnerLastnameValue);
@@ -68,9 +80,9 @@ public class FragmentPdfInfo extends android.support.v4.app.Fragment {
 
         pdfId.setText(pdfExt.getId());
         pdfOriginalName.setText(pdfExt.getOriginalName());
-        pdfOwnerEmail.setText(pdfExt.getOwnerId().getEmail());
-        pdfOwnerName.setText(pdfExt.getOwnerId().getName());
-        pdfOwnerLastname.setText(pdfExt.getOwnerId().getLastname());
+        pdfOwnerEmail.setText(pdfExt.getOwner().getEmail());
+        pdfOwnerName.setText(pdfExt.getOwner().getName());
+        pdfOwnerLastname.setText(pdfExt.getOwner().getLastname());
 
 
         SignerListAdapter sa = new SignerListAdapter(myCtx, pdfExt.getSigners());
@@ -81,7 +93,7 @@ public class FragmentPdfInfo extends android.support.v4.app.Fragment {
         final Button buttonExportPdf = (Button) view.findViewById(R.id.buttonExportPdf);
 
 
-        if (!(myUserExt.getId().equals(pdfExt.getId()))) {
+        if (!(myUserExt.getId().equals(pdfExt.getOwner().getId()))) {
             buttonDeletePdf.setEnabled(false);
         }
 
@@ -98,17 +110,17 @@ public class FragmentPdfInfo extends android.support.v4.app.Fragment {
                 } else {
                     String pdfName = pdfExt.getFileName() + ".pdf";
                     File fileInternalStorage = new File(appCtx.getFilesDir().getAbsolutePath() + File.separator + pdfName);
-                    File fileExternalStorage = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + pdfExt.getOriginalName());
+                    File fileExternalStorage = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + "exported_" + pdfExt.getOriginalName());
 
                     try {
-                        RelativeLayout layoutPdf = (RelativeLayout) getActivity().findViewById(R.id.layoutPdf);
+                        RelativeLayout layoutPdf = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfInfo);
                         StorageCtrl.copy(fileInternalStorage, fileExternalStorage);
-                        Snackbar.make(layoutPdf, "See your Downloads folder", Snackbar.LENGTH_LONG)
+                        Snackbar.make(layoutPdf, R.string.check_downloads, Snackbar.LENGTH_LONG)
                                 .setAction("Action", null).show();
                     } catch (IOException e) {
                         e.printStackTrace();
-                        RelativeLayout layoutPdf = (RelativeLayout) getActivity().findViewById(R.id.layoutPdf);
-                        Snackbar.make(layoutPdf, "Something went wrong", Snackbar.LENGTH_LONG)
+                        RelativeLayout layoutPdf = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfInfo);
+                        Snackbar.make(layoutPdf, R.string.export_exception, Snackbar.LENGTH_LONG)
                                 .setAction("Action", null).show();
                     }
                 }
@@ -117,7 +129,36 @@ public class FragmentPdfInfo extends android.support.v4.app.Fragment {
 
         buttonDeletePdf.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // TODO
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl(spc.get("URL_SERVER"))
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+                final SignuServerService sss = retrofit.create(SignuServerService.class);
+                String auth = "Bearer " + myToken.getAccessToken();
+                Call<SSResponse> call = sss.deletePdf(auth, pdfExt.getId());
+                call.enqueue(new Callback<SSResponse>(){
+                    @Override
+                    public void onResponse(Call<SSResponse> call, Response<SSResponse> response) {
+                        if(response.isSuccessful()){
+                            FragmentManager fm = getFragmentManager();
+                            new SignuServerServiceCtrl(appCtx, fm).updateUserExt();
+                            String fileRoute = getActivity().getApplicationContext().getFilesDir().getAbsolutePath() + File.separator + pdfExt.getFileName() + ".pdf";
+                            File file = new File(fileRoute);
+                            StorageCtrl.delete(file);
+                            RelativeLayout layoutPdf = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfInfo);
+                            Snackbar.make(layoutPdf, response.body().getMessage(), Snackbar.LENGTH_LONG)
+                                    .setAction("Action", null).show();
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<SSResponse> call, Throwable t) {
+                        RelativeLayout layoutPdf = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfInfo);
+                        Snackbar.make(layoutPdf, spc.get("UNKNOWN_ERROR"), Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
+                    }
+                });
             }
         });
 

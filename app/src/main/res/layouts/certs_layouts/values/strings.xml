@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="imported_cert_wrong">It was a problem importing the certificate</string>
+    <string name="imported_cert_ok">Certificate imported</string>
+    <string name="dialog_overwrite">Are you sure you want overwrite?</string>
+    <string name="dialog_overwrite_title">Overwrite certificate</string>
+    <string name="export_exception">It could not be exported</string>
+    <string name="dialog_insert_pass">Enter the password</string>
+    <string name="response_no_successful">Server\'s response was not successful</string>
+</resources>

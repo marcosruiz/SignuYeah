@@ -5,7 +5,7 @@
     android:id="@+id/coordinatorLayoutSignup"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="markens.signu.activities.main.MainActivity">
+    tools:context="markens.signu.activities.SignupActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

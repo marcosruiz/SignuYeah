@@ -61,7 +61,7 @@ public class SignupActivity extends AppCompatActivity {
                 String lastnameStr = et_lastname.getText().toString();
 
                 Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl(spc.get("URL_HEROKU"))
+                        .baseUrl(spc.get("URL_SERVER"))
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
                 SignuServerService sss = retrofit.create(SignuServerService.class);

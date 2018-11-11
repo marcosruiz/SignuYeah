@@ -74,4 +74,8 @@ public class StorageCtrl {
         inStream.close();
         outStream.close();
     }
+
+    public static void delete(File src){
+        src.delete();
+    }
 }

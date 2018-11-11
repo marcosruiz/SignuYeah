@@ -25,7 +25,6 @@ public class FragmentPdfSee extends android.support.v4.app.Fragment {
         String fileRoute = getActivity().getApplicationContext().getFilesDir().getAbsolutePath() + File.separator + pdfExt.getFileName() + ".pdf";
         PDFView pdfView = (PDFView) view.findViewById(R.id.pdfView);
         File file = new File(fileRoute);
-        System.out.println(fileRoute);
         pdfView.fromFile(file).load();
 
         return view;

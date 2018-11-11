@@ -35,6 +35,12 @@ public class FragmentPdfContainer extends android.support.v4.app.Fragment {
 
     private View view;
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        uploadNotifications();
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {

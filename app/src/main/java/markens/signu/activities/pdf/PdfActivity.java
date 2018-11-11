@@ -121,7 +121,7 @@ public class PdfActivity extends AppCompatActivity {
         if (!sPdfCtrl.itExists(pdfName)) {
 
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(spc.get("URL_HEROKU"))
+                    .baseUrl(spc.get("URL_SERVER"))
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
             SignuServerService sss = retrofit.create(SignuServerService.class);

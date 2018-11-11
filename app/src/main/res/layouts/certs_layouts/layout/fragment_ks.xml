@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/layoutPdfView"
+    android:id="@+id/fragmentKS"
     tools:context=".activities.NavigationActivity">
 
 
@@ -18,7 +18,7 @@
             android:id="@+id/buttonImportCert"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Import Certificate" />
+            android:text="Import .P12" />
 
         <ListView
             android:id="@+id/listViewCerts"

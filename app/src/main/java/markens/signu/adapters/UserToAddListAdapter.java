@@ -99,7 +99,7 @@ public class UserToAddListAdapter extends BaseAdapter {
         Token token = spc.getToken();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(spc.get("URL_HEROKU"))
+                .baseUrl(spc.get("URL_SERVER"))
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         final SignuServerService sss = retrofit.create(SignuServerService.class);

@@ -17,6 +17,17 @@ import markens.signu.storage.SharedPrefsCtrl;
 import markens.signu.storage.SharedPrefsGeneralCtrl;
 
 public class FragmentPdfOwnedList extends android.support.v4.app.Fragment {
+    PdfsExtListAdapter pdfsExtListAdatper;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        uploadData();
+    }
+
+    private void uploadData() {
+        pdfsExtListAdatper.notifyDataSetChanged();
+    }
 
     @Nullable
     @Override
@@ -31,7 +42,8 @@ public class FragmentPdfOwnedList extends android.support.v4.app.Fragment {
 
         UserExt myUserExt = spc.getUserExt();
         List<Boolean> listNot = spc.getListBoolean("LIST_PDF_NOTIFICATION_OWNED");
-        list.setAdapter(new PdfsExtListAdapter(getContext(), myUserExt.getPdfsOwned(), listNot, "LIST_PDF_NOTIFICATION_OWNED"));
+        pdfsExtListAdatper = new PdfsExtListAdapter(getContext(), myUserExt.getPdfsOwned(), listNot, "LIST_PDF_NOTIFICATION_OWNED");
+        list.setAdapter(pdfsExtListAdatper);
 
         return view;
     }

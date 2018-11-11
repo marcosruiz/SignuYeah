@@ -75,8 +75,8 @@ public class PdfsExtListAdapter extends BaseAdapter {
         ImageView imageViewNotification = (ImageView) view.findViewById(R.id.imageViewNotification);
 
         pdfName.setText(currentPdfExt.getOriginalName());
-        pdfOwnerName.setText(currentPdfExt.getOwnerId().getName());
-        pdfOwnerLastname.setText(currentPdfExt.getOwnerId().getLastname());
+        pdfOwnerName.setText(currentPdfExt.getOwner().getName());
+        pdfOwnerLastname.setText(currentPdfExt.getOwner().getLastname());
         pdfId.setText(currentPdfExt.getId());
 
         String signersStr = "";

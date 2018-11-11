@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import markens.signu.R;
+import markens.signu.activities.cert.FragmentKSList;
 import markens.signu.activities.main.FragmentPdfContainer;
 import markens.signu.activities.user.FragmentUserContainer;
 import markens.signu.api.SignuServerService;
@@ -37,6 +38,11 @@ public class NavigationActivity extends AppCompatActivity
     public Token myToken;
     private SharedPrefsGeneralCtrl spgc;
     private SharedPrefsCtrl spc;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +71,7 @@ public class NavigationActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 //        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_main, new FragmentPdfContainer()).commit();
-        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container_main, new FragmentPdfContainer(), "selected_fragment_main").commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_main, new FragmentPdfContainer(), "selected_fragment_main").commit();
 
     }
 
@@ -110,7 +116,7 @@ public class NavigationActivity extends AppCompatActivity
         if (id == R.id.nav_user) {
             selectedFragment = new FragmentUserContainer();
         } else if (id == R.id.nav_cert) {
-            selectedFragment = new FragmentCertList();
+            selectedFragment = new FragmentKSList();
         } else if (id == R.id.nav_settings) {
             selectedFragment = new FragmentSettings();
         } else if (id == R.id.nav_share) {
@@ -124,7 +130,7 @@ public class NavigationActivity extends AppCompatActivity
             selectedFragment = new FragmentPdfContainer();
             logOut();
         }
-        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container_main, selectedFragment, "selected_fragment_main").commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_main, selectedFragment, "selected_fragment_main").commit();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -132,7 +138,7 @@ public class NavigationActivity extends AppCompatActivity
 
     private void logOut() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(spc.get("URL_HEROKU"))
+                .baseUrl(spc.get("URL_SERVER"))
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         final SignuServerService signuServerService = retrofit.create(SignuServerService.class);
@@ -143,23 +149,17 @@ public class NavigationActivity extends AppCompatActivity
         call.enqueue(new Callback<SSResponse>() {
             @Override
             public void onResponse(Call<SSResponse> call, Response<SSResponse> response) {
-
-                if (response.isSuccessful()) {
-                    spc.store((Token) null);
-//                    spc.store((UserExt) null);
-                    launchLoginActivity();
-                }
-                DrawerLayout myLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-                Snackbar.make(myLayout, response.body().getMessage(), Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                spc.store((Token) null);
+                launchLoginActivity();
             }
 
             @Override
             public void onFailure(Call<SSResponse> call, Throwable t) {
-
                 DrawerLayout myLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
                 Snackbar.make(myLayout, spc.get("UNKNOWN_ERROR"), Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                spc.store((Token) null);
+                launchLoginActivity();
             }
         });
     }

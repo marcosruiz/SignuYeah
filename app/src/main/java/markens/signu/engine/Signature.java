@@ -2,8 +2,6 @@ package markens.signu.engine;
 
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Rectangle;
-import com.itextpdf.text.log.LoggerFactory;
-import com.itextpdf.text.log.SysoLogger;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfSignatureAppearance;
 import com.itextpdf.text.pdf.PdfStamper;
@@ -19,33 +17,35 @@ import com.itextpdf.text.pdf.security.PrivateKeySignature;
 import com.itextpdf.text.pdf.security.TSAClient;
 import com.itextpdf.text.pdf.security.TSAClientBouncyCastle;
 
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.spongycastle.jce.provider.BouncyCastleProvider;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.Security;
 import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Properties;
 
 public class Signature {
 
-    public static void signWithCrl(String certPath, String pdfSrc, String pdfDst, String pass, String tsaUrl, String crlUrl) throws IOException, GeneralSecurityException, DocumentException {
+    public static void signWithCrl(String routeKS, String pdfSrc, String pdfDst, String pass, String tsaUrl, String crlUrl) throws IOException, GeneralSecurityException, DocumentException {
         TSAClient tsaClient = new TSAClientBouncyCastle(tsaUrl);
-        char[] pass2 = pass.toCharArray();
+        char[] passCharArray = pass.toCharArray();
         BouncyCastleProvider provider = new BouncyCastleProvider();
-        Security.addProvider(provider);
+        Security.insertProviderAt(provider, 1);
         KeyStore ks = KeyStore.getInstance("pkcs12", provider.getName());
-        ks.load(new FileInputStream(certPath), pass2);
+        ks.load(new FileInputStream(routeKS), passCharArray);
         String alias = (String) ks.aliases().nextElement();
-        PrivateKey pk = (PrivateKey) ks.getKey(alias, pass2);
+        PrivateKey pk = (PrivateKey) ks.getKey(alias, passCharArray);
         Certificate[] chain = ks.getCertificateChain(alias);
         CrlClient crlClient = new CrlClientOnline(crlUrl);
         //CrlClient crlClient = new CrlClientOnline("http://crl.certum.pl/ca.crl");
@@ -68,6 +68,29 @@ public class Signature {
         ExternalSignature pks = new PrivateKeySignature(pk, digestAlgorithm, provider);
         ExternalDigest digest = new BouncyCastleDigest();
         MakeSignature.signDetached(appearance, digest, pks, chain, crlList, ocspClient, tsaClient, estimatedSize, subfilter);
+    }
+
+    public static KeyStore getKeyStore(String route, String password) throws NoSuchProviderException, KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException {
+        BouncyCastleProvider provider = new BouncyCastleProvider();
+        Security.insertProviderAt(provider, 1);
+        KeyStore ks = KeyStore.getInstance("pkcs12", provider.getName());
+        char[] passCharArray = password.toCharArray();
+        ks.load(new FileInputStream(route), passCharArray);
+        return ks;
+    }
+
+    public static boolean isPassCorrect(String route, String password){
+        try{
+            BouncyCastleProvider provider = new BouncyCastleProvider();
+            Security.insertProviderAt(provider, 1);
+            KeyStore ks = KeyStore.getInstance("pkcs12", provider.getName());
+            char[] passCharArray = password.toCharArray();
+            ks.load(new FileInputStream(route), passCharArray);
+            return true;
+        } catch(Exception e){
+            return false;
+        }
+
     }
 
 }

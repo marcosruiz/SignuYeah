@@ -41,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
     private static final String CLIENT_SECRET = "secret";
     private static final String GRANT_TYPE = "password";
     private static final String TOKEN_TYPE = "bearer";
-    private static final String URL_HEROKU = "https://signu-server.herokuapp.com/";
+    private static final String URL_SERVER = "https://signu-server.herokuapp.com/";
     private static final String URL_LOCAL = "http://192.168.1.6:3000/";
     private static final String URL_TSA = "https://signu-tsa.herokuapp.com/";
     private static final String URL_CA = "https://signu-ca.herokuapp.com/";
@@ -58,14 +58,14 @@ public class LoginActivity extends AppCompatActivity {
      * @param spc
      */
     private void saveGlobalVars(SharedPrefsCtrl spc){
-        spc.store("URL_LOCAL", URL_LOCAL);
-        spc.store("URL_HEROKU", URL_HEROKU);
+        spc.store("URL_SERVER", URL_LOCAL);
         spc.store("URL_TSA", URL_TSA);
         spc.store("URL_CA", URL_CA);
         spc.store("GRANT_TYPE", GRANT_TYPE);
         spc.store("TOKEN_TYPE", TOKEN_TYPE);
         spc.store("CLIENT_ID", CLIENT_ID);
         spc.store("CLIENT_SECRET", CLIENT_SECRET);
+        spc.store("UNKNOWN_ERROR", UNKNOWN_ERROR);
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +113,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void getToken(String email, String password){
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(spc.get("URL_HEROKU"))
+                .baseUrl(spc.get("URL_SERVER"))
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         SignuServerService sss = retrofit.create(SignuServerService.class);
@@ -139,7 +139,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Token> call, Throwable t) {
-                Snackbar snackbar = Snackbar.make(coordinatorLayoutSignup, UNKNOWN_ERROR, Snackbar.LENGTH_LONG);
+                Snackbar snackbar = Snackbar.make(coordinatorLayoutSignup, spc.get("UNKNOWN_ERROR"), Snackbar.LENGTH_LONG);
                 snackbar.show();
             }
         });
@@ -247,7 +247,7 @@ public class LoginActivity extends AppCompatActivity {
      */
     private void getUserExt(Token token) {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(spc.get("URL_HEROKU"))
+                .baseUrl(spc.get("URL_SERVER"))
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         SignuServerService sss = retrofit.create(SignuServerService.class);
@@ -261,6 +261,8 @@ public class LoginActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     UserExt myUserExt = response.body().getData().getUserExt();
                     //Save myUserExt
+                    spgc.storeUserId(myUserExt.getId());
+                    spc = new SharedPrefsCtrl(appCtx, spgc.getUserId());
                     spc.store(myUserExt);
                     // Launch ActivityNavigation
                     launchActivityNavigation();
