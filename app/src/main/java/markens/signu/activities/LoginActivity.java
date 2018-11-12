@@ -58,7 +58,7 @@ public class LoginActivity extends AppCompatActivity {
      * @param spc
      */
     private void saveGlobalVars(SharedPrefsCtrl spc){
-        spc.store("URL_SERVER", URL_LOCAL);
+        spc.store("URL_SERVER", URL_SERVER);
         spc.store("URL_TSA", URL_TSA);
         spc.store("URL_CA", URL_CA);
         spc.store("GRANT_TYPE", GRANT_TYPE);
