@@ -18,6 +18,18 @@ import markens.signu.storage.SharedPrefsGeneralCtrl;
 
 public class FragmentPdfToSignList extends android.support.v4.app.Fragment {
 
+    PdfsExtListAdapter pdfsExtListAdatper;
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        uploadData();
+    }
+
+    private void uploadData() {
+        pdfsExtListAdatper.notifyDataSetChanged();
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -30,7 +42,8 @@ public class FragmentPdfToSignList extends android.support.v4.app.Fragment {
         SharedPrefsCtrl spc = new SharedPrefsCtrl(appCtx, spgc.getUserId());
         UserExt myUserExt = spc.getUserExt();
         List<Boolean> listNot = spc.getListBoolean("LIST_PDF_NOTIFICATION_TO_SIGN");
-        list.setAdapter(new PdfsExtListAdapter(getContext(), myUserExt.getPdfsToSign(), listNot, "LIST_PDF_NOTIFICATION_TO_SIGN"));
+        pdfsExtListAdatper = new PdfsExtListAdapter(getContext(), myUserExt.getPdfsOwned(), listNot, "LIST_PDF_NOTIFICATION_TO_SIGN");
+        list.setAdapter(pdfsExtListAdatper);
 
         return view;
     }

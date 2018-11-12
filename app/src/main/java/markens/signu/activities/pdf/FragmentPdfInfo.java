@@ -136,18 +136,21 @@ public class FragmentPdfInfo extends android.support.v4.app.Fragment {
                 final SignuServerService sss = retrofit.create(SignuServerService.class);
                 String auth = "Bearer " + myToken.getAccessToken();
                 Call<SSResponse> call = sss.deletePdf(auth, pdfExt.getId());
-                call.enqueue(new Callback<SSResponse>(){
+                call.enqueue(new Callback<SSResponse>() {
                     @Override
                     public void onResponse(Call<SSResponse> call, Response<SSResponse> response) {
-                        if(response.isSuccessful()){
+                        RelativeLayout layoutPdf = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfInfo);
+                        if (response.isSuccessful()) {
                             FragmentManager fm = getFragmentManager();
                             new SignuServerServiceCtrl(appCtx, fm).updateUserExt();
                             String fileRoute = getActivity().getApplicationContext().getFilesDir().getAbsolutePath() + File.separator + pdfExt.getFileName() + ".pdf";
                             File file = new File(fileRoute);
                             StorageCtrl.delete(file);
-                            RelativeLayout layoutPdf = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfInfo);
                             Snackbar.make(layoutPdf, response.body().getMessage(), Snackbar.LENGTH_LONG)
-                                    .setAction("Action", null).show();
+                                    .setAction(R.string.action, null).show();
+                        } else {
+                            Snackbar.make(layoutPdf, R.string.response_no_successful, Snackbar.LENGTH_LONG)
+                                    .setAction(R.string.action, null).show();
                         }
 
                     }
@@ -155,8 +158,8 @@ public class FragmentPdfInfo extends android.support.v4.app.Fragment {
                     @Override
                     public void onFailure(Call<SSResponse> call, Throwable t) {
                         RelativeLayout layoutPdf = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfInfo);
-                        Snackbar.make(layoutPdf, spc.get("UNKNOWN_ERROR"), Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
+                        Snackbar.make(layoutPdf, R.string.exception, Snackbar.LENGTH_LONG)
+                                .setAction(R.string.action, null).show();
                     }
                 });
             }

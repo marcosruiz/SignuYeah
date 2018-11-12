@@ -22,6 +22,27 @@ public class FragmentUserInfo extends android.support.v4.app.Fragment {
 
     UserExt myUserExt;
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        myUserExt = spc.getUserExt();
+
+        TextView userId = (TextView) getActivity().findViewById(R.id.textViewIdValue);
+        TextView userEmail = (TextView) getActivity().findViewById(R.id.textViewEmailValue);
+        TextView userName = (TextView) getActivity().findViewById(R.id.textViewNameValue);
+        TextView userLastname = (TextView) getActivity().findViewById(R.id.textViewLastnameValue);
+        TextView userCD = (TextView) getActivity().findViewById(R.id.textViewCAValue);
+        TextView userLED = (TextView) getActivity().findViewById(R.id.textViewLastEditionDateValue);
+
+        userId.setText(myUserExt.getId());
+        userEmail.setText(myUserExt.getEmail());
+        userName.setText(myUserExt.getName());
+        userLastname.setText(myUserExt.getLastname());
+        userCD.setText(myUserExt.getCreationDate());
+        userLED.setText(myUserExt.getLastEditionDate());
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {

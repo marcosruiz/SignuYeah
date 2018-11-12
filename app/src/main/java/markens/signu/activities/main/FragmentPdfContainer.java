@@ -1,6 +1,7 @@
 package markens.signu.activities.main;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -35,10 +36,16 @@ public class FragmentPdfContainer extends android.support.v4.app.Fragment {
 
     private View view;
 
+    final String LIST_PDF_NOTIFICATION_OWNED = "LIST_PDF_NOTIFICATION_OWNED";
+    final String LIST_PDF_NOTIFICATION_TO_SIGN = "LIST_PDF_NOTIFICATION_TO_SIGN";
+    final String LIST_PDF_NOTIFICATION_SIGNED = "LIST_PDF_NOTIFICATION_SIGNED";
+
     @Override
     public void onResume() {
         super.onResume();
-        uploadNotifications();
+        new UpdateNotifications().execute(LIST_PDF_NOTIFICATION_OWNED);
+        new UpdateNotifications().execute(LIST_PDF_NOTIFICATION_TO_SIGN);
+        new UpdateNotifications().execute(LIST_PDF_NOTIFICATION_SIGNED);
     }
 
     @Nullable
@@ -76,7 +83,9 @@ public class FragmentPdfContainer extends android.support.v4.app.Fragment {
         bottomNav.addItem(item4);
 
         //Add notifications
-        uploadNotifications();
+        new UpdateNotifications().execute(LIST_PDF_NOTIFICATION_OWNED);
+        new UpdateNotifications().execute(LIST_PDF_NOTIFICATION_TO_SIGN);
+        new UpdateNotifications().execute(LIST_PDF_NOTIFICATION_SIGNED);
 
         bottomNav.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
             @Override
@@ -122,7 +131,35 @@ public class FragmentPdfContainer extends android.support.v4.app.Fragment {
         }
     };
 
-    public void uploadNotifications() {
+    public class UpdateNotifications extends AsyncTask<String, Void, Integer> {
+        String key;
+
+        @Override
+        protected Integer doInBackground(String... strings) {
+            key = strings[0];
+            List<Boolean> list = spc.getListBoolean(key);
+            int count = countTrue(list);
+            return count;
+        }
+
+        @Override
+        protected void onPostExecute(Integer integer) {
+            AHBottomNavigation bottomNav = (AHBottomNavigation) view.findViewById(R.id.bottom_navigation);
+            int position = 0;
+            if (key.equals(LIST_PDF_NOTIFICATION_TO_SIGN)) {
+                position = 1;
+            } else if (key.equals(LIST_PDF_NOTIFICATION_SIGNED)) {
+                position = 2;
+            }
+            if (integer == 0) {
+                bottomNav.setNotification("", position);
+            } else {
+                bottomNav.setNotification("" + integer, position);
+            }
+        }
+    }
+
+    private void uploadNotifications(String key) {
         AHBottomNavigation bottomNav = (AHBottomNavigation) view.findViewById(R.id.bottom_navigation);
         List<Boolean> listNotOwned = spc.getListBoolean("LIST_PDF_NOTIFICATION_OWNED");
         List<Boolean> listNotToSign = spc.getListBoolean("LIST_PDF_NOTIFICATION_TO_SIGN");
@@ -132,17 +169,17 @@ public class FragmentPdfContainer extends android.support.v4.app.Fragment {
             int countToSign = countTrue(listNotToSign);
             int countSigned = countTrue(listNotSigned);
 
-            if(countOwned == 0){
+            if (countOwned == 0) {
                 bottomNav.setNotification("", 0);
             } else {
                 bottomNav.setNotification("" + countOwned, 0);
             }
-            if(countToSign == 0){
+            if (countToSign == 0) {
                 bottomNav.setNotification("", 1);
             } else {
                 bottomNav.setNotification("" + countToSign, 1);
             }
-            if(countSigned == 0){
+            if (countSigned == 0) {
                 bottomNav.setNotification("", 2);
             } else {
                 bottomNav.setNotification("" + countSigned, 2);

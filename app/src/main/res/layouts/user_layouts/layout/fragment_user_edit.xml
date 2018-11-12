@@ -37,6 +37,21 @@
 
                 </android.support.design.widget.TextInputLayout>
 
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/inputLayoutNewEmail2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/editTextNewEmail2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="@string/new_email"
+                        android:inputType="textEmailAddress" />
+
+                </android.support.design.widget.TextInputLayout>
+
                 <Button
                     android:id="@+id/buttonNewEmail"
                     android:layout_width="match_parent"
@@ -62,13 +77,13 @@
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
-                    android:id="@+id/inputLayoutOldPassword"
+                    android:id="@+id/inputLayoutNewPassword2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:passwordToggleEnabled="true">
 
                     <EditText
-                        android:id="@+id/editTextOldPassword"
+                        android:id="@+id/editTextNewPassword2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:ems="10"
@@ -130,6 +145,21 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginBottom="32dp"
                     android:text="Update lastname" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/inputLayoutPasswordToDelete"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/editTextPasswordToDelete"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:hint="@string/new_lastname"
+                        android:inputType="textEmailAddress" />
+
+                </android.support.design.widget.TextInputLayout>
 
                 <Button
                     android:id="@+id/buttonDeleteUser"

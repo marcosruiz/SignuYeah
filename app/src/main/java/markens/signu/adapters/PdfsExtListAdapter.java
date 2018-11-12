@@ -130,15 +130,8 @@ public class PdfsExtListAdapter extends BaseAdapter {
                 intent.putExtra("pdf_ext", pdfExtList.get(position));
                 myCtx.startActivity(intent);
 
-
-
                 notificationList.set(position, false);
                 spc.storeListBoolean(tagNotificationList, notificationList);
-
-                // Update notifications on bottom navigation bar
-                FragmentManager fm = ((AppCompatActivity) myCtx).getSupportFragmentManager();
-                FragmentPdfContainer fragment = (FragmentPdfContainer) fm.findFragmentByTag("selected_fragment_main");
-                fragment.uploadNotifications();
 
                 // Update view
                 ImageView imageViewNotification = (ImageView) v.findViewById(R.id.imageViewNotification);
