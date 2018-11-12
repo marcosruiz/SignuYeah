@@ -331,6 +331,43 @@ public class SSAPIPdfsUnitTest {
     }
 
     @Test
+    public void SSS_Pdf_API_Lock_Pdf_Success() throws Exception {
+        SSS_Pdf_API_Upload_Success();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(URL_LOCAL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        final SignuServerService sss = retrofit.create(SignuServerService.class);
+
+        // Login: Get token
+        Token token = getToken(sss, USER_EMAIL, USER_PASS);
+
+        // Get info user 1
+        User u1 = getUser(sss, token);
+
+        // Get info pdf 1
+        String pdfId = u1.getPdfsToSign().get((u1.getPdfsToSign().size() - 1));
+        Pdf pdf1 = getPdf(sss, token, pdfId);
+
+        // Lock pdf
+        String auth = "Bearer " + token.getAccessToken();
+        Call<SSResponse> call = sss.lockPdf(auth, pdf1.getId());
+        Response<SSResponse> response = call.execute();
+        assertTrue(response.isSuccessful());
+        SSResponse ssRes = response.body();
+        Pdf pdf = ssRes.getData().getPdf();
+
+        // Get info pdf 2
+        Pdf pdf2 = getPdf(sss, token, pdfId);
+
+        assertEquals(pdf1.getId(), pdf2.getId());
+        assertEquals((pdf1.getSigners().size()), pdf2.getSigners().size());
+        assertFalse(pdf1.getSigners().get(0).getIsSigned());
+        assertTrue(pdf1.isWasLocked());
+        assertEquals(pdf1.getWasLockedBy(), u1.getId());
+    }
+
+    @Test
     public void SSS_Pdf_API_Sign_Success() throws Exception {
         SSS_Pdf_API_Add_Signer_Success();
 

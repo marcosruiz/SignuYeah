@@ -112,6 +112,10 @@ public interface SignuServerService {
                                @Path("pdf_id") String pdfId,
                                @Field("signer_id") String signerId);
 
+    @PUT("api/pdfs/lock/{pdf_id}")
+    Call<SSResponse> lockPdf(@Header("Authorization") String authorization,
+                               @Path("pdf_id") String pdfId);
+
     @GET("api/pdfs/info/{pdf_id}")
     Call<SSResponse> getPdfInfo(@Header("Authorization") String authorization,
                                 @Path("pdf_id") String pdfId);

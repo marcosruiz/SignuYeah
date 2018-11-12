@@ -26,6 +26,12 @@ public class PdfExt implements Serializable {
     private List<SignerExt> signers;
     @SerializedName("with_stamp")
     private boolean withStamp;
+    @SerializedName("was_locked")
+    private boolean wasLocked;
+    @SerializedName("was_locked_by")
+    private String wasLockedBy;
+    @SerializedName("when_was_locked")
+    private String whenWhasLocked;
 
     public PdfExt(String id, String originalName, String mimeType, String fileName, String lastEditionDate, String creationDate, markens.signu.objects.User owner, List<SignerExt> signers) {
         this.id = id;
@@ -118,5 +124,29 @@ public class PdfExt implements Serializable {
 
     public void setWithStamp(boolean withStamp) {
         this.withStamp = withStamp;
+    }
+
+    public boolean isWasLocked() {
+        return wasLocked;
+    }
+
+    public void setWasLocked(boolean wasLocked) {
+        this.wasLocked = wasLocked;
+    }
+
+    public String getWasLockedBy() {
+        return wasLockedBy;
+    }
+
+    public void setWasLockedBy(String wasLockedBy) {
+        this.wasLockedBy = wasLockedBy;
+    }
+
+    public String getWhenWhasLocked() {
+        return whenWhasLocked;
+    }
+
+    public void setWhenWhasLocked(String whenWhasLocked) {
+        this.whenWhasLocked = whenWhasLocked;
     }
 }

@@ -20,10 +20,12 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.itextpdf.text.DocumentException;
 import com.nbsp.materialfilepicker.MaterialFilePicker;
 import com.nbsp.materialfilepicker.ui.FilePickerActivity;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -32,6 +34,7 @@ import markens.signu.R;
 import markens.signu.adapters.UserListCheckboxAdapter;
 import markens.signu.api.SignuServerService;
 import markens.signu.api.SignuServerServiceCtrl;
+import markens.signu.engine.Signature2;
 import markens.signu.objects.SSResponse;
 import markens.signu.objects.Token;
 import markens.signu.objects.User;
@@ -52,7 +55,10 @@ import static android.app.Activity.RESULT_OK;
 public class FragmentPdfUpload extends Fragment {
 
     Fragment myFragment;
+    File fileOriginal;
     File file;
+    String originalFileRoute;
+    String fileRoute;
     Token token;
     UserExt userExt;
 
@@ -97,7 +103,7 @@ public class FragmentPdfUpload extends Fragment {
                     new MaterialFilePicker()
                             .withSupportFragment(myFragment)
                             .withRequestCode(1)
-                            .withFilter(Pattern.compile(".*\\.pdf$")) // Filtering files and directories by file name using regexp
+                            .withFilter(Pattern.compile(".*\\.pdf$")) // Filtering files and directories by fileOriginal name using regexp
                             .withFilterDirectories(false) // Set directories filterable (false by default)
                             .withHiddenFiles(true) // Show hidden files and folders
                             .start();
@@ -108,12 +114,22 @@ public class FragmentPdfUpload extends Fragment {
         final Button buttonUploadPdf = (Button) view.findViewById(R.id.buttonUploadPdf);
         buttonUploadPdf.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (file == null) {
+                if (fileOriginal == null) {
                     RelativeLayout myLayout = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfUpload);
-                    Snackbar.make(myLayout, "You need to select a PDF", Snackbar.LENGTH_LONG)
+                    Snackbar.make(myLayout, R.string.select_pdf, Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                 } else {
-                    uploadPdf();
+                    fileRoute = appCtx.getFilesDir().getAbsolutePath() + File.separator + fileOriginal.getName();
+                    int qos = userListCheckboxAdapter.getUsersIdSelected().size();
+                    try {
+                        Signature2.addEmptyFields(originalFileRoute, fileRoute, qos, Signature2.Margin.LEFT, null);
+                        file = new File(fileRoute);
+                        uploadPdf();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (DocumentException e) {
+                        e.printStackTrace();
+                    }
                 }
 
             }
@@ -128,12 +144,13 @@ public class FragmentPdfUpload extends Fragment {
 
         if (requestCode == 1 && resultCode == RESULT_OK) {
             String filePath = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
-            // Do anything with file
+            // Do anything with fileOriginal
             final TextView editTextPathPdf = (TextView) getActivity().findViewById(R.id.textViewPathPdf);
             editTextPathPdf.setText(filePath);
 
-            //Get file
-            file = new File(filePath);
+            //Get fileOriginal
+            originalFileRoute = filePath;
+            fileOriginal = new File(filePath);
 
         }
     }
@@ -169,7 +186,7 @@ public class FragmentPdfUpload extends Fragment {
 
         if (signers.size() == 0) {
             RelativeLayout layoutMain = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfUpload);
-            Snackbar.make(layoutMain, "You need to choose at least one signer", Snackbar.LENGTH_LONG)
+            Snackbar.make(layoutMain, R.string.choose_signer, Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
         } else {
             Call<SSResponse> call = sss.uploadPdfWithSigners(auth, body, signers);
@@ -183,13 +200,15 @@ public class FragmentPdfUpload extends Fragment {
                     if (response.isSuccessful()) {
                         FragmentManager fm = getActivity().getSupportFragmentManager();
                         new SignuServerServiceCtrl(appCtx, fm).updateUserExt();
+
+
                     }
                 }
 
                 @Override
                 public void onFailure(Call<SSResponse> call, Throwable t) {
                     RelativeLayout myLayout = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfUpload);
-                    Snackbar.make(myLayout, spc.get("UNKNOWN_ERROR"), Snackbar.LENGTH_LONG)
+                    Snackbar.make(myLayout, R.string.server_error, Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                 }
             });

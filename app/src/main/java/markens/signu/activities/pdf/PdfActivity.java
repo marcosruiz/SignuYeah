@@ -73,14 +73,15 @@ public class PdfActivity extends AppCompatActivity {
 
 
         // Disable buttons
-
         if (!isSigner(myUserExt.getId(), pdfExt.getSigners())) {
             bottomNavPdf.getMenu().findItem(R.id.nav_sign_pdf).setEnabled(false);
         }
         if (pdfExt.isWithStamp()) {
             bottomNavPdf.getMenu().findItem(R.id.nav_add_signers).setEnabled(false);
         }
-
+        if (!myUserExt.getId().equals(pdfExt.getOwner().getId())) {
+            bottomNavPdf.getMenu().findItem(R.id.nav_add_signers).setEnabled(false);
+        }
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -165,10 +166,16 @@ public class PdfActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Return true if is a signer and is pending his signature
+     * @param id
+     * @param signers
+     * @return
+     */
     private boolean isSigner(String id, List<SignerExt> signers) {
         boolean isSigner = false;
         for (SignerExt signer : signers) {
-            if (signer.getUser().getId().equals(id)) {
+            if (signer.getUser().getId().equals(id) && !signer.getIsSigned()) {
                 isSigner = true;
             }
         }

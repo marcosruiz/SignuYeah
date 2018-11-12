@@ -21,15 +21,10 @@
 
         <TextView
             android:id="@+id/textViewWarning"
+            android:textColor="@color/colorRed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Warning: you are bloquing this PDF" />
-
-        <TextView
-            android:id="@+id/textViewTime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="You have 1 minute to sign this PDF since you open this view" />
+            android:text="Warning" />
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/textInputLayoutPass"

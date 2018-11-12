@@ -47,7 +47,7 @@ public class SignuServerServiceCtrl {
 
                     // Update notifications on bottom navigation bar
 //                    FragmentPdfContainer fragment = (FragmentPdfContainer) fm.findFragmentByTag("selected_fragment_main");
-//                    fragment.uploadNotifications();
+//                    fragment.updateNotifications();
                 }
             }
 

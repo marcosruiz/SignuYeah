@@ -43,6 +43,10 @@ public class FragmentPdfContainer extends android.support.v4.app.Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        updateNotifications();
+    }
+
+    public void updateNotifications(){
         new UpdateNotifications().execute(LIST_PDF_NOTIFICATION_OWNED);
         new UpdateNotifications().execute(LIST_PDF_NOTIFICATION_TO_SIGN);
         new UpdateNotifications().execute(LIST_PDF_NOTIFICATION_SIGNED);
@@ -83,9 +87,7 @@ public class FragmentPdfContainer extends android.support.v4.app.Fragment {
         bottomNav.addItem(item4);
 
         //Add notifications
-        new UpdateNotifications().execute(LIST_PDF_NOTIFICATION_OWNED);
-        new UpdateNotifications().execute(LIST_PDF_NOTIFICATION_TO_SIGN);
-        new UpdateNotifications().execute(LIST_PDF_NOTIFICATION_SIGNED);
+        updateNotifications();
 
         bottomNav.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
             @Override
@@ -159,7 +161,8 @@ public class FragmentPdfContainer extends android.support.v4.app.Fragment {
         }
     }
 
-    private void uploadNotifications(String key) {
+    @Deprecated
+    private void uploadNotifications() {
         AHBottomNavigation bottomNav = (AHBottomNavigation) view.findViewById(R.id.bottom_navigation);
         List<Boolean> listNotOwned = spc.getListBoolean("LIST_PDF_NOTIFICATION_OWNED");
         List<Boolean> listNotToSign = spc.getListBoolean("LIST_PDF_NOTIFICATION_TO_SIGN");

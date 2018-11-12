@@ -11,13 +11,14 @@ import android.widget.ListView;
 import java.util.List;
 
 import markens.signu.R;
-import markens.signu.adapters.PdfsExtListAdapter;
+import markens.signu.adapters.PdfsExtOwnedListAdapter;
+import markens.signu.adapters.PdfsExtSignedListAdapter;
 import markens.signu.objects.ext.UserExt;
 import markens.signu.storage.SharedPrefsCtrl;
 import markens.signu.storage.SharedPrefsGeneralCtrl;
 
 public class FragmentPdfOwnedList extends android.support.v4.app.Fragment {
-    PdfsExtListAdapter pdfsExtListAdatper;
+    PdfsExtOwnedListAdapter pdfsExtListAdatper;
 
     @Override
     public void onResume() {
@@ -42,7 +43,7 @@ public class FragmentPdfOwnedList extends android.support.v4.app.Fragment {
 
         UserExt myUserExt = spc.getUserExt();
         List<Boolean> listNot = spc.getListBoolean("LIST_PDF_NOTIFICATION_OWNED");
-        pdfsExtListAdatper = new PdfsExtListAdapter(getContext(), myUserExt.getPdfsOwned(), listNot, "LIST_PDF_NOTIFICATION_OWNED");
+        pdfsExtListAdatper = new PdfsExtOwnedListAdapter(getContext(), myUserExt.getPdfsOwned(), listNot, "LIST_PDF_NOTIFICATION_OWNED");
         list.setAdapter(pdfsExtListAdatper);
 
         return view;

@@ -14,8 +14,10 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.github.barteksc.pdfviewer.PDFView;
+import com.google.gson.Gson;
 import com.itextpdf.text.DocumentException;
 
 import java.io.File;
@@ -27,6 +29,9 @@ import markens.signu.R;
 import markens.signu.api.SignuServerService;
 import markens.signu.api.SignuServerServiceCtrl;
 import markens.signu.engine.Signature;
+import markens.signu.engine.Signature2;
+import markens.signu.exception.NoEmptySignaturesException;
+import markens.signu.objects.Pdf;
 import markens.signu.objects.SSResponse;
 import markens.signu.objects.Token;
 import markens.signu.objects.ext.PdfExt;
@@ -36,6 +41,7 @@ import markens.signu.storage.StorageCtrl;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -51,6 +57,7 @@ public class FragmentPdfSign extends android.support.v4.app.Fragment {
     String[] certs;
     Token token;
     PdfExt pdfExt;
+    TextView textViewWarning;
 
     @Nullable
     @Override
@@ -66,8 +73,53 @@ public class FragmentPdfSign extends android.support.v4.app.Fragment {
         token = spc.getToken();
         certs = setCerts.toArray(new String[setCerts.size()]);
 
-        // TODO lock pdf
-        // TODO download pdf
+        textViewWarning = (TextView) view.findViewById(R.id.textViewWarning);
+
+
+        // Lock pdf and download if is necesary
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(spc.get("URL_SERVER"))
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        final SignuServerService sss = retrofit.create(SignuServerService.class);
+        String auth = "Bearer " + token.getAccessToken();
+        Call<SSResponse> call = sss.lockPdf(auth, pdfExt.getId());
+        call.enqueue(new Callback<SSResponse>() {
+            @Override
+            public void onResponse(Call<SSResponse> call, Response<SSResponse> response) {
+                RelativeLayout layoutPdf = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfSign);
+                if (response.isSuccessful()) {
+                    Pdf resPdf = response.body().getData().getPdf();
+                    if (!resPdf.getLastEditionDate().equals(pdfExt.getLastEditionDate())) {
+                        downloadPdf();
+                    }
+                    textViewWarning.setText(R.string.pdf_locked);
+                } else {
+                    String errBody = null;
+                    try {
+                        errBody = response.errorBody().string();
+                        Gson g = new Gson();
+                        SSResponse ssRes = g.fromJson(errBody, SSResponse.class);
+                        RelativeLayout myLayout = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfSign);
+                        Snackbar.make(myLayout, ssRes.getMessage(), Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
+                    } catch (IOException e) {
+                        RelativeLayout myLayout = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfSign);
+                        Snackbar.make(myLayout, R.string.exception, Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show();
+                        e.printStackTrace();
+                    }
+                    textViewWarning.setText(R.string.pdf_already_locked);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SSResponse> call, Throwable t) {
+                RelativeLayout layoutPdf = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfSign);
+                Snackbar.make(layoutPdf, R.string.server_error, Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
 
         // Show pdf
         String fileRoute = getActivity().getApplicationContext().getFilesDir().getAbsolutePath() + File.separator + pdfExt.getFileName() + ".pdf";
@@ -93,13 +145,13 @@ public class FragmentPdfSign extends android.support.v4.app.Fragment {
             public void onClick(View v) {
                 RadioGroup radioGroup = (RadioGroup) view.findViewById(R.id.radioGroupCerts);
                 RadioButton radioButtonSelected = (RadioButton) view.findViewById(radioGroup.getCheckedRadioButtonId());
-                if(radioButtonSelected==null){
+                if (radioButtonSelected == null) {
                     // Show snackbar
                     RelativeLayout layoutPdf = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfSign);
                     Snackbar.make(layoutPdf, "You have to select a KS", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
-                } else{
-                    String certRouteSelected = certs[radioButtonSelected.getId()];
+                } else {
+                    String ksRouteSelected = certs[radioButtonSelected.getId()];
 
                     EditText editTextPass = (EditText) view.findViewById(R.id.editTextPass);
                     String pass = editTextPass.getText().toString();
@@ -108,16 +160,19 @@ public class FragmentPdfSign extends android.support.v4.app.Fragment {
                     String pdfDst = appCtx.getFilesDir().getAbsolutePath() + File.separator + "signed.pdf";
 
                     try {
-                        Signature.signWithCrl(certRouteSelected, pdfSrc, pdfDst, pass, "https://signu-tsa.herokuapp.com/tsr", "https://signu-ca.herokuapp.com/ca.crl");
+//                        Signature.signWithCrl(ksRouteSelected, pdfSrc, pdfDst, pass, "https://signu-tsa.herokuapp.com/tsr", "https://signu-ca.herokuapp.com/ca.crl");
+                        try {
+                            Signature2.signEmptyField(ksRouteSelected, pdfSrc, pdfDst, pass.toCharArray(), "https://signu-tsa.herokuapp.com/tsr", "https://signu-ca.herokuapp.com/ca.crl");
+                            updateSignedFile(pdfDst);
+                            RelativeLayout layoutPdf = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfSign);
+                            Snackbar.make(layoutPdf, R.string.pdf_signed, Snackbar.LENGTH_LONG)
+                                    .setAction("Action", null).show();
+                        } catch (NoEmptySignaturesException e) {
+                            e.printStackTrace();
+                        }
+                        String externalDst = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + "exported_" + pdfExt.getOriginalName();
+                        StorageCtrl.copy(new File(pdfDst), new File(externalDst));
 
-//                        String externalDst = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + "exported_" + pdfExt.getOriginalName();
-//                        StorageCtrl.copy(new File(pdfDst), new File(externalDst));
-
-                        updateSignedFile(pdfDst);
-
-                        RelativeLayout layoutPdf = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfSign);
-                        Snackbar.make(layoutPdf, "Pdf signed", Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
 
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -177,5 +232,55 @@ public class FragmentPdfSign extends android.support.v4.app.Fragment {
                         .setAction("Action", null).show();
             }
         });
+    }
+
+    private void downloadPdf() {
+        StorageCtrl sPdfCtrl = new StorageCtrl(appCtx);
+        String pdfName = pdfExt.getFileName() + ".pdf";
+        if (!sPdfCtrl.itExists(pdfName)) {
+
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(spc.get("URL_SERVER"))
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+            SignuServerService sss = retrofit.create(SignuServerService.class);
+            Token myToken = spc.getToken();
+            String auth = "Bearer " + myToken.getAccessToken();
+
+            Call<ResponseBody> call = sss.downloadPdf(auth, pdfExt.getId());
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if (response.isSuccessful()) {
+                        ResponseBody rb = response.body();
+                        StorageCtrl sPdfC = new StorageCtrl(myCtx);
+                        String fileName = pdfExt.getFileName() + ".pdf";
+                        boolean isOk = sPdfC.writeResponseBodyToDisk(rb, fileName);
+                    } else {
+                        String errBody = null;
+                        try {
+                            errBody = response.errorBody().string();
+                            Gson g = new Gson();
+                            SSResponse ssRes = g.fromJson(errBody, SSResponse.class);
+                            RelativeLayout myLayout = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfSign);
+                            Snackbar.make(myLayout, ssRes.getMessage(), Snackbar.LENGTH_LONG)
+                                    .setAction("Action", null).show();
+                        } catch (IOException e) {
+                            RelativeLayout myLayout = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfSign);
+                            Snackbar.make(myLayout, R.string.exception, Snackbar.LENGTH_LONG)
+                                    .setAction("Action", null).show();
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    RelativeLayout myLayout = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfSign);
+                    Snackbar.make(myLayout, R.string.server_error, Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+            });
+        }
     }
 }

@@ -10,4 +10,10 @@
     <string name="action">Action</string>
     <string name="dialog_insert_data">Insert data</string>
     <string name="dialog_data_not_valid">Data not valid</string>
+    <string name="server_error">It was an error on signu server</string>
+    <string name="pdf_already_locked">This PDF was already locked by other signer, wait 1 minute and try again</string>
+    <string name="pdf_locked">You have 1 minute to sign this PDF since you opened this screen</string>
+    <string name="choose_signer">You need to choose at least one signer</string>
+    <string name="select_pdf">You need to select a PDF</string>
+    <string name="pdf_signed">Nice! Pdf signed</string>
 </resources>

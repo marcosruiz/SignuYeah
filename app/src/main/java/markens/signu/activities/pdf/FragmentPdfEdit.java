@@ -18,7 +18,7 @@ public class FragmentPdfEdit extends android.support.v4.app.Fragment {
 //        // Get data owned pdf_list
 //        Bundle bundle = getArguments();
 //        List<PdfExt> listPdf = (List<PdfExt>) bundle.getSerializable("list_pdf");
-//        list.setAdapter(new PdfsExtListAdapter(getContext(), listPdf));
+//        list.setAdapter(new PdfsExtSignedListAdapter(getContext(), listPdf));
 
         return view;
     }
