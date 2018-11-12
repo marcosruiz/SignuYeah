@@ -47,7 +47,7 @@ public class FragmentUserContainer extends Fragment{
         bottomNav.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         //Default fragment
-        getFragmentManager().beginTransaction().replace(R.id.frameLayoutPdfContainer, new FragmentUserInfo()).commit();
+        getFragmentManager().beginTransaction().replace(R.id.frameLayoutUserContainer, new FragmentUserInfo()).commit();
 
         return view;
     }
@@ -69,7 +69,7 @@ public class FragmentUserContainer extends Fragment{
                     selectedFragment = new FragmentUsersRelated();
                     break;
             }
-            getFragmentManager().beginTransaction().replace(R.id.frameLayoutPdfContainer, selectedFragment).commit();
+            getFragmentManager().beginTransaction().replace(R.id.frameLayoutUserContainer, selectedFragment).commit();
 
             return true;
         }

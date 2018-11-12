@@ -14,15 +14,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.google.gson.Gson;
-
-import markens.signu.objects.ext.UserExt;
-import markens.signu.storage.SharedPrefsCtrl;
 import markens.signu.R;
 import markens.signu.api.SignuServerService;
 import markens.signu.objects.SSResponse;
 import markens.signu.objects.Token;
-import markens.signu.objects.TokenError;
+import markens.signu.objects.ext.UserExt;
+import markens.signu.storage.SharedPrefsCtrl;
 import markens.signu.storage.SharedPrefsGeneralCtrl;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -37,19 +34,6 @@ public class LoginActivity extends AppCompatActivity {
 
     CoordinatorLayout coordinatorLayoutSignup;
 
-    private static final String CLIENT_ID = "application";
-    private static final String CLIENT_SECRET = "secret";
-    private static final String GRANT_TYPE = "password";
-    private static final String TOKEN_TYPE = "bearer";
-    private static final String URL_SERVER = "https://signu-server.herokuapp.com/";
-    private static final String URL_SERVER_LOCAL = "http://192.168.1.6:3000/";
-    private static final String URL_CA = "https://signu-ca.herokuapp.com/";
-    private static final String URL_CA_LOCAL = "http://192.168.1.6:3001/";
-    private static final String URL_TSA = "https://signu-tsa.herokuapp.com/";
-    private static final String URL_TSA_LOCAL = "http://192.168.1.6:3002/";
-
-
-
     private Context myCtx;
     private Context appCtx;
 
@@ -58,22 +42,23 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * Save global variables
+     *
      * @param spc
      */
     private void saveGlobalVars(SharedPrefsCtrl spc) {
         if (spc.get("URL_SERVER") == null || spc.get("URL_SERVER").equals("")) {
-            spc.store("URL_SERVER", URL_SERVER_LOCAL);
+            spc.store("URL_SERVER", getString(R.string.URL_SERVER));
         }
         if (spc.get("URL_TSA") == null || spc.get("URL_TSA").equals("")) {
-            spc.store("URL_TSA", URL_TSA);
+            spc.store("URL_TSA", getString(R.string.URL_TSA));
         }
         if (spc.get("URL_CA") == null || spc.get("URL_CA").equals("")) {
-            spc.store("URL_CA", URL_CA);
+            spc.store("URL_CA", getString(R.string.URL_CA));
         }
-        spc.store("GRANT_TYPE", GRANT_TYPE);
-        spc.store("TOKEN_TYPE", TOKEN_TYPE);
-        spc.store("CLIENT_ID", CLIENT_ID);
-        spc.store("CLIENT_SECRET", CLIENT_SECRET);
+        spc.store("GRANT_TYPE", getString(R.string.GRANT_TYPE));
+        spc.store("TOKEN_TYPE", getString(R.string.TOKEN_TYPE));
+        spc.store("CLIENT_ID", getString(R.string.CLIENT_ID));
+        spc.store("CLIENT_SECRET", getString(R.string.CLIENT_SECRET));
     }
 
     @Override
@@ -122,12 +107,12 @@ public class LoginActivity extends AppCompatActivity {
 
     private void getToken(String email, String password) {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(spc.get(getString(R.string.url_server)))
+                .baseUrl(getString(R.string.url_server))
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         SignuServerService sss = retrofit.create(SignuServerService.class);
 
-        Call<Token> call = sss.getToken(email, password, GRANT_TYPE, CLIENT_ID, CLIENT_SECRET);
+        Call<Token> call = sss.getToken(email, password, getString(R.string.GRANT_TYPE), getString(R.string.CLIENT_ID), getString(R.string.CLIENT_SECRET));
         Response<SSResponse> response = null;
 
         call.enqueue(new retrofit2.Callback<Token>() {

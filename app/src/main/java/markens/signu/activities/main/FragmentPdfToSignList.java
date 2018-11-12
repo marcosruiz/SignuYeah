@@ -42,8 +42,8 @@ public class FragmentPdfToSignList extends android.support.v4.app.Fragment {
         SharedPrefsGeneralCtrl spgc = new SharedPrefsGeneralCtrl(appCtx);
         SharedPrefsCtrl spc = new SharedPrefsCtrl(appCtx, spgc.getUserId());
         UserExt myUserExt = spc.getUserExt();
-        List<Boolean> listNot = spc.getListBoolean("LIST_PDF_NOTIFICATION_TO_SIGN");
-        pdfsExtListAdatper = new PdfsExtToSignListAdapter(getContext(), myUserExt.getPdfsToSign(), listNot, "LIST_PDF_NOTIFICATION_TO_SIGN");
+        List<Boolean> listNot = spc.getListBoolean(getString(R.string.key_list_pdf_not_to_sign));
+        pdfsExtListAdatper = new PdfsExtToSignListAdapter(getContext(), myUserExt.getPdfsToSign(), listNot, getString(R.string.key_list_pdf_not_to_sign));
         list.setAdapter(pdfsExtListAdatper);
 
         return view;

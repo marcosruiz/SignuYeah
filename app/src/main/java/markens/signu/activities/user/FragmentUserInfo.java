@@ -28,19 +28,19 @@ public class FragmentUserInfo extends android.support.v4.app.Fragment {
 
         myUserExt = spc.getUserExt();
 
-        TextView userId = (TextView) getActivity().findViewById(R.id.textViewIdValue);
-        TextView userEmail = (TextView) getActivity().findViewById(R.id.textViewEmailValue);
-        TextView userName = (TextView) getActivity().findViewById(R.id.textViewNameValue);
-        TextView userLastname = (TextView) getActivity().findViewById(R.id.textViewLastnameValue);
-        TextView userCD = (TextView) getActivity().findViewById(R.id.textViewCAValue);
-        TextView userLED = (TextView) getActivity().findViewById(R.id.textViewLastEditionDateValue);
+        TextView textViewUserId = (TextView) getActivity().findViewById(R.id.textViewUserIdValue);
+        TextView textViewUserEmail = (TextView) getActivity().findViewById(R.id.textViewUserEmailValue);
+        TextView textViewUserName = (TextView) getActivity().findViewById(R.id.textViewUserNameValue);
+        TextView textViewUserLastname = (TextView) getActivity().findViewById(R.id.textViewUserLastnameValue);
+        TextView textViewUserCD = (TextView) getActivity().findViewById(R.id.textViewUserCDValue);
+        TextView textViewUserLED = (TextView) getActivity().findViewById(R.id.textViewUserLastEditionDateValue);
 
-        userId.setText(myUserExt.getId());
-        userEmail.setText(myUserExt.getEmail());
-        userName.setText(myUserExt.getName());
-        userLastname.setText(myUserExt.getLastname());
-        userCD.setText(myUserExt.getCreationDate());
-        userLED.setText(myUserExt.getLastEditionDate());
+        textViewUserId.setText(myUserExt.getId());
+        textViewUserEmail.setText(myUserExt.getEmail());
+        textViewUserName.setText(myUserExt.getName());
+        textViewUserLastname.setText(myUserExt.getLastname());
+        textViewUserCD.setText(myUserExt.getCreationDate());
+        textViewUserLED.setText(myUserExt.getLastEditionDate());
     }
 
     @Nullable
@@ -57,19 +57,19 @@ public class FragmentUserInfo extends android.support.v4.app.Fragment {
         myUserExt = spc.getUserExt();
 
         // Get text view
-        TextView userId = (TextView) view.findViewById(R.id.textViewIdValue);
-        TextView userEmail = (TextView) view.findViewById(R.id.textViewEmailValue);
-        TextView userName = (TextView) view.findViewById(R.id.textViewNameValue);
-        TextView userLastname = (TextView) view.findViewById(R.id.textViewLastnameValue);
-        TextView userCD = (TextView) view.findViewById(R.id.textViewCAValue);
-        TextView userLED = (TextView) view.findViewById(R.id.textViewLastEditionDateValue);
+        TextView textViewUserId = (TextView) view.findViewById(R.id.textViewUserIdValue);
+        TextView textViewUserEmail = (TextView) view.findViewById(R.id.textViewUserEmailValue);
+        TextView textViewUserName = (TextView) view.findViewById(R.id.textViewUserNameValue);
+        TextView textViewUserLastname = (TextView) view.findViewById(R.id.textViewUserLastnameValue);
+        TextView textViewUserCD = (TextView) view.findViewById(R.id.textViewUserCDValue);
+        TextView textViewUserLED = (TextView) view.findViewById(R.id.textViewUserLastEditionDateValue);
 
-        userId.setText(myUserExt.getId());
-        userEmail.setText(myUserExt.getEmail());
-        userName.setText(myUserExt.getName());
-        userLastname.setText(myUserExt.getLastname());
-        userCD.setText(myUserExt.getCreationDate());
-        userLED.setText(myUserExt.getLastEditionDate());
+        textViewUserId.setText(myUserExt.getId());
+        textViewUserEmail.setText(myUserExt.getEmail());
+        textViewUserName.setText(myUserExt.getName());
+        textViewUserLastname.setText(myUserExt.getLastname());
+        textViewUserCD.setText(myUserExt.getCreationDate());
+        textViewUserLED.setText(myUserExt.getLastEditionDate());
 
         return view;
     }

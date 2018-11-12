@@ -19,4 +19,18 @@
     <string name="select_ks">You have to select a KS</string>
     <string name="url_server">http://192.168.1.6:3000/</string>
     <string name="incorrect_login">Incorrect login</string>
+    <string name="key_list_pdf_not_owned">LIST_PDF_NOTIFICATION_OWNED</string>
+    <string name="key_list_pdf_not_signed">LIST_PDF_NOTIFsobreICATION_SIGNED</string>
+    <string name="key_list_pdf_not_to_sign">LIST_PDF_NOTIFICATION_TO_SIGN</string>
+    <string name="CLIENT_ID">application</string>
+    <string name="CLIENT_SECRET">secret</string>
+    <string name="GRANT_TYPE">password</string>
+    <string name="TOKEN_TYPE">bearer</string>
+    <string name="URL_SERVER">https://signu-server.herokuapp.com/</string>
+    <string name="URL_SERVER_LOCAL">http://192.168.1.6:3000/</string>
+    <string name="URL_CA">https://signu-ca.herokuapp.com/</string>
+    <string name="URL_CA_LOCAL">http://192.168.1.6:3001/</string>
+    <string name="URL_TSA">https://signu-tsa.herokuapp.com/</string>
+    <string name="URL_TSA_LOCAL">http://192.168.1.6:3002/</string>
+
 </resources>

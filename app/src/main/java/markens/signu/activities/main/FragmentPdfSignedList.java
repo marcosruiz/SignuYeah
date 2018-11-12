@@ -41,8 +41,8 @@ public class FragmentPdfSignedList extends android.support.v4.app.Fragment {
         SharedPrefsGeneralCtrl spgc = new SharedPrefsGeneralCtrl(appCtx);
         SharedPrefsCtrl spc = new SharedPrefsCtrl(appCtx, spgc.getUserId());
         UserExt myUserExt = spc.getUserExt();
-        List<Boolean> listNot = spc.getListBoolean("LIST_PDF_NOTIFICATION_SIGNED");
-        pdfsExtListAdatper = new PdfsExtSignedListAdapter(getContext(), myUserExt.getPdfsSigned(), listNot, "LIST_PDF_NOTIFICATION_SIGNED");
+        List<Boolean> listNot = spc.getListBoolean(getString(R.string.key_list_pdf_not_signed));
+        pdfsExtListAdatper = new PdfsExtSignedListAdapter(getContext(), myUserExt.getPdfsSigned(), listNot, getString(R.string.key_list_pdf_not_signed));
         list.setAdapter(pdfsExtListAdatper);
 
         return view;
