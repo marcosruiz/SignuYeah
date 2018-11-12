@@ -162,10 +162,10 @@ public class FragmentKSList extends Fragment {
             kSListAdapter.updateData();
             kSListAdapter.notifyDataSetChanged();
             Snackbar.make(myLayout, R.string.imported_cert_ok, Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
+                    .setAction(R.string.action, null).show();
         } catch (IOException e) {
             Snackbar.make(myLayout, R.string.imported_cert_wrong, Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
+                    .setAction(R.string.action, null).show();
         }
     }
 

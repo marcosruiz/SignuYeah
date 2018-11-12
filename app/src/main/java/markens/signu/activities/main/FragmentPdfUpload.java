@@ -117,7 +117,7 @@ public class FragmentPdfUpload extends Fragment {
                 if (fileOriginal == null) {
                     RelativeLayout myLayout = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfUpload);
                     Snackbar.make(myLayout, R.string.select_pdf, Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
+                            .setAction(R.string.action, null).show();
                 } else {
                     fileRoute = appCtx.getFilesDir().getAbsolutePath() + File.separator + fileOriginal.getName();
                     int qos = userListCheckboxAdapter.getUsersIdSelected().size();
@@ -187,7 +187,7 @@ public class FragmentPdfUpload extends Fragment {
         if (signers.size() == 0) {
             RelativeLayout layoutMain = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfUpload);
             Snackbar.make(layoutMain, R.string.choose_signer, Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
+                    .setAction(R.string.action, null).show();
         } else {
             Call<SSResponse> call = sss.uploadPdfWithSigners(auth, body, signers);
             call.enqueue(new Callback<SSResponse>() {
@@ -195,7 +195,7 @@ public class FragmentPdfUpload extends Fragment {
                 public void onResponse(Call<SSResponse> call, Response<SSResponse> response) {
                     RelativeLayout myLayout = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfUpload);
                     Snackbar.make(myLayout, response.body().getMessage(), Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
+                            .setAction(R.string.action, null).show();
 
                     if (response.isSuccessful()) {
                         FragmentManager fm = getActivity().getSupportFragmentManager();
@@ -209,7 +209,7 @@ public class FragmentPdfUpload extends Fragment {
                 public void onFailure(Call<SSResponse> call, Throwable t) {
                     RelativeLayout myLayout = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfUpload);
                     Snackbar.make(myLayout, R.string.server_error, Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
+                            .setAction(R.string.action, null).show();
                 }
             });
         }

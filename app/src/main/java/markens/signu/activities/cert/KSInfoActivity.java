@@ -98,7 +98,7 @@ public class KSInfoActivity extends AppCompatActivity {
             e.printStackTrace();
             RelativeLayout layoutPdf = (RelativeLayout) findViewById(R.id.activityCertInfo);
             Snackbar.make(layoutPdf, R.string.wrong, Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
+                    .setAction(R.string.action, null).show();
         }
 
 
@@ -124,12 +124,12 @@ public class KSInfoActivity extends AppCompatActivity {
                         RelativeLayout layoutPdf = (RelativeLayout) findViewById(R.id.activityCertInfo);
                         StorageCtrl.copy(fileInternalStorage, fileExternalStorage);
                         Snackbar.make(layoutPdf, R.string.check_downloads, Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
+                                .setAction(R.string.action, null).show();
                     } catch (IOException e) {
                         e.printStackTrace();
                         RelativeLayout layoutPdf = (RelativeLayout) findViewById(R.id.activityCertInfo);
                         Snackbar.make(layoutPdf, R.string.exception, Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
+                                .setAction(R.string.action, null).show();
                     }
                 }
             }

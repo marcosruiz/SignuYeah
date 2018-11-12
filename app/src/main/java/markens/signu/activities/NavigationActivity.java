@@ -156,8 +156,8 @@ public class NavigationActivity extends AppCompatActivity
             @Override
             public void onFailure(Call<SSResponse> call, Throwable t) {
                 DrawerLayout myLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-                Snackbar.make(myLayout, spc.get("UNKNOWN_ERROR"), Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Snackbar.make(myLayout, R.string.server_error, Snackbar.LENGTH_LONG)
+                        .setAction(R.string.action, null).show();
                 spc.store((Token) null);
                 launchLoginActivity();
             }

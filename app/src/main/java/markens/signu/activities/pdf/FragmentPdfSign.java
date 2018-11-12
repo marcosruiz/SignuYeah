@@ -75,7 +75,6 @@ public class FragmentPdfSign extends android.support.v4.app.Fragment {
 
         textViewWarning = (TextView) view.findViewById(R.id.textViewWarning);
 
-
         // Lock pdf and download if is necesary
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(spc.get("URL_SERVER"))
@@ -102,11 +101,11 @@ public class FragmentPdfSign extends android.support.v4.app.Fragment {
                         SSResponse ssRes = g.fromJson(errBody, SSResponse.class);
                         RelativeLayout myLayout = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfSign);
                         Snackbar.make(myLayout, ssRes.getMessage(), Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
+                                .setAction(R.string.action, null).show();
                     } catch (IOException e) {
                         RelativeLayout myLayout = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfSign);
                         Snackbar.make(myLayout, R.string.exception, Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
+                                .setAction(R.string.action, null).show();
                         e.printStackTrace();
                     }
                     textViewWarning.setText(R.string.pdf_already_locked);
@@ -117,7 +116,7 @@ public class FragmentPdfSign extends android.support.v4.app.Fragment {
             public void onFailure(Call<SSResponse> call, Throwable t) {
                 RelativeLayout layoutPdf = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfSign);
                 Snackbar.make(layoutPdf, R.string.server_error, Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                        .setAction(R.string.action, null).show();
             }
         });
 
@@ -148,8 +147,8 @@ public class FragmentPdfSign extends android.support.v4.app.Fragment {
                 if (radioButtonSelected == null) {
                     // Show snackbar
                     RelativeLayout layoutPdf = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfSign);
-                    Snackbar.make(layoutPdf, "You have to select a KS", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
+                    Snackbar.make(layoutPdf, R.string.select_ks, Snackbar.LENGTH_LONG)
+                            .setAction(R.string.action, null).show();
                 } else {
                     String ksRouteSelected = certs[radioButtonSelected.getId()];
 
@@ -166,7 +165,7 @@ public class FragmentPdfSign extends android.support.v4.app.Fragment {
                             updateSignedFile(pdfDst);
                             RelativeLayout layoutPdf = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfSign);
                             Snackbar.make(layoutPdf, R.string.pdf_signed, Snackbar.LENGTH_LONG)
-                                    .setAction("Action", null).show();
+                                    .setAction(R.string.action, null).show();
                         } catch (NoEmptySignaturesException e) {
                             e.printStackTrace();
                         }
@@ -178,17 +177,17 @@ public class FragmentPdfSign extends android.support.v4.app.Fragment {
                         e.printStackTrace();
                         RelativeLayout layoutPdf = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfSign);
                         Snackbar.make(layoutPdf, e.getMessage(), Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
+                                .setAction(R.string.action, null).show();
                     } catch (GeneralSecurityException e) {
                         e.printStackTrace();
                         RelativeLayout layoutPdf = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfSign);
                         Snackbar.make(layoutPdf, e.getMessage(), Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
+                                .setAction(R.string.action, null).show();
                     } catch (DocumentException e) {
                         e.printStackTrace();
                         RelativeLayout layoutPdf = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfSign);
                         Snackbar.make(layoutPdf, e.getMessage(), Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
+                                .setAction(R.string.action, null).show();
                     }
                 }
             }
@@ -218,18 +217,18 @@ public class FragmentPdfSign extends android.support.v4.app.Fragment {
                     FragmentManager fm = getFragmentManager();
                     new SignuServerServiceCtrl(appCtx, fm).updateUserExt();
                     Snackbar.make(layoutPdf, response.body().getMessage(), Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
+                            .setAction(R.string.action, null).show();
                 } else {
                     Snackbar.make(layoutPdf, R.string.response_no_successful, Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
+                            .setAction(R.string.action, null).show();
                 }
             }
 
             @Override
             public void onFailure(Call<SSResponse> call, Throwable t) {
                 RelativeLayout layoutPdf = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfSign);
-                Snackbar.make(layoutPdf, spc.get("UNKNOWN_ERROR"), Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Snackbar.make(layoutPdf, R.string.server_error, Snackbar.LENGTH_LONG)
+                        .setAction(R.string.action, null).show();
             }
         });
     }
@@ -264,11 +263,11 @@ public class FragmentPdfSign extends android.support.v4.app.Fragment {
                             SSResponse ssRes = g.fromJson(errBody, SSResponse.class);
                             RelativeLayout myLayout = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfSign);
                             Snackbar.make(myLayout, ssRes.getMessage(), Snackbar.LENGTH_LONG)
-                                    .setAction("Action", null).show();
+                                    .setAction(R.string.action, null).show();
                         } catch (IOException e) {
                             RelativeLayout myLayout = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfSign);
                             Snackbar.make(myLayout, R.string.exception, Snackbar.LENGTH_LONG)
-                                    .setAction("Action", null).show();
+                                    .setAction(R.string.action, null).show();
                             e.printStackTrace();
                         }
                     }
@@ -278,7 +277,7 @@ public class FragmentPdfSign extends android.support.v4.app.Fragment {
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
                     RelativeLayout myLayout = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfSign);
                     Snackbar.make(myLayout, R.string.server_error, Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
+                            .setAction(R.string.action, null).show();
                 }
             });
         }

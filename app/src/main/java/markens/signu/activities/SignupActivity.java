@@ -30,7 +30,6 @@ public class SignupActivity extends AppCompatActivity {
 
     CoordinatorLayout coordinatorLayoutSignup;
 
-    private static final String UNKNOWN_ERROR = "This error should not appear";
     Context myCtx;
     Context appCtx;
     private SharedPrefsGeneralCtrl spgc;
@@ -85,7 +84,7 @@ public class SignupActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<SSResponse> call, Throwable t) {
-                        Snackbar snackbar = Snackbar.make(coordinatorLayoutSignup, UNKNOWN_ERROR, Snackbar.LENGTH_LONG);
+                        Snackbar snackbar = Snackbar.make(coordinatorLayoutSignup, R.string.server_error, Snackbar.LENGTH_LONG);
                         snackbar.show();
                     }
                 });

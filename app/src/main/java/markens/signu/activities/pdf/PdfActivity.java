@@ -146,11 +146,11 @@ public class PdfActivity extends AppCompatActivity {
                             SSResponse ssRes = g.fromJson(errBody, SSResponse.class);
                             RelativeLayout myLayout = (RelativeLayout) findViewById(R.id.layoutPdf);
                             Snackbar.make(myLayout, ssRes.getMessage(), Snackbar.LENGTH_LONG)
-                                    .setAction("Action", null).show();
+                                    .setAction(R.string.action, null).show();
                         } catch (IOException e) {
                             RelativeLayout myLayout = (RelativeLayout) findViewById(R.id.layoutPdf);
                             Snackbar.make(myLayout, "Something went wrong", Snackbar.LENGTH_LONG)
-                                    .setAction("Action", null).show();
+                                    .setAction(R.string.action, null).show();
                             e.printStackTrace();
                         }
                     }
@@ -160,7 +160,7 @@ public class PdfActivity extends AppCompatActivity {
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
                     RelativeLayout myLayout = (RelativeLayout) findViewById(R.id.layoutPdf);
                     Snackbar.make(myLayout, "Something went wrong", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
+                            .setAction(R.string.action, null).show();
                 }
             });
         }

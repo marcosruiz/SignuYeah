@@ -45,7 +45,6 @@ public class LoginActivity extends AppCompatActivity {
     private static final String URL_LOCAL = "http://192.168.1.6:3000/";
     private static final String URL_TSA = "https://signu-tsa.herokuapp.com/";
     private static final String URL_CA = "https://signu-ca.herokuapp.com/";
-    private static final String UNKNOWN_ERROR = "Something went wrong";
 
     private Context myCtx;
     private Context appCtx;
@@ -57,16 +56,22 @@ public class LoginActivity extends AppCompatActivity {
      * Save global variables
      * @param spc
      */
-    private void saveGlobalVars(SharedPrefsCtrl spc){
-        spc.store("URL_SERVER", URL_SERVER);
-        spc.store("URL_TSA", URL_TSA);
-        spc.store("URL_CA", URL_CA);
+    private void saveGlobalVars(SharedPrefsCtrl spc) {
+        if (spc.get("URL_SERVER") == null || spc.get("URL_SERVER").equals("")) {
+            spc.store("URL_SERVER", URL_SERVER);
+        }
+        if (spc.get("URL_TSA") == null || spc.get("URL_TSA").equals("")) {
+            spc.store("URL_TSA", URL_TSA);
+        }
+        if (spc.get("URL_CA") == null || spc.get("URL_CA").equals("")) {
+            spc.store("URL_CA", URL_CA);
+        }
         spc.store("GRANT_TYPE", GRANT_TYPE);
         spc.store("TOKEN_TYPE", TOKEN_TYPE);
         spc.store("CLIENT_ID", CLIENT_ID);
         spc.store("CLIENT_SECRET", CLIENT_SECRET);
-        spc.store("UNKNOWN_ERROR", UNKNOWN_ERROR);
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,7 +90,7 @@ public class LoginActivity extends AppCompatActivity {
         Token myToken = spc.getToken();
         UserExt myUserExt = spc.getUserExt();
 
-        if(myToken != null && myUserExt != null){
+        if (myToken != null && myUserExt != null) {
             launchActivityNavigation();
         } else {
             setupFloatingLabelErrorEmail();
@@ -111,7 +116,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void getToken(String email, String password){
+    private void getToken(String email, String password) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(spc.get("URL_SERVER"))
                 .addConverterFactory(GsonConverterFactory.create())
@@ -139,7 +144,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Token> call, Throwable t) {
-                Snackbar snackbar = Snackbar.make(coordinatorLayoutSignup, spc.get("UNKNOWN_ERROR"), Snackbar.LENGTH_LONG);
+                Snackbar snackbar = Snackbar.make(coordinatorLayoutSignup, R.string.server_error, Snackbar.LENGTH_LONG);
                 snackbar.show();
             }
         });
@@ -243,6 +248,7 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * Get info user from server and save it in sharedprefs and launch NavigationActivity
+     *
      * @param token
      */
     private void getUserExt(Token token) {
@@ -268,8 +274,8 @@ public class LoginActivity extends AppCompatActivity {
                     launchActivityNavigation();
                 } else {
                     DrawerLayout myLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-                    Snackbar.make(myLayout, "Response not successful", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
+                    Snackbar.make(myLayout, R.string.response_no_successful, Snackbar.LENGTH_LONG)
+                            .setAction(R.string.action, null).show();
                 }
 
             }
@@ -277,8 +283,8 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<SSResponse> call, Throwable t) {
                 DrawerLayout myLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-                Snackbar.make(myLayout, spc.get("UNKNOWN_ERROR"), Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Snackbar.make(myLayout, R.string.server_error, Snackbar.LENGTH_LONG)
+                        .setAction(R.string.action, null).show();
             }
         });
     }

@@ -7,7 +7,7 @@
     <string name="export_exception">It could not be exported</string>
     <string name="dialog_insert_pass">Enter the password</string>
     <string name="response_no_successful">Server\'s response was not successful</string>
-    <string name="action">Action</string>
+    <string name=R.string.action>Action</string>
     <string name="dialog_insert_data">Insert data</string>
     <string name="dialog_data_not_valid">Data not valid</string>
     <string name="server_error">It was an error on signu server</string>
@@ -16,4 +16,6 @@
     <string name="choose_signer">You need to choose at least one signer</string>
     <string name="select_pdf">You need to select a PDF</string>
     <string name="pdf_signed">Nice! Pdf signed</string>
+    <string name="select_ks">You have to select a KS</string>
+    <string name="url_server">url</string>
 </resources>

@@ -116,12 +116,12 @@ public class FragmentPdfInfo extends android.support.v4.app.Fragment {
                         RelativeLayout layoutPdf = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfInfo);
                         StorageCtrl.copy(fileInternalStorage, fileExternalStorage);
                         Snackbar.make(layoutPdf, R.string.check_downloads, Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
+                                .setAction(R.string.action, null).show();
                     } catch (IOException e) {
                         e.printStackTrace();
                         RelativeLayout layoutPdf = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfInfo);
                         Snackbar.make(layoutPdf, R.string.export_exception, Snackbar.LENGTH_LONG)
-                                .setAction("Action", null).show();
+                                .setAction(R.string.action, null).show();
                     }
                 }
             }
