@@ -8,10 +8,10 @@
     tools:context="markens.signu.activities.NavigationActivity">
 
     <FrameLayout
-        android:id="@+id/fragment_container"
+        android:id="@+id/frameLayoutPdfContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/bottom_navigation"></FrameLayout>
+        android:layout_above="@id/bottomNavigationListPdf"></FrameLayout>
 
     <!--<android.support.design.widget.BottomNavigationView-->
     <!--android:id="@+id/bottom_navigation"-->
@@ -20,8 +20,16 @@
     <!--android:layout_alignParentBottom="true"-->
     <!--app:menu="@menu/bottom_navigation_main" />-->
 
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/placeSnackBar"
+        android:layout_above="@id/bottomNavigationListPdf">
+    </android.support.design.widget.CoordinatorLayout>
+
+
     <com.aurelhubert.ahbottomnavigation.AHBottomNavigation
-        android:id="@+id/bottom_navigation"
+        android:id="@+id/bottomNavigationListPdf"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"

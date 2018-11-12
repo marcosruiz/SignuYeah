@@ -70,12 +70,12 @@ public class FragmentPdfContainer extends android.support.v4.app.Fragment {
         // Bottom navigation
         setUpBottomNav();
 
-        getFragmentManager().beginTransaction().replace(R.id.fragment_container, new FragmentPdfOwnedList()).commit();
+        getFragmentManager().beginTransaction().replace(R.id.frameLayoutPdfContainer, new FragmentPdfOwnedList()).commit();
         return view;
     }
 
     private void setUpBottomNav() {
-        AHBottomNavigation bottomNav = (AHBottomNavigation) view.findViewById(R.id.bottom_navigation);
+        AHBottomNavigation bottomNav = (AHBottomNavigation) view.findViewById(R.id.bottomNavigationListPdf);
         bottomNav.setColored(true);
         AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.pdfs_owned, R.drawable.ic_home_black_24dp, R.color.colorAccent);
         AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.pdfs_to_sign, R.drawable.ic_timer_black_24dp, R.color.colorAccent);
@@ -102,7 +102,7 @@ public class FragmentPdfContainer extends android.support.v4.app.Fragment {
                 } else if (position == 3) {
                     selectedFragment = new FragmentPdfUpload();
                 }
-                getFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+                getFragmentManager().beginTransaction().replace(R.id.frameLayoutPdfContainer, selectedFragment).commit();
                 return true;
             }
         });
@@ -128,7 +128,7 @@ public class FragmentPdfContainer extends android.support.v4.app.Fragment {
                     selectedFragment = new FragmentPdfUpload();
                     break;
             }
-            getFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+            getFragmentManager().beginTransaction().replace(R.id.frameLayoutPdfContainer, selectedFragment).commit();
             return true;
         }
     };
@@ -146,7 +146,7 @@ public class FragmentPdfContainer extends android.support.v4.app.Fragment {
 
         @Override
         protected void onPostExecute(Integer integer) {
-            AHBottomNavigation bottomNav = (AHBottomNavigation) view.findViewById(R.id.bottom_navigation);
+            AHBottomNavigation bottomNav = (AHBottomNavigation) view.findViewById(R.id.bottomNavigationListPdf);
             int position = 0;
             if (key.equals(LIST_PDF_NOTIFICATION_TO_SIGN)) {
                 position = 1;
@@ -163,7 +163,7 @@ public class FragmentPdfContainer extends android.support.v4.app.Fragment {
 
     @Deprecated
     private void uploadNotifications() {
-        AHBottomNavigation bottomNav = (AHBottomNavigation) view.findViewById(R.id.bottom_navigation);
+        AHBottomNavigation bottomNav = (AHBottomNavigation) view.findViewById(R.id.bottomNavigationListPdf);
         List<Boolean> listNotOwned = spc.getListBoolean("LIST_PDF_NOTIFICATION_OWNED");
         List<Boolean> listNotToSign = spc.getListBoolean("LIST_PDF_NOTIFICATION_TO_SIGN");
         List<Boolean> listNotSigned = spc.getListBoolean("LIST_PDF_NOTIFICATION_SIGNED");

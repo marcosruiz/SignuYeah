@@ -82,7 +82,7 @@ public class SearchUserActivity extends AppCompatActivity {
                     List<User> listUser = response.body().getData().getUsers();
                     list.setAdapter(new UserToAddListAdapter(myCtx, listUser));
                 } else {
-                    Snackbar snackbar = Snackbar.make(myLayout, "Bad request", Snackbar.LENGTH_LONG);
+                    Snackbar snackbar = Snackbar.make(myLayout, R.string.response_no_successful, Snackbar.LENGTH_LONG);
                     snackbar.show();
                 }
             }
@@ -90,7 +90,7 @@ public class SearchUserActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<SSResponse> call, Throwable t) {
                 RelativeLayout myLayout = (RelativeLayout) findViewById(R.id.layoutUserSearch);
-                Snackbar snackbar = Snackbar.make(myLayout, "Somthing went wrong", Snackbar.LENGTH_LONG);
+                Snackbar snackbar = Snackbar.make(myLayout, R.string.server_error, Snackbar.LENGTH_LONG);
                 snackbar.show();
             }
         });

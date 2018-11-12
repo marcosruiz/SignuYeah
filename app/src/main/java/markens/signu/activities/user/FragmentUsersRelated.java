@@ -31,6 +31,12 @@ public class FragmentUsersRelated extends android.support.v4.app.Fragment {
     private SharedPrefsGeneralCtrl spgc;
     private SharedPrefsCtrl spc;
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {

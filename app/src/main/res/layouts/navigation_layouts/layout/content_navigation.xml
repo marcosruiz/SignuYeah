@@ -12,6 +12,6 @@
         android:id="@+id/fragment_container_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/bottom_navigation"></FrameLayout>
+        android:layout_above="@id/bottomNavigationListPdf"></FrameLayout>
 
 </android.support.constraint.ConstraintLayout>

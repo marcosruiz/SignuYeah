@@ -46,6 +46,7 @@ public class FragmentPdfOwnedList extends android.support.v4.app.Fragment {
         pdfsExtListAdatper = new PdfsExtOwnedListAdapter(getContext(), myUserExt.getPdfsOwned(), listNot, "LIST_PDF_NOTIFICATION_OWNED");
         list.setAdapter(pdfsExtListAdatper);
 
+
         return view;
     }
 }

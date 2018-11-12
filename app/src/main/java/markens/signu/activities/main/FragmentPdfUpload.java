@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -16,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -67,6 +69,8 @@ public class FragmentPdfUpload extends Fragment {
     private SharedPrefsGeneralCtrl spgc;
     private SharedPrefsCtrl spc;
 
+    CoordinatorLayout snackbarLayout;
+
     UserListCheckboxAdapter userListCheckboxAdapter;
 
     @Nullable
@@ -81,6 +85,8 @@ public class FragmentPdfUpload extends Fragment {
         spc = new SharedPrefsCtrl(appCtx, spgc.getUserId());
         userExt = spc.getUserExt();
         token = spc.getToken();
+
+        snackbarLayout = (CoordinatorLayout) getActivity().findViewById(R.id.placeSnackBar);
 
         // List signers
         ListView list = (ListView) view.findViewById(R.id.listViewUsers);
@@ -115,8 +121,8 @@ public class FragmentPdfUpload extends Fragment {
         buttonUploadPdf.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (fileOriginal == null) {
-                    RelativeLayout myLayout = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfUpload);
-                    Snackbar.make(myLayout, R.string.select_pdf, Snackbar.LENGTH_LONG)
+
+                    Snackbar.make(snackbarLayout, R.string.select_pdf, Snackbar.LENGTH_LONG)
                             .setAction(R.string.action, null).show();
                 } else {
                     fileRoute = appCtx.getFilesDir().getAbsolutePath() + File.separator + fileOriginal.getName();
@@ -183,18 +189,16 @@ public class FragmentPdfUpload extends Fragment {
             signers.add(MultipartBody.Part.createFormData("signers[" + i + "]", id));
             i++;
         }
-
         if (signers.size() == 0) {
-            RelativeLayout layoutMain = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfUpload);
-            Snackbar.make(layoutMain, R.string.choose_signer, Snackbar.LENGTH_LONG)
+            Snackbar.make(snackbarLayout, R.string.choose_signer, Snackbar.LENGTH_LONG)
                     .setAction(R.string.action, null).show();
         } else {
             Call<SSResponse> call = sss.uploadPdfWithSigners(auth, body, signers);
             call.enqueue(new Callback<SSResponse>() {
                 @Override
                 public void onResponse(Call<SSResponse> call, Response<SSResponse> response) {
-                    RelativeLayout myLayout = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfUpload);
-                    Snackbar.make(myLayout, response.body().getMessage(), Snackbar.LENGTH_LONG)
+                     
+                    Snackbar.make( snackbarLayout, response.body().getMessage(), Snackbar.LENGTH_LONG)
                             .setAction(R.string.action, null).show();
 
                     if (response.isSuccessful()) {
@@ -207,8 +211,7 @@ public class FragmentPdfUpload extends Fragment {
 
                 @Override
                 public void onFailure(Call<SSResponse> call, Throwable t) {
-                    RelativeLayout myLayout = (RelativeLayout) getActivity().findViewById(R.id.fragmentPdfUpload);
-                    Snackbar.make(myLayout, R.string.server_error, Snackbar.LENGTH_LONG)
+                    Snackbar.make( snackbarLayout, R.string.server_error, Snackbar.LENGTH_LONG)
                             .setAction(R.string.action, null).show();
                 }
             });

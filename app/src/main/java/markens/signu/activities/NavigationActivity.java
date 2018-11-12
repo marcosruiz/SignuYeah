@@ -167,7 +167,7 @@ public class NavigationActivity extends AppCompatActivity
     private void launchLoginActivity() {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
-        finish();
+        this.finish();
     }
 
 

@@ -42,9 +42,13 @@ public class LoginActivity extends AppCompatActivity {
     private static final String GRANT_TYPE = "password";
     private static final String TOKEN_TYPE = "bearer";
     private static final String URL_SERVER = "https://signu-server.herokuapp.com/";
-    private static final String URL_LOCAL = "http://192.168.1.6:3000/";
-    private static final String URL_TSA = "https://signu-tsa.herokuapp.com/";
+    private static final String URL_SERVER_LOCAL = "http://192.168.1.6:3000/";
     private static final String URL_CA = "https://signu-ca.herokuapp.com/";
+    private static final String URL_CA_LOCAL = "http://192.168.1.6:3001/";
+    private static final String URL_TSA = "https://signu-tsa.herokuapp.com/";
+    private static final String URL_TSA_LOCAL = "http://192.168.1.6:3002/";
+
+
 
     private Context myCtx;
     private Context appCtx;
@@ -58,7 +62,7 @@ public class LoginActivity extends AppCompatActivity {
      */
     private void saveGlobalVars(SharedPrefsCtrl spc) {
         if (spc.get("URL_SERVER") == null || spc.get("URL_SERVER").equals("")) {
-            spc.store("URL_SERVER", URL_SERVER);
+            spc.store("URL_SERVER", URL_SERVER_LOCAL);
         }
         if (spc.get("URL_TSA") == null || spc.get("URL_TSA").equals("")) {
             spc.store("URL_TSA", URL_TSA);
@@ -118,7 +122,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void getToken(String email, String password) {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(spc.get("URL_SERVER"))
+                .baseUrl(spc.get(getString(R.string.url_server)))
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         SignuServerService sss = retrofit.create(SignuServerService.class);
@@ -135,9 +139,7 @@ public class LoginActivity extends AppCompatActivity {
                     spc.store(myToken);
                     getUserExt(myToken);
                 } else {
-                    Gson g = new Gson();
-                    TokenError myTokenError = g.fromJson(response.errorBody().charStream(), TokenError.class);
-                    Snackbar snackbar = Snackbar.make(coordinatorLayoutSignup, "Incorrect loggin", Snackbar.LENGTH_LONG);
+                    Snackbar snackbar = Snackbar.make(coordinatorLayoutSignup, R.string.incorrect_login, Snackbar.LENGTH_LONG);
                     snackbar.show();
                 }
             }
