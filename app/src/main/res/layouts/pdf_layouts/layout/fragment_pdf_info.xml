@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
-            android:text="Pdf Id"
+            android:text="@string/pdf_id"
             android:textColor="@color/colorAccent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -30,17 +30,16 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
-            android:text="TextView"
             app:layout_constraintStart_toEndOf="@+id/textViewDetailsTag"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textViewDetailsTag"
+            android:id="@+id/textViewOriginalNameTag"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
-            android:text="Original Name"
+            android:text="@string/original_name"
             android:textColor="@color/colorAccent"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -50,16 +49,15 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
-            android:text="TextView"
             app:layout_constraintStart_toEndOf="@+id/textViewDetailsTag" />
 
         <TextView
-            android:id="@+id/textViewTSATag"
+            android:id="@+id/textViewOwnerEmailTag"
             android:layout_width="match_parent"
             android:layout_height="19dp"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
-            android:text="Owner Email"
+            android:text="@string/owner_email"
             android:textColor="@color/colorAccent"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -69,27 +67,25 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
-            android:text="TextView"
             app:layout_constraintStart_toEndOf="@+id/textViewTSATag" />
 
         <TextView
-            android:id="@+id/textViewCATag"
+            android:id="@+id/textViewOwnerNameTag"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
-            android:text="Owner Name"
+            android:text="@string/owner_name"
             android:textColor="@color/colorAccent"
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:id="@+id/textViewCAValue"
+            android:id="@+id/textViewOwnerNameValue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
-            android:text="TextView"
-            app:layout_constraintStart_toEndOf="@+id/textViewCATag" />
+            app:layout_constraintStart_toEndOf="@+id/textViewNameTag" />
 
         <TextView
             android:id="@+id/textViewOwnerLastnameValue"
@@ -97,7 +93,6 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
-            android:text="TextView"
             app:layout_constraintStart_toEndOf="@+id/textViewCAValue" />
 
         <TextView
@@ -106,7 +101,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
-            android:text="Signers"
+            android:text="@string/signers"
             android:textColor="@color/colorAccent" />
 
         <ListView
@@ -130,14 +125,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="2dp"
-            android:text="delete" />
+            android:text="@string/delete" />
 
         <Button
             android:id="@+id/buttonExportPdf"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="2dp"
-            android:text="export" />
+            android:text="@string/export" />
 
     </LinearLayout>
 

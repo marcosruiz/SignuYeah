@@ -7,7 +7,7 @@ import markens.signu.activities.main.FragmentPdfContainer;
 import markens.signu.objects.SSResponse;
 import markens.signu.objects.ext.UserExt;
 import markens.signu.storage.SharedPrefsCtrl;
-import markens.signu.storage.SharedPrefsGeneralCtrl;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -15,15 +15,13 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SignuServerServiceCtrl {
-    private SharedPrefsGeneralCtrl spgc;
+
     private SharedPrefsCtrl spc;
     Context context;
     FragmentManager fm;
 
     public SignuServerServiceCtrl(Context context, FragmentManager fm) {
-
-        spgc = new SharedPrefsGeneralCtrl(context);
-        spc = new SharedPrefsCtrl(context, spgc.getUserId());
+        spc = new SharedPrefsCtrl(context, new SharedPrefsCtrl(context).getCurrentUserId());
         this.context = context;
         this.fm = fm;
     }

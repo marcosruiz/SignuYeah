@@ -18,10 +18,10 @@ import java.util.Set;
 
 import markens.signu.R;
 import markens.signu.activities.cert.KSInfoActivity;
-import markens.signu.engine.Signature;
+import markens.signu.itext.Signature;
 import markens.signu.objects.ext.PdfExt;
 import markens.signu.storage.SharedPrefsCtrl;
-import markens.signu.storage.SharedPrefsGeneralCtrl;
+
 
 public class KSListAdapter extends BaseAdapter {
     private static LayoutInflater inflater = null;
@@ -30,7 +30,7 @@ public class KSListAdapter extends BaseAdapter {
     Context appCtx;
     List<PdfExt> pdfExtList;
     View view;
-    private SharedPrefsGeneralCtrl spgc;
+
     private SharedPrefsCtrl spc;
     String[] ksRoutes;
 
@@ -39,9 +39,14 @@ public class KSListAdapter extends BaseAdapter {
         myCtx = context;
         appCtx = context.getApplicationContext();
         inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
-        spgc = new SharedPrefsGeneralCtrl(appCtx);
-        spc = new SharedPrefsCtrl(appCtx, spgc.getUserId());
+
+        spc = new SharedPrefsCtrl(appCtx, new SharedPrefsCtrl(appCtx).getCurrentUserId());
         updateData();
+    }
+
+    public void updateData() {
+        Set<String> setCerts = spc.getCerts();
+        ksRoutes = setCerts.toArray(new String[setCerts.size()]);
     }
 
     @Override
@@ -111,10 +116,5 @@ public class KSListAdapter extends BaseAdapter {
         });
 
         return view;
-    }
-
-    public void updateData() {
-        Set<String> setCerts = spc.getCerts();
-        ksRoutes = setCerts.toArray(new String[setCerts.size()]);
     }
 }

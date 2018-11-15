@@ -19,25 +19,25 @@
                 android:id="@+id/textViewPathPdfKey"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Selection" />
+                android:text="@string/selection_pdf" />
 
             <TextView
                 android:id="@+id/textViewPathPdf"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="None" />
+                android:text="@string/nothing_selected" />
 
             <Button
                 android:id="@+id/buttonSelectPdf"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Select PDF file" />
+                android:text="@string/select_pdf_file" />
 
             <TextView
                 android:id="@+id/textViewSelectSignersKey"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Select signers" />
+                android:text="@string/select_signers" />
 
             <ListView
                 android:id="@+id/listViewUsers"
@@ -56,7 +56,7 @@
                 android:id="@+id/buttonUploadPdf"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Upload Pdf" />
+                android:text="@string/upload_pdf" />
         </LinearLayout>
     </LinearLayout>
 

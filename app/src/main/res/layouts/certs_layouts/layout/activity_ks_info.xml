@@ -23,7 +23,7 @@
                 android:id="@+id/textViewKSNameTag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Filename"
+                android:text="@string/filename"
                 android:textColor="@color/colorAccent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -33,7 +33,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="TextView"
                 app:layout_constraintStart_toEndOf="@+id/textViewDetailsTag"
                 app:layout_constraintTop_toTopOf="parent" />
         </LinearLayout>
@@ -47,15 +46,14 @@
                 android:id="@+id/textViewTypeTag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Type"
+                android:text="@string/type"
                 android:textColor="@color/colorAccent" />
 
             <TextView
                 android:id="@+id/textViewTypeValue"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="TextView" />
+                android:layout_weight="1" />
         </LinearLayout>
 
         <LinearLayout
@@ -67,15 +65,14 @@
                 android:id="@+id/textViewProviderVersionTag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Provider version"
+                android:text="@string/provider_version"
                 android:textColor="@color/colorAccent" />
 
             <TextView
                 android:id="@+id/textViewProviderVersionValue"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="TextView" />
+                android:layout_weight="1" />
         </LinearLayout>
 
         <LinearLayout
@@ -87,7 +84,7 @@
                 android:id="@+id/textViewProviderInfoTag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Provider Info"
+                android:text="@string/provider_info"
                 android:textColor="@color/colorAccent" />
 
             <TextView
@@ -95,7 +92,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="TextView" />
+                android:text="" />
         </LinearLayout>
 
         <LinearLayout
@@ -107,15 +104,14 @@
                 android:id="@+id/textViewProviderNameTag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Provider Name"
+                android:text="@string/provider_name"
                 android:textColor="@color/colorAccent" />
 
             <TextView
                 android:id="@+id/textViewProviderNameValue"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="TextView" />
+                android:layout_weight="1" />
         </LinearLayout>
 
         <LinearLayout
@@ -127,7 +123,7 @@
                 android:id="@+id/textViewCreationDateTag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Creation Date"
+                android:text="@string/creation_date"
                 android:textColor="@color/colorAccent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -137,7 +133,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="TextView"
                 app:layout_constraintStart_toEndOf="@+id/textViewDetailsTag"
                 app:layout_constraintTop_toTopOf="parent" />
         </LinearLayout>
@@ -146,7 +141,7 @@
             android:id="@+id/textViewCertificatesTag"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Certificate List"
+            android:text="@string/certificate_list"
             android:textColor="@color/colorAccent" />
 
         <ListView
@@ -166,14 +161,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="2dp"
-            android:text="delete" />
+            android:text="@string/delete" />
 
         <Button
             android:id="@+id/buttonExportCert"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="2dp"
-            android:text="export" />
+            android:text="@string/export" />
 
     </LinearLayout>
 

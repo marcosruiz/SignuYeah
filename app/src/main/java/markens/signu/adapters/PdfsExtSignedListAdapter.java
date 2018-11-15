@@ -2,8 +2,6 @@ package markens.signu.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +12,12 @@ import android.widget.TextView;
 import java.util.List;
 
 import markens.signu.R;
-import markens.signu.activities.main.FragmentPdfContainer;
 import markens.signu.activities.pdf.PdfActivity;
 import markens.signu.objects.ext.PdfExt;
 import markens.signu.objects.ext.SignerExt;
 import markens.signu.objects.ext.UserExt;
 import markens.signu.storage.SharedPrefsCtrl;
-import markens.signu.storage.SharedPrefsGeneralCtrl;
+
 
 public class PdfsExtSignedListAdapter extends BaseAdapter {
     private static LayoutInflater inflater = null;
@@ -31,15 +28,15 @@ public class PdfsExtSignedListAdapter extends BaseAdapter {
     UserExt myUserExt;
     List<Boolean> notificationList;
     String tagNotificationList;
-    private SharedPrefsGeneralCtrl spgc;
+
     private SharedPrefsCtrl spc;
 
     public PdfsExtSignedListAdapter(Context context, List<PdfExt> pdfExtList, List<Boolean> notificationList, String tagNotificationList) {
         this.pdfExtList = pdfExtList;
         myCtx = context;
         appCtx = context.getApplicationContext();
-        spgc = new SharedPrefsGeneralCtrl(appCtx);
-        spc = new SharedPrefsCtrl(appCtx, spgc.getUserId());
+
+        spc = new SharedPrefsCtrl(appCtx, new SharedPrefsCtrl(appCtx).getCurrentUserId());
         myUserExt = spc.getUserExt();
         this.notificationList = notificationList;
         this.tagNotificationList = tagNotificationList;
@@ -131,7 +128,7 @@ public class PdfsExtSignedListAdapter extends BaseAdapter {
                 myCtx.startActivity(intent);
 
                 notificationList.set(position, false);
-                spc.storeListBoolean(tagNotificationList, notificationList);
+                spc.storeListBooleanUser(tagNotificationList, notificationList);
 
                 // Update view
                 ImageView imageViewNotification = (ImageView) v.findViewById(R.id.imageViewNotification);

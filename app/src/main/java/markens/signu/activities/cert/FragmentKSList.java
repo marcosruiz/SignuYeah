@@ -33,7 +33,7 @@ import markens.signu.adapters.KSListAdapter;
 import markens.signu.objects.Token;
 import markens.signu.objects.ext.UserExt;
 import markens.signu.storage.SharedPrefsCtrl;
-import markens.signu.storage.SharedPrefsGeneralCtrl;
+
 import markens.signu.storage.StorageCtrl;
 
 import static android.app.Activity.RESULT_OK;
@@ -47,7 +47,7 @@ public class FragmentKSList extends Fragment {
     KSListAdapter kSListAdapter;
     Context myCtx;
     Context appCtx;
-    private SharedPrefsGeneralCtrl spgc;
+
     private SharedPrefsCtrl spc;
 
     File fileSrc;
@@ -67,8 +67,8 @@ public class FragmentKSList extends Fragment {
 
         myCtx = getContext();
         appCtx = getContext().getApplicationContext();
-        spgc = new SharedPrefsGeneralCtrl(appCtx);
-        spc = new SharedPrefsCtrl(appCtx, spgc.getUserId());
+
+        spc = new SharedPrefsCtrl(appCtx, new SharedPrefsCtrl(appCtx).getCurrentUserId());
 
         fragment = this;
 
@@ -110,6 +110,7 @@ public class FragmentKSList extends Fragment {
 
     /**
      * It is executed when we select a .p12 file
+     *
      * @param requestCode
      * @param resultCode
      * @param data
@@ -124,7 +125,9 @@ public class FragmentKSList extends Fragment {
             String filePath = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
             //Get file
             fileSrc = new File(filePath);
-            fileDest = new File(appCtx.getFilesDir().getAbsolutePath() + File.separator + fileSrc.getName());
+            StorageCtrl sc = new StorageCtrl(appCtx, new SharedPrefsCtrl(appCtx).getCurrentUserId());
+            String pathname = sc.getKeystoreFolder().getAbsolutePath() + File.separator + fileSrc.getName();
+            fileDest = new File(pathname);
             if (fileDest.exists()) {
                 //Show dialog if you want overwrite
                 AlertDialog.Builder builder;
@@ -154,7 +157,7 @@ public class FragmentKSList extends Fragment {
         }
     }
 
-    private void copyCertAndShowSnackbar(){
+    private void copyCertAndShowSnackbar() {
         RelativeLayout myLayout = (RelativeLayout) getActivity().findViewById(R.id.fragmentKS);
         try {
             StorageCtrl.copy(fileSrc, fileDest);

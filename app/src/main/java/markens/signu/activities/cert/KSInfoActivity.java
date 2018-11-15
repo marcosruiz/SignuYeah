@@ -23,12 +23,10 @@ import java.security.KeyStore;
 import java.security.cert.Certificate;
 
 import markens.signu.R;
-import markens.signu.activities.NavigationActivity;
 import markens.signu.adapters.CertListAdapter;
-import markens.signu.adapters.KSListAdapter;
-import markens.signu.engine.Signature;
+import markens.signu.itext.Signature;
 import markens.signu.storage.SharedPrefsCtrl;
-import markens.signu.storage.SharedPrefsGeneralCtrl;
+
 import markens.signu.storage.StorageCtrl;
 
 public class KSInfoActivity extends AppCompatActivity {
@@ -37,7 +35,7 @@ public class KSInfoActivity extends AppCompatActivity {
     Context myCtx;
     String routeKS;
     String password;
-    private SharedPrefsGeneralCtrl spgc;
+
     private SharedPrefsCtrl spc;
 
     @Override
@@ -49,8 +47,8 @@ public class KSInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_ks_info);
 
         // Get myUserExt
-        spgc = new SharedPrefsGeneralCtrl(appCtx);
-        spc = new SharedPrefsCtrl(appCtx, spgc.getUserId());
+
+        spc = new SharedPrefsCtrl(appCtx, new SharedPrefsCtrl(appCtx).getCurrentUserId());
 
         // Get ks
         Intent intent = getIntent();

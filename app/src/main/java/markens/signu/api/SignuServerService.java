@@ -68,7 +68,7 @@ public interface SignuServerService {
     @FormUrlEncoded
     @PUT("api/users/related")
     Call<SSResponse> addRelatedUser(@Header("Authorization") String authorization,
-                                @Field("related_id") String userId);
+                                    @Field("related_id") String userId);
 
     @FormUrlEncoded
     @PUT("api/users/")
@@ -84,6 +84,9 @@ public interface SignuServerService {
     @PUT("api/users/email/")
     Call<SSResponse> editUserEmail(@Header("Authorization") String authorization,
                                    @Field("email") String email);
+
+    @DELETE("api/users/related/{user_id}")
+    Call<SSResponse> deleteRelatedUser(@Header("Authorization") String auth, @Path("user_id") String userId);
 
     /**
      * PDFS
@@ -114,7 +117,7 @@ public interface SignuServerService {
 
     @PUT("api/pdfs/lock/{pdf_id}")
     Call<SSResponse> lockPdf(@Header("Authorization") String authorization,
-                               @Path("pdf_id") String pdfId);
+                             @Path("pdf_id") String pdfId);
 
     @GET("api/pdfs/info/{pdf_id}")
     Call<SSResponse> getPdfInfo(@Header("Authorization") String authorization,
@@ -127,6 +130,5 @@ public interface SignuServerService {
     @DELETE("api/pdfs/{pdf_id}")
     Call<SSResponse> deletePdf(@Header("Authorization") String authorization,
                                @Path("pdf_id") String pdfId);
-
 
 }

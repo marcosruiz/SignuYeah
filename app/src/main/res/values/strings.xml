@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Signu</string>
     <string name="action_settings">Settings</string>
-
     <string name="list_cert">My Certificates</string>
     <string name="create_cert">Create certificate</string>
     <string name="info_user">Info user</string>
     <string name="edit_user">Edit user</string>
     <string name="original_name">Original name</string>
-
     <string name="login">Log in</string>
     <string name="signup">Sign up</string>
     <string name="email">Email</string>
@@ -18,14 +15,11 @@
     <string name="new_password">New password</string>
     <string name="preg_member">Still not in Signu\'s family?</string>
     <string name="lastname">Lastname</string>
-
     <!-- Error messages -->
     <string name="email_required">Email required</string>
     <string name="password_required">Password must be bigger</string>
-
     <!-- Info messages -->
     <string name="info_signup">Info: Signu will send you an email to confirm your email and give you a provisional password</string>
-    <string name="todo">TODO</string>
     <string name="name">Name</string>
     <string name="new_name">New name</string>
     <string name="new_lastname">New lastname</string>
@@ -51,7 +45,7 @@
     <string name="sign_pdf">Sign PDF</string>
     <string name="add_signers">Add signers</string>
     <string name="edit_pdf">Edit PDF</string>
-    
+
     <!-- Snackbar -->
     <string name="check_downloads">Check your Downloads folder</string>
     <string name="wrong">Something went wrong</string>

@@ -2,6 +2,7 @@ package markens.signu.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,7 @@ import markens.signu.objects.ext.PdfExt;
 import markens.signu.objects.ext.SignerExt;
 import markens.signu.objects.ext.UserExt;
 import markens.signu.storage.SharedPrefsCtrl;
-import markens.signu.storage.SharedPrefsGeneralCtrl;
+
 
 public class PdfsExtOwnedListAdapter extends BaseAdapter {
     private static LayoutInflater inflater = null;
@@ -28,15 +29,15 @@ public class PdfsExtOwnedListAdapter extends BaseAdapter {
     UserExt myUserExt;
     List<Boolean> notificationList;
     String tagNotificationList;
-    private SharedPrefsGeneralCtrl spgc;
+
     private SharedPrefsCtrl spc;
 
     public PdfsExtOwnedListAdapter(Context context, List<PdfExt> pdfExtList, List<Boolean> notificationList, String tagNotificationList) {
         this.pdfExtList = pdfExtList;
         myCtx = context;
         appCtx = context.getApplicationContext();
-        spgc = new SharedPrefsGeneralCtrl(appCtx);
-        spc = new SharedPrefsCtrl(appCtx, spgc.getUserId());
+
+        spc = new SharedPrefsCtrl(appCtx, new SharedPrefsCtrl(appCtx).getCurrentUserId());
         myUserExt = spc.getUserExt();
         this.notificationList = notificationList;
         this.tagNotificationList = tagNotificationList;
@@ -113,12 +114,15 @@ public class PdfsExtOwnedListAdapter extends BaseAdapter {
         }
 
         // Notifications
-        if (notificationList.get(position)) {
-            imageViewNotification.setVisibility(View.VISIBLE);
+        if (position<notificationList.size()) {
+            if (notificationList.get(position)) {
+                imageViewNotification.setVisibility(View.VISIBLE);
+            } else {
+                imageViewNotification.setVisibility(View.INVISIBLE);
+            }
         } else {
-            imageViewNotification.setVisibility(View.INVISIBLE);
+            Log.d("WARNING", "notificationList is not equal to pdfList");
         }
-
 
         view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,7 +132,7 @@ public class PdfsExtOwnedListAdapter extends BaseAdapter {
                 myCtx.startActivity(intent);
 
                 notificationList.set(position, false);
-                spc.storeListBoolean(tagNotificationList, notificationList);
+                spc.storeListBooleanUser(tagNotificationList, notificationList);
 
                 // Update view
                 ImageView imageViewNotification = (ImageView) v.findViewById(R.id.imageViewNotification);

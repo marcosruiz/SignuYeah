@@ -14,13 +14,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import markens.signu.LocaleManager;
 import markens.signu.R;
 import markens.signu.api.SignuServerService;
 import markens.signu.objects.SSResponse;
 import markens.signu.objects.Token;
 import markens.signu.objects.ext.UserExt;
 import markens.signu.storage.SharedPrefsCtrl;
-import markens.signu.storage.SharedPrefsGeneralCtrl;
+
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -36,8 +37,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private Context myCtx;
     private Context appCtx;
-
-    private SharedPrefsGeneralCtrl spgc;
     private SharedPrefsCtrl spc;
 
     /**
@@ -47,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
      */
     private void saveGlobalVars(SharedPrefsCtrl spc) {
         if (spc.get("URL_SERVER") == null || spc.get("URL_SERVER").equals("")) {
-            spc.store("URL_SERVER", getString(R.string.URL_SERVER));
+            spc.store("URL_SERVER", getString(R.string.URL_SERVER_LOCAL));
         }
         if (spc.get("URL_TSA") == null || spc.get("URL_TSA").equals("")) {
             spc.store("URL_TSA", getString(R.string.URL_TSA));
@@ -71,8 +70,8 @@ public class LoginActivity extends AppCompatActivity {
         coordinatorLayoutSignup = (CoordinatorLayout) findViewById(R.id.coordinatorLayoutLogin);
 
         //Save global vars
-        spgc = new SharedPrefsGeneralCtrl(appCtx);
-        spc = new SharedPrefsCtrl(appCtx, spgc.getUserId());
+        LocaleManager.setLocale(appCtx);
+        spc = new SharedPrefsCtrl(appCtx, new SharedPrefsCtrl(appCtx).getCurrentUserId());
         saveGlobalVars(spc);
 
         // Check if we are already logged
@@ -85,17 +84,17 @@ public class LoginActivity extends AppCompatActivity {
             setupFloatingLabelErrorEmail();
             setupFloatingLabelErrorPassword();
 
-            final Button buttonSignup = (Button) findViewById(R.id.button_signup);
+            final Button buttonSignup = (Button) findViewById(R.id.buttonSignup);
             buttonSignup.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     launchActivitySignup();
                 }
             });
-            final Button buttonLogin = (Button) findViewById(R.id.button_login);
+            final Button buttonLogin = (Button) findViewById(R.id.buttonLogin);
             buttonLogin.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    final EditText et_email = (EditText) findViewById(R.id.edit_email);
-                    final EditText et_password = (EditText) findViewById(R.id.edit_pass);
+                    final EditText et_email = (EditText) findViewById(R.id.editTextEmail);
+                    final EditText et_password = (EditText) findViewById(R.id.editTextPassword);
 
                     String emailStr = et_email.getText().toString();
                     String passStr = et_password.getText().toString();
@@ -107,7 +106,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void getToken(String email, String password) {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(getString(R.string.url_server))
+                .baseUrl(spc.get("URL_SERVER"))
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         SignuServerService sss = retrofit.create(SignuServerService.class);
@@ -152,7 +151,7 @@ public class LoginActivity extends AppCompatActivity {
      * Shows input errors
      */
     private void setupFloatingLabelErrorEmail() {
-        final TextInputLayout floatingUsernameLabel = (TextInputLayout) findViewById(R.id.input_layout_email);
+        final TextInputLayout floatingUsernameLabel = (TextInputLayout) findViewById(R.id.textInputLayoutPassword);
         floatingUsernameLabel.getEditText().addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence text, int start, int count, int after) {
@@ -195,7 +194,7 @@ public class LoginActivity extends AppCompatActivity {
      * Shows password error
      */
     private void setupFloatingLabelErrorPassword() {
-        final TextInputLayout floatingUsernameLabel = (TextInputLayout) findViewById(R.id.input_layout_password);
+        final TextInputLayout floatingUsernameLabel = (TextInputLayout) findViewById(R.id.textInputLayoutPassword);
         floatingUsernameLabel.getEditText().addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence text, int start, int count, int after) {
@@ -254,8 +253,8 @@ public class LoginActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     UserExt myUserExt = response.body().getData().getUserExt();
                     //Save myUserExt
-                    spgc.storeUserId(myUserExt.getId());
-                    spc = new SharedPrefsCtrl(appCtx, spgc.getUserId());
+                    spc.storeCurrentUserId(myUserExt.getId());
+                    spc = new SharedPrefsCtrl(appCtx, new SharedPrefsCtrl(appCtx).getCurrentUserId());
                     spc.store(myUserExt);
                     // Launch ActivityNavigation
                     launchActivityNavigation();

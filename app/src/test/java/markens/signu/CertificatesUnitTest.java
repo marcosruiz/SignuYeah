@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import java.security.KeyStore;
 
-import markens.signu.engine.Signature;
+import markens.signu.itext.Signature;
 
 import static org.junit.Assert.assertNotNull;
 

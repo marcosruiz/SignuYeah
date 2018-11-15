@@ -9,11 +9,13 @@
         android:id="@+id/textViewCert"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="8dp"
         android:text="TextView"
         android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline11"
         app:layout_constraintStart_toEndOf="@+id/imageCert"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -24,16 +26,16 @@
         android:text="TextView"
         android:visibility="invisible" />
 
-    <TextView
-        android:id="@+id/textViewCertDes"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="4dp"
-        android:text="TextView"
-        app:layout_constraintStart_toEndOf="@+id/imageCert"
-        app:layout_constraintTop_toTopOf="@+id/guideline10" />
+    <!--<TextView-->
+        <!--android:id="@+id/textViewCertDes"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="8dp"-->
+        <!--android:layout_marginStart="8dp"-->
+        <!--android:layout_marginTop="4dp"-->
+        <!--android:text="TextView"-->
+        <!--app:layout_constraintStart_toEndOf="@+id/imageCert"-->
+        <!--app:layout_constraintTop_toTopOf="@+id/guideline10" />-->
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline10"

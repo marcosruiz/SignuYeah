@@ -2,6 +2,7 @@ package markens.signu.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+
+import java.util.Locale;
 
 import markens.signu.R;
 import markens.signu.activities.cert.FragmentKSList;
@@ -23,7 +27,7 @@ import markens.signu.objects.SSResponse;
 import markens.signu.objects.Token;
 import markens.signu.objects.ext.UserExt;
 import markens.signu.storage.SharedPrefsCtrl;
-import markens.signu.storage.SharedPrefsGeneralCtrl;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -36,7 +40,9 @@ public class NavigationActivity extends AppCompatActivity
 
     public UserExt myUserExt;
     public Token myToken;
-    private SharedPrefsGeneralCtrl spgc;
+
+    private Menu menu;
+
     private SharedPrefsCtrl spc;
 
     @Override
@@ -52,18 +58,32 @@ public class NavigationActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         // Get token from Shared preferences
-        spgc = new SharedPrefsGeneralCtrl(appCtx);
-        spc = new SharedPrefsCtrl(appCtx, spgc.getUserId());
+
+        spc = new SharedPrefsCtrl(appCtx, new SharedPrefsCtrl(appCtx).getCurrentUserId());
         myToken = spc.getToken();
         myUserExt = spc.getUserExt();
 
-        if(myToken == null || myUserExt == null){
+        if (myToken == null || myUserExt == null) {
             launchLoginActivity();
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+
+//                invalidateOptionsMenu();
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+
+//                invalidateOptionsMenu();
+            }
+        };
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -88,6 +108,7 @@ public class NavigationActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+        this.menu = menu;
         getMenuInflater().inflate(R.menu.navigation, menu);
         return true;
     }
@@ -115,24 +136,36 @@ public class NavigationActivity extends AppCompatActivity
         Fragment selectedFragment = null;
         if (id == R.id.nav_user) {
             selectedFragment = new FragmentUserContainer();
-        } else if (id == R.id.nav_cert) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_main, selectedFragment, "selected_fragment_main").commit();
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
+        } else if (id == R.id.nav_ks) {
             selectedFragment = new FragmentKSList();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_main, selectedFragment, "selected_fragment_main").commit();
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
         } else if (id == R.id.nav_settings) {
             selectedFragment = new FragmentSettings();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_main, selectedFragment, "selected_fragment_main").commit();
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
         } else if (id == R.id.nav_share) {
-            // TODO add share
-            selectedFragment = new FragmentAbout();
+            Intent share = new Intent(Intent.ACTION_SEND);
+            share.setType("text/plain");
+            share.putExtra(Intent.EXTRA_TEXT, R.string.dialog_share);
+            startActivity(Intent.createChooser(share, "Share Text"));
         } else if (id == R.id.nav_about) {
-            selectedFragment = new FragmentAbout();
+            DrawerLayout myLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+            Snackbar.make(myLayout, R.string.dialog_about, Snackbar.LENGTH_LONG)
+                    .setAction(R.string.action, null).show();
         } else if (id == R.id.nav_pdf) {
             selectedFragment = new FragmentPdfContainer();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_main, selectedFragment, "selected_fragment_main").commit();
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
         } else if (id == R.id.nav_log_out) {
-            selectedFragment = new FragmentPdfContainer();
             logOut();
         }
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_main, selectedFragment, "selected_fragment_main").commit();
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
@@ -167,8 +200,12 @@ public class NavigationActivity extends AppCompatActivity
     private void launchLoginActivity() {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
-        this.finish();
+        finish();
     }
 
-
+    public void notifyLanguageChange(String language) {
+        Intent refresh = new Intent(this, NavigationActivity.class);
+        startActivity(refresh);
+        finish();
+    }
 }

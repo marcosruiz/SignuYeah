@@ -20,7 +20,7 @@
                 android:id="@+id/textViewEncodedTag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Encoded"
+                android:text="@string/encoded"
                 android:textColor="@color/colorAccent"
                 android:textSize="8sp"
                 android:typeface="monospace" />
@@ -29,7 +29,6 @@
                 android:id="@+id/textViewEncodedValue"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="TextView"
                 android:textSize="8sp"
                 android:typeface="monospace" />
 
@@ -44,7 +43,7 @@
                 android:id="@+id/textViewFormatTag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Format"
+                android:text="@string/format"
                 android:textColor="@color/colorAccent"
                 android:textSize="8sp"
                 android:typeface="monospace" />
@@ -53,7 +52,6 @@
                 android:id="@+id/textViewFormatValue"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="TextView"
                 android:textSize="8sp"
                 android:typeface="monospace" />
         </LinearLayout>
@@ -67,7 +65,7 @@
                 android:id="@+id/textViewAlgTag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Algorithm"
+                android:text="@string/algorithm"
                 android:textColor="@color/colorAccent"
                 android:textSize="8sp"
                 android:typeface="monospace" />
@@ -77,7 +75,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="TextView"
                 android:textSize="8sp"
                 android:typeface="monospace" />
         </LinearLayout>
@@ -91,7 +88,7 @@
                 android:id="@+id/textViewTypeTag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Type"
+                android:text="@string/type"
                 android:textColor="@color/colorAccent"
                 android:textSize="8sp"
                 android:typeface="monospace" />
@@ -101,7 +98,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="TextView"
                 android:textSize="8sp"
                 android:typeface="monospace" />
         </LinearLayout>
@@ -115,7 +111,7 @@
                 android:id="@+id/textViewDetailsTag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Details"
+                android:text="@string/details"
                 android:textColor="@color/colorAccent"
                 android:textSize="8sp"
                 android:typeface="monospace"
@@ -127,7 +123,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="TextView"
                 android:textSize="8sp"
                 android:typeface="monospace"
                 app:layout_constraintStart_toEndOf="@+id/textViewDetailsTag"

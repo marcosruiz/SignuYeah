@@ -44,9 +44,9 @@ public class SignerListAdapter extends BaseAdapter {
         SignerExt se = signers.get(position);
         final View view = inflater.inflate(R.layout.signer_item, null);
 
-        TextView signerEmail = (TextView) view.findViewById(R.id.textViewCert);
-        TextView signerName = (TextView) view.findViewById(R.id.textViewCertDes);
-        TextView signerLastname = (TextView) view.findViewById(R.id.textViewUserLastname);
+        TextView signerEmail = (TextView) view.findViewById(R.id.textViewSignerEmail);
+        TextView signerName = (TextView) view.findViewById(R.id.textViewSignerName);
+        TextView signerLastname = (TextView) view.findViewById(R.id.textViewSignerLastname);
         ImageView signerImg = (ImageView) view.findViewById(R.id.imageIsSigned);
 
         signerEmail.setText(se.getUser().getEmail());

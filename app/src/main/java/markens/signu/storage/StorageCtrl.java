@@ -10,20 +10,45 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.channels.FileChannel;
 
-import markens.signu.objects.ext.PdfExt;
 import okhttp3.ResponseBody;
 
 public class StorageCtrl {
-    Context myCtx;
+    Context context;
+    String userId;
 
-    public StorageCtrl(Context context) {
-        myCtx = context;
+    final String pdfsNameFolder = "pdfs";
+    final String keystoreNameFolder = "keystores";
+
+    public StorageCtrl(Context context, String userId) {
+        this.context = context;
+        this.userId = userId;
+        // Create folders if they do not exist
+        File mydir = context.getDir(userId, Context.MODE_PRIVATE);
+        if (!mydir.exists()) {
+            mydir.mkdirs();
+        }
+        mydir = context.getDir(userId + "." + pdfsNameFolder, Context.MODE_PRIVATE);
+        if (!mydir.exists()) {
+            mydir.mkdirs();
+        }
+        mydir = context.getDir(userId + "." + keystoreNameFolder, Context.MODE_PRIVATE);
+        if (!mydir.exists()) {
+            mydir.mkdirs();
+        }
     }
 
-    public boolean writeResponseBodyToDisk(ResponseBody body, String fileName) {
+    public File getPdfsFolder(){
+        return context.getDir(userId + "." + pdfsNameFolder, Context.MODE_PRIVATE);
+    }
+
+    public File getKeystoreFolder(){
+        return context.getDir(userId + "." + keystoreNameFolder, Context.MODE_PRIVATE);
+    }
+
+    public boolean writeResponseBodyPdfToDisk(ResponseBody body, String fileName) {
         try {
 //            File file = new File(getExternalFilesDir(null) + File.separator + "Future Studio Icon.png");
-            File file = new File(myCtx.getApplicationContext().getFilesDir().getAbsolutePath() + File.separator + fileName);
+            File file = new File(getPdfsFolder() + File.separator + fileName);
             InputStream inputStream = null;
             OutputStream outputStream = null;
             try {
@@ -60,12 +85,12 @@ public class StorageCtrl {
         }
     }
 
-    public boolean itExists(String fileName){
-        File file = new File(myCtx.getApplicationContext().getFilesDir().getAbsolutePath() + File.separator + fileName);
+    public boolean itExists(String fileName) {
+        File file = new File(context.getApplicationContext().getFilesDir().getAbsolutePath() + File.separator + fileName);
         return file.exists();
     }
 
-    public static void copy(File src, File dst) throws IOException{
+    public static void copy(File src, File dst) throws IOException {
         FileInputStream inStream = new FileInputStream(src);
         FileOutputStream outStream = new FileOutputStream(dst);
         FileChannel inChannel = inStream.getChannel();
@@ -75,7 +100,7 @@ public class StorageCtrl {
         outStream.close();
     }
 
-    public static void delete(File src){
+    public static void delete(File src) {
         src.delete();
     }
 }

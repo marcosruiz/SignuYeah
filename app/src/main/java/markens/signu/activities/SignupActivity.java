@@ -15,7 +15,7 @@ import markens.signu.R;
 import markens.signu.api.SignuServerService;
 import markens.signu.objects.SSResponse;
 import markens.signu.storage.SharedPrefsCtrl;
-import markens.signu.storage.SharedPrefsGeneralCtrl;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -32,7 +32,7 @@ public class SignupActivity extends AppCompatActivity {
 
     Context myCtx;
     Context appCtx;
-    private SharedPrefsGeneralCtrl spgc;
+
     private SharedPrefsCtrl spc;
 
     @Override
@@ -43,8 +43,8 @@ public class SignupActivity extends AppCompatActivity {
 
         myCtx = this;
         appCtx = this.getApplicationContext();
-        spgc = new SharedPrefsGeneralCtrl(appCtx);
-        spc = new SharedPrefsCtrl(appCtx, spgc.getUserId());
+
+        spc = new SharedPrefsCtrl(appCtx, new SharedPrefsCtrl(appCtx).getCurrentUserId());
 
         final Button button = (Button) findViewById(R.id.button_finish_signup);
         button.setOnClickListener(new View.OnClickListener() {

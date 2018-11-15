@@ -22,7 +22,7 @@ import markens.signu.R;
 import markens.signu.objects.Token;
 import markens.signu.objects.ext.UserExt;
 import markens.signu.storage.SharedPrefsCtrl;
-import markens.signu.storage.SharedPrefsGeneralCtrl;
+
 
 public class FragmentPdfContainer extends android.support.v4.app.Fragment {
     Context appCtx;
@@ -31,7 +31,7 @@ public class FragmentPdfContainer extends android.support.v4.app.Fragment {
 
     private UserExt myUserExt;
     private Token myToken;
-    private SharedPrefsGeneralCtrl spgc;
+
     private SharedPrefsCtrl spc;
 
     private View view;
@@ -43,10 +43,7 @@ public class FragmentPdfContainer extends android.support.v4.app.Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        updateNotifications();
-    }
 
-    public void updateNotifications(){
         new UpdateNotifications().execute(LIST_PDF_NOTIFICATION_OWNED);
         new UpdateNotifications().execute(LIST_PDF_NOTIFICATION_TO_SIGN);
         new UpdateNotifications().execute(LIST_PDF_NOTIFICATION_SIGNED);
@@ -62,10 +59,8 @@ public class FragmentPdfContainer extends android.support.v4.app.Fragment {
 
 
         // Get token from Shared preferences
-        spgc = new SharedPrefsGeneralCtrl(appCtx);
-        spc = new SharedPrefsCtrl(appCtx, spgc.getUserId());
+        spc = new SharedPrefsCtrl(appCtx, new SharedPrefsCtrl(appCtx).getCurrentUserId());
         myToken = spc.getToken();
-
 
         // Bottom navigation
         setUpBottomNav();
@@ -85,9 +80,6 @@ public class FragmentPdfContainer extends android.support.v4.app.Fragment {
         bottomNav.addItem(item2);
         bottomNav.addItem(item3);
         bottomNav.addItem(item4);
-
-        //Add notifications
-        updateNotifications();
 
         bottomNav.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
             @Override
@@ -139,7 +131,7 @@ public class FragmentPdfContainer extends android.support.v4.app.Fragment {
         @Override
         protected Integer doInBackground(String... strings) {
             key = strings[0];
-            List<Boolean> list = spc.getListBoolean(key);
+            List<Boolean> list = spc.getListBooleanUser(key);
             int count = countTrue(list);
             return count;
         }
@@ -164,9 +156,9 @@ public class FragmentPdfContainer extends android.support.v4.app.Fragment {
     @Deprecated
     private void uploadNotifications() {
         AHBottomNavigation bottomNav = (AHBottomNavigation) view.findViewById(R.id.bottomNavigationListPdf);
-        List<Boolean> listNotOwned = spc.getListBoolean("LIST_PDF_NOTIFICATION_OWNED");
-        List<Boolean> listNotToSign = spc.getListBoolean("LIST_PDF_NOTIFICATION_TO_SIGN");
-        List<Boolean> listNotSigned = spc.getListBoolean("LIST_PDF_NOTIFICATION_SIGNED");
+        List<Boolean> listNotOwned = spc.getListBooleanUser("LIST_PDF_NOTIFICATION_OWNED");
+        List<Boolean> listNotToSign = spc.getListBooleanUser("LIST_PDF_NOTIFICATION_TO_SIGN");
+        List<Boolean> listNotSigned = spc.getListBooleanUser("LIST_PDF_NOTIFICATION_SIGNED");
         if (listNotOwned != null && listNotSigned != null && listNotSigned != null) {
             int countOwned = countTrue(listNotOwned);
             int countToSign = countTrue(listNotToSign);

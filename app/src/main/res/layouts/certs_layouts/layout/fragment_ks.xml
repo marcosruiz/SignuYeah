@@ -14,16 +14,18 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <ListView
+            android:id="@+id/listViewCerts"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
         <Button
             android:id="@+id/buttonImportCert"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Import .P12" />
-
-        <ListView
-            android:id="@+id/listViewCerts"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:text="@string/import_ks" />
 
     </LinearLayout>
+
 </RelativeLayout>

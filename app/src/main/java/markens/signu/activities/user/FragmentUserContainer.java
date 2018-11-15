@@ -16,7 +16,7 @@ import markens.signu.R;
 import markens.signu.objects.Token;
 import markens.signu.objects.ext.UserExt;
 import markens.signu.storage.SharedPrefsCtrl;
-import markens.signu.storage.SharedPrefsGeneralCtrl;
+
 
 public class FragmentUserContainer extends Fragment{
     Context appCtx;
@@ -24,7 +24,7 @@ public class FragmentUserContainer extends Fragment{
 
     public UserExt myUserExt;
     public Token myToken;
-    private SharedPrefsGeneralCtrl spgc;
+
     private SharedPrefsCtrl spc;
 
 
@@ -39,8 +39,8 @@ public class FragmentUserContainer extends Fragment{
         RelativeLayout myLayout = (RelativeLayout) view.findViewById(R.id.fragmentUserContainer);
 
         // Get myToken from Shared preferences
-        spgc = new SharedPrefsGeneralCtrl(appCtx);
-        spc = new SharedPrefsCtrl(appCtx, spgc.getUserId());
+
+        spc = new SharedPrefsCtrl(appCtx, new SharedPrefsCtrl(appCtx).getCurrentUserId());
         myToken = spc.getToken();
 
         BottomNavigationView bottomNav = (BottomNavigationView) view.findViewById(R.id.bottom_navigation_user);

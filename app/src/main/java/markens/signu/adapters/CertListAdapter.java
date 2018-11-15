@@ -16,7 +16,7 @@ import java.security.cert.X509Certificate;
 
 import markens.signu.R;
 import markens.signu.storage.SharedPrefsCtrl;
-import markens.signu.storage.SharedPrefsGeneralCtrl;
+
 
 
 public class CertListAdapter extends BaseAdapter {
@@ -24,7 +24,7 @@ public class CertListAdapter extends BaseAdapter {
     private static LayoutInflater inflater;
     Context myCtx;
     Context appCtx;
-    private SharedPrefsGeneralCtrl spgc;
+
     private SharedPrefsCtrl spc;
     Certificate[] certificates;
 

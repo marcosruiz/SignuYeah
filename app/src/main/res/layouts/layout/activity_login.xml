@@ -24,12 +24,12 @@
 
         <!-- Email -->
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/input_layout_email"
+            android:id="@+id/textInputLayoutEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <EditText
-                android:id="@+id/edit_email"
+                android:id="@+id/editTextEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -41,13 +41,13 @@
 
         <!-- Password -->
         <android.support.design.widget.TextInputLayout
-            android:id="@+id/input_layout_password"
+            android:id="@+id/textInputLayoutPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:passwordToggleEnabled="true">
 
             <EditText
-                android:id="@+id/edit_pass"
+                android:id="@+id/editTextPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -57,7 +57,7 @@
         </android.support.design.widget.TextInputLayout>
 
         <Button
-            android:id="@+id/button_login"
+            android:id="@+id/buttonLogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/login"/>
@@ -81,7 +81,7 @@
             android:text="@string/preg_member"/>
 
         <Button
-            android:id="@+id/button_signup"
+            android:id="@+id/buttonSignup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/signup"/>

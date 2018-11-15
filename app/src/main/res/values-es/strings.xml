@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">Signu</string>
+    <string name="action_settings">Ajustes</string>
+    <string name="list_cert">Mis certificados</string>
+    <string name="create_cert">Crear certificado</string>
+    <string name="info_user">Info del usuario</string>
+    <string name="edit_user">Editar usuario</string>
+    <string name="original_name">Nombre original</string>
+    <string name="login">Entrar</string>
+    <string name="signup">Registrarse</string>
+    <string name="email">Email</string>
+    <string name="new_email">Nuevo email</string>
+    <string name="password">Contraseña</string>
+    <string name="old_password">Antigüa Contraseña</string>
+    <string name="new_password">Nueva contraseña</string>
+    <string name="preg_member">¿Aún no estás en la familia Signu?</string>
+    <string name="lastname">Apellidos</string>
+    <!-- Error messages -->
+    <string name="email_required">Se requiere un email</string>
+    <string name="password_required">La contraseña debe ser más larga</string>
+    <!-- Info messages -->
+    <string name="info_signup">Info: Signu will send you an email to confirm your email and give you a provisional password</string>
+    <string name="name">Nombre</string>
+    <string name="new_name">Nuevo nombre</string>
+    <string name="new_lastname">Nuevos apellidos</string>
+    <string name="signers">Firmantes</string>
+    <string name="owner">Propietario</string>
+    <string name="title_activity_navigation">Signu</string>
+    <string name="navigation_drawer_open">Abrir cajón de navegación</string>
+    <string name="navigation_drawer_close">Cerrar cajón de navegación</string>
+    <string name="nav_header_title">Signu</string>
+    <string name="nav_header_subtitle">Keep calm and sign</string>
+    <string name="nav_header_desc">Cabezera de navegación</string>
+    <string name="pdfs_owned">PDFs en propiedad</string>
+    <string name="pdfs_to_sign">PDFs pendientes</string>
+    <string name="pdfs_signed">PDFs firmados</string>
+    <string name="upload_pdf">Subir PDF</string>
+    <string name="users_related">Usuarios relacionados</string>
+    <string name="see_pdf">Ver PDF</string>
+    <string name="info_pdf">Info PDF</string>
+    <string name="sign_pdf">Firmar PDF</string>
+    <string name="add_signers">Añadir firmantes</string>
+    <string name="edit_pdf">Editar PDF</string>
+    <!-- Snackbar -->
+    <string name="check_downloads">Comprueba tu carpeta de Descargas</string>
+    <string name="wrong">Algo ha ido mal</string>
+    <string name="exception">Ha ocurrido una excepción</string>
+
+</resources>

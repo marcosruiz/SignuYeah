@@ -8,19 +8,20 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/buttonAddUsersRelated"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Add user" />
-
         <ListView
             android:id="@+id/listViewUsersRelated"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_centerVertical="true" >
+            android:layout_centerVertical="true"
+            android:layout_weight="1">
 
         </ListView>
+
+        <Button
+            android:id="@+id/buttonAddUsersRelated"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/search_user" />
 
     </LinearLayout>
 

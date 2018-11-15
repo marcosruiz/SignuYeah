@@ -1,6 +1,7 @@
 package markens.signu.activities.main;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -11,15 +12,15 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.itextpdf.text.DocumentException;
@@ -33,16 +34,18 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import markens.signu.R;
+import markens.signu.activities.NavigationActivity;
+import markens.signu.activities.user.SearchUserActivity;
 import markens.signu.adapters.UserListCheckboxAdapter;
 import markens.signu.api.SignuServerService;
 import markens.signu.api.SignuServerServiceCtrl;
-import markens.signu.engine.Signature2;
+import markens.signu.itext.Signature2;
 import markens.signu.objects.SSResponse;
 import markens.signu.objects.Token;
 import markens.signu.objects.User;
 import markens.signu.objects.ext.UserExt;
 import markens.signu.storage.SharedPrefsCtrl;
-import markens.signu.storage.SharedPrefsGeneralCtrl;
+
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -56,8 +59,8 @@ import static android.app.Activity.RESULT_OK;
 
 public class FragmentPdfUpload extends Fragment {
 
-    Fragment myFragment;
-    File fileOriginal;
+    Fragment fragment;
+    File originalFile;
     File file;
     String originalFileRoute;
     String fileRoute;
@@ -66,7 +69,7 @@ public class FragmentPdfUpload extends Fragment {
 
     Context myCtx;
     Context appCtx;
-    private SharedPrefsGeneralCtrl spgc;
+
     private SharedPrefsCtrl spc;
 
     CoordinatorLayout snackbarLayout;
@@ -78,11 +81,11 @@ public class FragmentPdfUpload extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_pdf_upload, container, false);
 
-        myFragment = this;
+        fragment = this;
         myCtx = getContext();
         appCtx = getContext().getApplicationContext();
-        spgc = new SharedPrefsGeneralCtrl(appCtx);
-        spc = new SharedPrefsCtrl(appCtx, spgc.getUserId());
+
+        spc = new SharedPrefsCtrl(appCtx, new SharedPrefsCtrl(appCtx).getCurrentUserId());
         userExt = spc.getUserExt();
         token = spc.getToken();
 
@@ -107,9 +110,9 @@ public class FragmentPdfUpload extends Fragment {
 
                 } else {
                     new MaterialFilePicker()
-                            .withSupportFragment(myFragment)
+                            .withSupportFragment(fragment)
                             .withRequestCode(1)
-                            .withFilter(Pattern.compile(".*\\.pdf$")) // Filtering files and directories by fileOriginal name using regexp
+                            .withFilter(Pattern.compile(".*\\.pdf$")) // Filtering files and directories by originalFile name using regexp
                             .withFilterDirectories(false) // Set directories filterable (false by default)
                             .withHiddenFiles(true) // Show hidden files and folders
                             .start();
@@ -120,12 +123,12 @@ public class FragmentPdfUpload extends Fragment {
         final Button buttonUploadPdf = (Button) view.findViewById(R.id.buttonUploadPdf);
         buttonUploadPdf.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (fileOriginal == null) {
+                if (originalFile == null) {
 
                     Snackbar.make(snackbarLayout, R.string.select_pdf, Snackbar.LENGTH_LONG)
                             .setAction(R.string.action, null).show();
                 } else {
-                    fileRoute = appCtx.getFilesDir().getAbsolutePath() + File.separator + fileOriginal.getName();
+                    fileRoute = appCtx.getFilesDir().getAbsolutePath() + File.separator + originalFile.getName();
                     int qos = userListCheckboxAdapter.getUsersIdSelected().size();
                     try {
                         Signature2.addEmptyFields(originalFileRoute, fileRoute, qos, Signature2.Margin.LEFT, null);
@@ -150,13 +153,13 @@ public class FragmentPdfUpload extends Fragment {
 
         if (requestCode == 1 && resultCode == RESULT_OK) {
             String filePath = data.getStringExtra(FilePickerActivity.RESULT_FILE_PATH);
-            // Do anything with fileOriginal
+            // Do anything with originalFile
             final TextView editTextPathPdf = (TextView) getActivity().findViewById(R.id.textViewPathPdf);
             editTextPathPdf.setText(filePath);
 
-            //Get fileOriginal
+            //Get originalFile
             originalFileRoute = filePath;
-            fileOriginal = new File(filePath);
+            originalFile = new File(filePath);
 
         }
     }
@@ -197,21 +200,24 @@ public class FragmentPdfUpload extends Fragment {
             call.enqueue(new Callback<SSResponse>() {
                 @Override
                 public void onResponse(Call<SSResponse> call, Response<SSResponse> response) {
-                     
-                    Snackbar.make( snackbarLayout, response.body().getMessage(), Snackbar.LENGTH_LONG)
+
+                    Snackbar.make(snackbarLayout, response.body().getMessage(), Snackbar.LENGTH_LONG)
                             .setAction(R.string.action, null).show();
 
                     if (response.isSuccessful()) {
-                        FragmentManager fm = getActivity().getSupportFragmentManager();
+                        // Update user
+                        FragmentManager fm = ((FragmentActivity) myCtx).getSupportFragmentManager();
                         new SignuServerServiceCtrl(appCtx, fm).updateUserExt();
 
-
+                        // Notify
+                        FragmentPdfContainer f = (FragmentPdfContainer) getFragmentManager().findFragmentByTag("selected_fragment_main");
+                        f.onResume();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<SSResponse> call, Throwable t) {
-                    Snackbar.make( snackbarLayout, R.string.server_error, Snackbar.LENGTH_LONG)
+                    Snackbar.make(snackbarLayout, R.string.server_error, Snackbar.LENGTH_LONG)
                             .setAction(R.string.action, null).show();
                 }
             });

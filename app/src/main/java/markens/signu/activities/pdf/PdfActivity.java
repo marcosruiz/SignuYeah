@@ -24,7 +24,7 @@ import markens.signu.objects.ext.PdfExt;
 import markens.signu.objects.ext.SignerExt;
 import markens.signu.objects.ext.UserExt;
 import markens.signu.storage.SharedPrefsCtrl;
-import markens.signu.storage.SharedPrefsGeneralCtrl;
+
 import markens.signu.storage.StorageCtrl;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -37,7 +37,7 @@ public class PdfActivity extends AppCompatActivity {
 
     Context appCtx;
     Context myCtx;
-    private SharedPrefsGeneralCtrl spgc;
+
     private SharedPrefsCtrl spc;
     PdfExt pdfExt;
     UserExt myUserExt;
@@ -53,8 +53,8 @@ public class PdfActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         Bundle b = intent.getExtras();
-        spgc = new SharedPrefsGeneralCtrl(appCtx);
-        spc = new SharedPrefsCtrl(appCtx, spgc.getUserId());
+
+        spc = new SharedPrefsCtrl(appCtx, new SharedPrefsCtrl(appCtx).getCurrentUserId());
         myUserExt = spc.getUserExt();
         pdfExt = (PdfExt) b.getSerializable("pdf_ext");
 
@@ -117,7 +117,7 @@ public class PdfActivity extends AppCompatActivity {
     };
 
     private void downloadPdf() {
-        StorageCtrl sPdfCtrl = new StorageCtrl(appCtx);
+        StorageCtrl sPdfCtrl = new StorageCtrl(appCtx, new SharedPrefsCtrl(appCtx).getCurrentUserId());
         String pdfName = pdfExt.getFileName() + ".pdf";
         if (!sPdfCtrl.itExists(pdfName)) {
 
@@ -135,9 +135,9 @@ public class PdfActivity extends AppCompatActivity {
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     if (response.isSuccessful()) {
                         ResponseBody rb = response.body();
-                        StorageCtrl sPdfC = new StorageCtrl(myCtx);
+                        StorageCtrl sPdfC = new StorageCtrl(appCtx, new SharedPrefsCtrl(appCtx).getCurrentUserId());
                         String fileName = pdfExt.getFileName() + ".pdf";
-                        boolean isOk = sPdfC.writeResponseBodyToDisk(rb, fileName);
+                        boolean isOk = sPdfC.writeResponseBodyPdfToDisk(rb, fileName);
                     } else {
                         String errBody = null;
                         try {

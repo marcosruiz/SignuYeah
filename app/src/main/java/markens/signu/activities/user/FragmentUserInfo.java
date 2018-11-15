@@ -11,29 +11,29 @@ import android.widget.TextView;
 import markens.signu.R;
 import markens.signu.objects.ext.UserExt;
 import markens.signu.storage.SharedPrefsCtrl;
-import markens.signu.storage.SharedPrefsGeneralCtrl;
+
 
 public class FragmentUserInfo extends android.support.v4.app.Fragment {
 
     Context appCtx;
     Context myCtx;
-    private SharedPrefsGeneralCtrl spgc;
+
     private SharedPrefsCtrl spc;
 
     UserExt myUserExt;
+
+    TextView textViewUserId;
+    TextView textViewUserEmail;
+    TextView textViewUserName;
+    TextView textViewUserLastname;
+    TextView textViewUserCD;
+    TextView textViewUserLED;
 
     @Override
     public void onResume() {
         super.onResume();
 
         myUserExt = spc.getUserExt();
-
-        TextView textViewUserId = (TextView) getActivity().findViewById(R.id.textViewUserIdValue);
-        TextView textViewUserEmail = (TextView) getActivity().findViewById(R.id.textViewUserEmailValue);
-        TextView textViewUserName = (TextView) getActivity().findViewById(R.id.textViewUserNameValue);
-        TextView textViewUserLastname = (TextView) getActivity().findViewById(R.id.textViewUserLastnameValue);
-        TextView textViewUserCD = (TextView) getActivity().findViewById(R.id.textViewUserCDValue);
-        TextView textViewUserLED = (TextView) getActivity().findViewById(R.id.textViewUserLastEditionDateValue);
 
         textViewUserId.setText(myUserExt.getId());
         textViewUserEmail.setText(myUserExt.getEmail());
@@ -52,17 +52,17 @@ public class FragmentUserInfo extends android.support.v4.app.Fragment {
         appCtx = getContext().getApplicationContext();
 
         // Get myUserExt
-        spgc = new SharedPrefsGeneralCtrl(appCtx);
-        spc = new SharedPrefsCtrl(appCtx, spgc.getUserId());
+
+        spc = new SharedPrefsCtrl(appCtx, new SharedPrefsCtrl(appCtx).getCurrentUserId());
         myUserExt = spc.getUserExt();
 
         // Get text view
-        TextView textViewUserId = (TextView) view.findViewById(R.id.textViewUserIdValue);
-        TextView textViewUserEmail = (TextView) view.findViewById(R.id.textViewUserEmailValue);
-        TextView textViewUserName = (TextView) view.findViewById(R.id.textViewUserNameValue);
-        TextView textViewUserLastname = (TextView) view.findViewById(R.id.textViewUserLastnameValue);
-        TextView textViewUserCD = (TextView) view.findViewById(R.id.textViewUserCDValue);
-        TextView textViewUserLED = (TextView) view.findViewById(R.id.textViewUserLastEditionDateValue);
+        textViewUserId = (TextView) view.findViewById(R.id.textViewUserIdValue);
+        textViewUserEmail = (TextView) view.findViewById(R.id.textViewUserEmailValue);
+        textViewUserName = (TextView) view.findViewById(R.id.textViewUserNameValue);
+        textViewUserLastname = (TextView) view.findViewById(R.id.textViewUserLastnameValue);
+        textViewUserCD = (TextView) view.findViewById(R.id.textViewUserCDValue);
+        textViewUserLED = (TextView) view.findViewById(R.id.textViewUserLastEditionDateValue);
 
         textViewUserId.setText(myUserExt.getId());
         textViewUserEmail.setText(myUserExt.getEmail());

@@ -31,7 +31,7 @@ import markens.signu.objects.Token;
 import markens.signu.objects.ext.PdfExt;
 import markens.signu.objects.ext.UserExt;
 import markens.signu.storage.SharedPrefsCtrl;
-import markens.signu.storage.SharedPrefsGeneralCtrl;
+
 import markens.signu.storage.StorageCtrl;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -48,7 +48,6 @@ public class FragmentPdfInfo extends android.support.v4.app.Fragment {
     PdfExt pdfExt;
     UserExt myUserExt;
     Token myToken;
-    private SharedPrefsGeneralCtrl spgc;
     private SharedPrefsCtrl spc;
 
 
@@ -64,8 +63,8 @@ public class FragmentPdfInfo extends android.support.v4.app.Fragment {
         pdfExt = (PdfExt) b.getSerializable("pdf_ext");
 
         // Get myUserExt
-        spgc = new SharedPrefsGeneralCtrl(appCtx);
-        spc = new SharedPrefsCtrl(appCtx, spgc.getUserId());
+
+        spc = new SharedPrefsCtrl(appCtx, new SharedPrefsCtrl(appCtx).getCurrentUserId());
         myUserExt = spc.getUserExt();
         myToken = spc.getToken();
         // PdfExt myPdfExt = myUserExt.getPdfsOwned().get(index);
@@ -74,7 +73,7 @@ public class FragmentPdfInfo extends android.support.v4.app.Fragment {
         TextView pdfId = (TextView) view.findViewById(R.id.textViewPdfIdValue);
         final TextView pdfOriginalName = (TextView) view.findViewById(R.id.textViewOriginalNameValue);
         TextView pdfOwnerEmail = (TextView) view.findViewById(R.id.textViewOwnerEmailValue);
-        TextView pdfOwnerName = (TextView) view.findViewById(R.id.textViewCAValue);
+        TextView pdfOwnerName = (TextView) view.findViewById(R.id.textViewOwnerNameValue);
         TextView pdfOwnerLastname = (TextView) view.findViewById(R.id.textViewOwnerLastnameValue);
         ListView signersList = (ListView) view.findViewById(R.id.listSigners);
 

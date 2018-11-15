@@ -22,7 +22,7 @@ import markens.signu.objects.SSResponse;
 import markens.signu.objects.Token;
 import markens.signu.objects.ext.UserExt;
 import markens.signu.storage.SharedPrefsCtrl;
-import markens.signu.storage.SharedPrefsGeneralCtrl;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -35,7 +35,7 @@ public class FragmentUserEdit extends android.support.v4.app.Fragment {
     Context appCtx;
     Context myCtx;
     Activity myActivity;
-    private SharedPrefsGeneralCtrl spgc;
+
     private SharedPrefsCtrl spc;
     RelativeLayout myLayout;
 
@@ -53,8 +53,8 @@ public class FragmentUserEdit extends android.support.v4.app.Fragment {
         myLayout = (RelativeLayout) getActivity().findViewById(R.id.fragmentUserEdit);
 
         // Get myUserExt
-        spgc = new SharedPrefsGeneralCtrl(appCtx);
-        spc = new SharedPrefsCtrl(appCtx, spgc.getUserId());
+
+        spc = new SharedPrefsCtrl(appCtx, new SharedPrefsCtrl(appCtx).getCurrentUserId());
         myUserExt = spc.getUserExt();
         token = spc.getToken();
 

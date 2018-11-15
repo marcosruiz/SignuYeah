@@ -18,19 +18,19 @@ import markens.signu.objects.ext.PdfExt;
 import markens.signu.objects.ext.UserExt;
 
 public class SharedPrefsCtrl {
-    private static final String PREFS_NAME_PRE = "markens.signu.storage.SharePrefsCtrl";
-    private static String PREFS_NAME;
+    private static final String PREFS_NAME = "markens.signu.storage.SharePrefsCtrl";
     private static SharedPreferences settings;
     private static SharedPreferences.Editor editor;
 
-    private static final String myTokenTag = "TOKEN";
-    private static final String myTokenCreationDateTag = "TOKEN_CD";
-    private static final String myUserTag = "USER";
-    private static final String myUserExtTag = "USER_EXT";
-    private static final String certsTag = "CERTS";
-    private static final String listNotificationOwnedTag = "LIST_PDF_NOTIFICATION_OWNED";
-    private static final String listNotificationToSignTag = "LIST_PDF_NOTIFICATION_TO_SIGN";
-    private static final String listNotificationSignedTag = "LIST_PDF_NOTIFICATION_SIGNED";
+    private String myTokenTag;
+    private String myTokenCreationDateTag;
+    private String myUserTag;
+    private String myUserExtTag;
+    private String ksTag;
+    private String listNotificationOwnedTag;
+    private String listNotificationToSignTag;
+    private String listNotificationSignedTag;
+    private final String currentUserIdTag = "CURRENT_USER_ID";
 
     /**
      * This SharedPrefsCtrl constructor is for my user info
@@ -39,31 +39,61 @@ public class SharedPrefsCtrl {
      * @param userId
      */
     public SharedPrefsCtrl(Context ctx, String userId) {
+        myTokenTag = userId + "." + "TOKEN";
+        myTokenCreationDateTag = userId + "." + "TOKEN_CD";
+        myUserTag = userId + "." + "USER";
+        myUserExtTag = userId + "." + "USER_EXT";
+        ksTag = userId + "." + "KS";
+        listNotificationOwnedTag = userId + "." + "LIST_PDF_NOTIFICATION_OWNED";
+        listNotificationToSignTag = userId + "." + "LIST_PDF_NOTIFICATION_TO_SIGN";
+        listNotificationSignedTag = userId + "." + "LIST_PDF_NOTIFICATION_SIGNED";
         if (settings == null) {
-            // Diferent PREFS_NAME for each user
-            PREFS_NAME = PREFS_NAME_PRE + "." + userId;
+            settings = ctx.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        }
+        editor = settings.edit();
+        storeCurrentUserId(userId);
+    }
+
+    /**
+     * This constructor only allows the use of storeCurrentUserId and getCurrentUserId
+     *
+     * @param ctx
+     */
+    public SharedPrefsCtrl(Context ctx) {
+        if (settings == null) {
             settings = ctx.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         }
         editor = settings.edit();
     }
 
+    public void storeCurrentUserId(String userId) {
+        editor.putString(currentUserIdTag, userId);
+        editor.commit();
+    }
+
+    public String getCurrentUserId() {
+        String value = settings.getString(currentUserIdTag, null);
+        return value;
+    }
+    ////////////////////////////////////////////////////////////////////////////
+
     public void store(String key, String value) {
-        editor.putString(key, value);
+        editor.putString(getCurrentUserId() + "." + key, value);
         editor.commit();
     }
 
     public void store(String key, boolean value) {
-        editor.putBoolean(key, value);
+        editor.putBoolean(getCurrentUserId() + "." + key, value);
         editor.commit();
     }
 
     public boolean getBoolean(String key) {
-        boolean value = settings.getBoolean(key, false);
+        boolean value = settings.getBoolean(getCurrentUserId() + "." + key, false);
         return value;
     }
 
     public String get(String key) {
-        String value = settings.getString(key, null);
+        String value = settings.getString(getCurrentUserId() + "." + key, null);
         return value;
     }
 
@@ -87,7 +117,7 @@ public class SharedPrefsCtrl {
 
     public Token getToken() {
         Gson gson = new Gson();
-        String myTokenStr = settings.getString(myTokenTag, "");
+        String myTokenStr = settings.getString(myTokenTag, null);
         Token token = gson.fromJson(myTokenStr, Token.class);
 
         long creationDate = settings.getLong(myTokenCreationDateTag, 0);
@@ -108,23 +138,37 @@ public class SharedPrefsCtrl {
         return token;
     }
 
+    public List<Boolean> getListBooleanUser(String key) {
+        Gson gson = new Gson();
+        String value = settings.getString(getCurrentUserId() + "." + key, null);
+        List<Boolean> list = gson.fromJson(value, List.class);
+        return list;
+    }
+
+    public void storeListBooleanUser(String key, List<Boolean> value) {
+        Gson gson = new Gson();
+        String valueStr = gson.toJson(value);
+        editor.putString(getCurrentUserId() + "." + key, valueStr);
+        editor.commit();
+    }
+
     public List<Boolean> getListBoolean(String key) {
         Gson gson = new Gson();
-        String value = settings.getString(key, "");
+        String value = settings.getString(key, null);
         List<Boolean> list = gson.fromJson(value, List.class);
         return list;
     }
 
     public void storeListBoolean(String key, List<Boolean> value) {
         Gson gson = new Gson();
-        String userStr = gson.toJson(value);
-        editor.putString(key, userStr);
+        String valueStr = gson.toJson(value);
+        editor.putString(key, valueStr);
         editor.commit();
     }
 
     public User getUser() {
         Gson gson = new Gson();
-        String myUserStr = settings.getString(myUserTag, "");
+        String myUserStr = settings.getString(myUserTag, null);
         User user = gson.fromJson(myUserStr, User.class);
         return user;
     }
@@ -144,9 +188,6 @@ public class SharedPrefsCtrl {
             listOwned = compareList(userExtOld.getPdfsOwned(), userExt.getPdfsOwned(), getListBoolean(listNotificationOwnedTag));
             listToSign = compareList(userExtOld.getPdfsToSign(), userExt.getPdfsToSign(), getListBoolean(listNotificationToSignTag));
             listSigned = compareList(userExtOld.getPdfsSigned(), userExt.getPdfsSigned(), getListBoolean(listNotificationSignedTag));
-            storeListBoolean(listNotificationOwnedTag, listOwned);
-            storeListBoolean(listNotificationToSignTag, listToSign);
-            storeListBoolean(listNotificationSignedTag, listSigned);
         } else if (userExtOld == null) {
             // First login so no notifications
             listOwned = getListOf(userExt.getPdfsOwned().size(), false);
@@ -161,19 +202,19 @@ public class SharedPrefsCtrl {
         storeListBoolean(listNotificationSignedTag, listSigned);
 
 //        if (listOwned == null) {
-//            storeListBoolean(listNotificationOwnedTag, getListOfTrue(userExt.getPdfsOwned().size()));
+//            storeListBooleanUser(listNotificationOwnedTag, getListOfTrue(userExt.getPdfsOwned().size()));
 //        } else {
-//            storeListBoolean(listNotificationOwnedTag, listOwned);
+//            storeListBooleanUser(listNotificationOwnedTag, listOwned);
 //        }
 //        if (listToSign == null) {
-//            storeListBoolean(listNotificationOwnedTag, getListOfTrue(userExt.getPdfsToSign().size()));
+//            storeListBooleanUser(listNotificationOwnedTag, getListOfTrue(userExt.getPdfsToSign().size()));
 //        } else {
-//            storeListBoolean(listNotificationToSignTag, listToSign);
+//            storeListBooleanUser(listNotificationToSignTag, listToSign);
 //        }
 //        if (listSigned == null) {
-//            storeListBoolean(listNotificationOwnedTag, getListOfTrue(userExt.getPdfsSigned().size()));
+//            storeListBooleanUser(listNotificationOwnedTag, getListOfTrue(userExt.getPdfsSigned().size()));
 //        } else {
-//            storeListBoolean(listNotificationSignedTag, listSigned);
+//            storeListBooleanUser(listNotificationSignedTag, listSigned);
 //        }
     }
 
@@ -186,31 +227,46 @@ public class SharedPrefsCtrl {
         return list;
     }
 
+    /**
+     * Compare and generate a new list of notifications.
+     * Squared cost
+     * @param listOld
+     * @param listNew
+     * @param oldListNotifications
+     * @return
+     */
     private static List<Boolean> compareList(List<PdfExt> listOld, List<PdfExt> listNew, List<Boolean> oldListNotifications) {
         List<Boolean> auxList = new ArrayList<>();
-        PdfExt pdfNew;
-        PdfExt pdfOld;
-        int iOld;
-        for (int i = 0; i < listNew.size(); i++) {
-            pdfNew = listNew.get(i);
-            iOld = indexOf(pdfNew, listOld);
-            if (iOld < 0) {
-                // It didn't exists before
-                auxList.add(i, Boolean.TRUE);
-            } else {
-                pdfOld = listOld.get(iOld);
-                if (pdfNew.equals(pdfOld)) {
-                    // It existed and it is equal
-                    Boolean b = oldListNotifications.get(iOld);
-                    if (b == null) {
-                        auxList.add(i, Boolean.TRUE);
-                    } else {
-                        auxList.add(i, b);
-                    }
-
-                } else {
-                    // It existed and it is not equal
+        if(listOld == null || listNew == null || oldListNotifications == null || listOld.size() != oldListNotifications.size()){
+            // We generate a new listNew without notifications (everything false)
+            for(PdfExt pdfExt : listNew){
+                auxList.add(Boolean.FALSE);
+            }
+        } else {
+            PdfExt pdfNew;
+            PdfExt pdfOld;
+            int iOld;
+            for (int i = 0; i < listNew.size(); i++) {
+                pdfNew = listNew.get(i);
+                iOld = indexOf(pdfNew, listOld);
+                if (iOld < 0) {
+                    // It didn't exists before
                     auxList.add(i, Boolean.TRUE);
+                } else {
+                    pdfOld = listOld.get(iOld);
+                    if (pdfNew.equals(pdfOld)) {
+                        // It existed and it is equal
+                        Boolean b = oldListNotifications.get(iOld);
+                        if (b == null) {
+                            auxList.add(i, Boolean.TRUE);
+                        } else {
+                            auxList.add(i, b);
+                        }
+
+                    } else {
+                        // It existed and it is not equal
+                        auxList.add(i, Boolean.TRUE);
+                    }
                 }
             }
         }
@@ -234,27 +290,27 @@ public class SharedPrefsCtrl {
 
     public UserExt getUserExt() {
         Gson gson = new Gson();
-        String myUserExtStr = settings.getString(myUserExtTag, "");
+        String myUserExtStr = settings.getString(myUserExtTag, null);
         UserExt userExt = gson.fromJson(myUserExtStr, UserExt.class);
         return userExt;
     }
 
     public Set<String> getCerts() {
         Set<String> hashSet = new HashSet<String>();
-        return settings.getStringSet(certsTag, hashSet);
+        return settings.getStringSet(ksTag, hashSet);
     }
 
     public void storeCert(String routeCert) {
         Set<String> certs = getCerts();
         certs.add(routeCert);
-        editor.putStringSet(certsTag, certs);
+        editor.putStringSet(ksTag, certs);
         editor.commit();
     }
 
     public void deleteCert(String routeCert) {
         Set<String> certs = getCerts();
         certs.remove(routeCert);
-        editor.putStringSet(certsTag, certs);
+        editor.putStringSet(ksTag, certs);
         editor.commit();
     }
 }

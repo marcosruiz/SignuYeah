@@ -28,15 +28,14 @@ import java.util.Set;
 import markens.signu.R;
 import markens.signu.api.SignuServerService;
 import markens.signu.api.SignuServerServiceCtrl;
-import markens.signu.engine.Signature;
-import markens.signu.engine.Signature2;
+import markens.signu.itext.Signature2;
 import markens.signu.exception.NoEmptySignaturesException;
 import markens.signu.objects.Pdf;
 import markens.signu.objects.SSResponse;
 import markens.signu.objects.Token;
 import markens.signu.objects.ext.PdfExt;
 import markens.signu.storage.SharedPrefsCtrl;
-import markens.signu.storage.SharedPrefsGeneralCtrl;
+
 import markens.signu.storage.StorageCtrl;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -52,7 +51,7 @@ public class FragmentPdfSign extends android.support.v4.app.Fragment {
     Context myCtx;
     Context appCtx;
     View view;
-    private SharedPrefsGeneralCtrl spgc;
+
     private SharedPrefsCtrl spc;
     String[] certs;
     Token token;
@@ -67,8 +66,8 @@ public class FragmentPdfSign extends android.support.v4.app.Fragment {
         appCtx = myCtx.getApplicationContext();
         Bundle b = getArguments();
         pdfExt = (PdfExt) b.getSerializable("pdf_ext");
-        spgc = new SharedPrefsGeneralCtrl(appCtx);
-        spc = new SharedPrefsCtrl(appCtx, spgc.getUserId());
+
+        spc = new SharedPrefsCtrl(appCtx, new SharedPrefsCtrl(appCtx).getCurrentUserId());
         Set<String> setCerts = spc.getCerts();
         token = spc.getToken();
         certs = setCerts.toArray(new String[setCerts.size()]);
@@ -152,7 +151,7 @@ public class FragmentPdfSign extends android.support.v4.app.Fragment {
                 } else {
                     String ksRouteSelected = certs[radioButtonSelected.getId()];
 
-                    EditText editTextPass = (EditText) view.findViewById(R.id.editTextPass);
+                    EditText editTextPass = (EditText) view.findViewById(R.id.editTextPassword);
                     String pass = editTextPass.getText().toString();
 
                     String pdfSrc = appCtx.getFilesDir().getAbsolutePath() + File.separator + pdfExt.getFileName() + ".pdf";
@@ -234,7 +233,7 @@ public class FragmentPdfSign extends android.support.v4.app.Fragment {
     }
 
     private void downloadPdf() {
-        StorageCtrl sPdfCtrl = new StorageCtrl(appCtx);
+        StorageCtrl sPdfCtrl = new StorageCtrl(appCtx, new SharedPrefsCtrl(appCtx).getCurrentUserId());
         String pdfName = pdfExt.getFileName() + ".pdf";
         if (!sPdfCtrl.itExists(pdfName)) {
 
@@ -252,9 +251,9 @@ public class FragmentPdfSign extends android.support.v4.app.Fragment {
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     if (response.isSuccessful()) {
                         ResponseBody rb = response.body();
-                        StorageCtrl sPdfC = new StorageCtrl(myCtx);
+                        StorageCtrl sc = new StorageCtrl(appCtx, new SharedPrefsCtrl(appCtx).getCurrentUserId());
                         String fileName = pdfExt.getFileName() + ".pdf";
-                        boolean isOk = sPdfC.writeResponseBodyToDisk(rb, fileName);
+                        boolean isOk = sc.writeResponseBodyPdfToDisk(rb, fileName);
                     } else {
                         String errBody = null;
                         try {

@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/textViewCert"
+        android:id="@+id/textViewSignerEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
@@ -14,11 +14,11 @@
         android:layout_marginTop="8dp"
         android:text="TextView"
         android:textSize="14sp"
-        app:layout_constraintStart_toEndOf="@+id/imageIsSigned"
-        app:layout_constraintTop_toBottomOf="@+id/textViewCertDes" />
+        app:layout_constraintStart_toEndOf="@+id/imageSigner"
+        app:layout_constraintTop_toBottomOf="@+id/imageIsSigned" />
 
     <TextView
-        android:id="@+id/textViewCertDes"
+        android:id="@+id/textViewSignerName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
@@ -30,7 +30,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textViewUserLastname"
+        android:id="@+id/textViewSignerLastname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
@@ -38,30 +38,38 @@
         android:layout_marginTop="8dp"
         android:text="TextView"
         android:textSize="18sp"
-        app:layout_constraintStart_toEndOf="@+id/textViewCertDes"
+        app:layout_constraintStart_toEndOf="@+id/textViewSignerName"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/imageIsSigned"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@+id/imageCert"
-        app:srcCompat="@drawable/ic_timer_black_24dp"
-        tools:layout_editor_absoluteY="36dp" />
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toEndOf="@+id/imageSigner"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_timer_black_24dp" />
 
     <ImageView
-        android:id="@+id/imageCert"
+        android:id="@+id/imageSigner"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        app:srcCompat="@drawable/ic_account_circle_black_24dp"
-        tools:layout_editor_absoluteX="6dp"
-        tools:layout_editor_absoluteY="8dp" />
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_account_circle_black_24dp" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="65dp" />
+        app:layout_constraintGuide_begin="64dp" />
 
 </android.support.constraint.ConstraintLayout>

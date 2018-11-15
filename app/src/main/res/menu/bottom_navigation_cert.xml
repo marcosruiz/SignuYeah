@@ -6,6 +6,6 @@
         android:title="@string/list_cert"></item>
     <item
         android:id="@+id/nav_add_cert"
-        android:icon="@drawable/add"
+        android:icon="@drawable/ic_add_black_24dp"
         android:title="@string/create_cert"></item>
 </menu>

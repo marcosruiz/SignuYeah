@@ -14,37 +14,33 @@ import markens.signu.R;
 import markens.signu.adapters.PdfsExtOwnedListAdapter;
 import markens.signu.objects.ext.UserExt;
 import markens.signu.storage.SharedPrefsCtrl;
-import markens.signu.storage.SharedPrefsGeneralCtrl;
+
 
 public class FragmentPdfOwnedList extends android.support.v4.app.Fragment {
-    PdfsExtOwnedListAdapter pdfsExtListAdatper;
+    PdfsExtOwnedListAdapter pdfsExtListAdapter;
+    SharedPrefsCtrl spc;
+    View view;
 
     @Override
     public void onResume() {
         super.onResume();
-        uploadData();
-    }
+        UserExt myUserExt = spc.getUserExt();
 
-    private void uploadData() {
-        pdfsExtListAdatper.notifyDataSetChanged();
+        ListView list = (ListView) view.findViewById(R.id.pdf_list);
+        List<Boolean> listNot = spc.getListBooleanUser(getString(R.string.key_list_pdf_not_owned));
+        pdfsExtListAdapter = new PdfsExtOwnedListAdapter(getContext(), myUserExt.getPdfsOwned(), listNot, getString(R.string.key_list_pdf_not_owned));
+        list.setAdapter(pdfsExtListAdapter);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_pdf_list, container, false);
-        ListView list = (ListView) view.findViewById(R.id.pdf_list);
+        view = inflater.inflate(R.layout.fragment_pdf_list, container, false);
+
         // Get data
         Context myCtx = getContext();
         Context appCtx = myCtx.getApplicationContext();
-        SharedPrefsGeneralCtrl spgc = new SharedPrefsGeneralCtrl(appCtx);
-        SharedPrefsCtrl spc = new SharedPrefsCtrl(appCtx, spgc.getUserId());
-
-        UserExt myUserExt = spc.getUserExt();
-        List<Boolean> listNot = spc.getListBoolean(getString(R.string.key_list_pdf_not_owned));
-        pdfsExtListAdatper = new PdfsExtOwnedListAdapter(getContext(), myUserExt.getPdfsOwned(), listNot, getString(R.string.key_list_pdf_not_owned));
-        list.setAdapter(pdfsExtListAdatper);
-
+        spc = new SharedPrefsCtrl(appCtx, new SharedPrefsCtrl(appCtx).getCurrentUserId());
 
         return view;
     }

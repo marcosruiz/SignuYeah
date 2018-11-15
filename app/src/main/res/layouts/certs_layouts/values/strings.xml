@@ -7,7 +7,6 @@
     <string name="export_exception">It could not be exported</string>
     <string name="dialog_insert_pass">Enter the password</string>
     <string name="response_no_successful">Server\'s response was not successful</string>
-    <string name="action">Action</string>
     <string name="dialog_insert_data">Insert data</string>
     <string name="dialog_data_not_valid">Data not valid</string>
     <string name="server_error">Internal server error</string>
@@ -16,21 +15,79 @@
     <string name="choose_signer">You need to choose at least one signer</string>
     <string name="select_pdf">You need to select a PDF</string>
     <string name="pdf_signed">Nice! Pdf signed</string>
-    <string name="select_ks">You have to select a KS</string>
-    <string name="url_server">http://192.168.1.6:3000/</string>
+    <string name="info_select_ks">You have to select a KeyStore</string>
+    <string name="select_ks">Select a KeyStore</string>
     <string name="incorrect_login">Incorrect login</string>
-    <string name="key_list_pdf_not_owned">LIST_PDF_NOTIFICATION_OWNED</string>
-    <string name="key_list_pdf_not_signed">LIST_PDF_NOTIFsobreICATION_SIGNED</string>
-    <string name="key_list_pdf_not_to_sign">LIST_PDF_NOTIFICATION_TO_SIGN</string>
-    <string name="CLIENT_ID">application</string>
-    <string name="CLIENT_SECRET">secret</string>
-    <string name="GRANT_TYPE">password</string>
-    <string name="TOKEN_TYPE">bearer</string>
-    <string name="URL_SERVER">https://signu-server.herokuapp.com/</string>
-    <string name="URL_SERVER_LOCAL">http://192.168.1.6:3000/</string>
-    <string name="URL_CA">https://signu-ca.herokuapp.com/</string>
-    <string name="URL_CA_LOCAL">http://192.168.1.6:3001/</string>
-    <string name="URL_TSA">https://signu-tsa.herokuapp.com/</string>
-    <string name="URL_TSA_LOCAL">http://192.168.1.6:3002/</string>
+    <string name="language_spanish">Spanish</string>
+    <string name="language_english">English</string>
+    <string name="select_language">Select language</string>
+    <string name="save_changes">Save changes</string>
+    <string name="urlServerTag">URL Signu Server</string>
+    <string name="urlTsaTag">URL Time Stamp Authority (TSA) </string>
+    <string name="urlCaTag">URL Certificate Authority (CA)</string>
+    <string name="user_added">Added</string>
+    <string name="key_list_pdf_not_owned" translatable="false">LIST_PDF_NOTIFICATION_OWNED</string>
+    <string name="key_list_pdf_not_signed" translatable="false">LIST_PDF_NOTIFICATION_SIGNED</string>
+    <string name="key_list_pdf_not_to_sign" translatable="false">LIST_PDF_NOTIFICATION_TO_SIGN</string>
+    <string name="URL_SERVER" translatable="false">https://signu-server.herokuapp.com/</string>
+    <string name="URL_SERVER_LOCAL" translatable="false">http://192.168.1.6:3000/</string>
+    <string name="URL_CA" translatable="false">https://signu-ca.herokuapp.com/</string>
+    <string name="URL_CA_LOCAL" translatable="false">http://192.168.1.6:3001/</string>
+    <string name="URL_TSA" translatable="false">https://signu-tsa.herokuapp.com/</string>
+    <string name="URL_TSA_LOCAL" translatable="false">http://192.168.1.6:3002/</string>
+    <string name="CLIENT_ID" translatable="false">application</string>
+    <string name="CLIENT_SECRET" translatable="false">secret</string>
+    <string name="GRANT_TYPE" translatable="false">password</string>
+    <string name="TOKEN_TYPE" translatable="false">bearer</string>
+    <string name="action" translatable="false">Action</string>
+    <string name="certificates">Certificates</string>
+    <string name="settings">Settings</string>
+    <string name="user">User</string>
+    <string name="pdf">List PDFs</string>
+    <string name="share">Share</string>
+    <string name="about">About</string>
+    <string name="log_out">Log out</string>
+    <string name="select_signers">Select signers</string>
+    <string name="select_pdf_file">Select PDF file</string>
+    <string name="nothing_selected">Nothing selected</string>
+    <string name="selection_pdf">PDF selection</string>
+    <string name="id">Identifier</string>
+    <string name="creation_date">Creation date</string>
+    <string name="last_edition_date">Last Edition Date</string>
+    <string name="update_email">Update email</string>
+    <string name="update_password">Update password</string>
+    <string name="update_name">Update name</string>
+    <string name="update_lastname">Update lastname</string>
+    <string name="delete_user">Delete user</string>
+    <string name="search_user">Add user</string>
+    <string name="filename">Filename</string>
+    <string name="type">Type</string>
+    <string name="provider_version">Provider version</string>
+    <string name="provider_info">Provider info</string>
+    <string name="provider_name">Provider name</string>
+    <string name="certificate_list">Certificate list</string>
+    <string name="delete">Delete</string>
+    <string name="export">Export</string>
+    <string name="import_ks">Import Keystore</string>
+    <string name="pdf_id">Pdf ID</string>
+    <string name="owner_email">Owner email</string>
+    <string name="owner_name">Owner name</string>
+    <string name="update">Update</string>
+    <string name="encoded">Encoded</string>
+    <string name="format">Format</string>
+    <string name="algorithm">Algorithm</string>
+    <string name="details">Details</string>
+    <string name="search">Search</string>
+    <string name="warning">Warning</string>
+    <string name="keystore_desc">Keystore</string>
+    <string name="user_desc">User</string>
+    <string name="dialog_about">Opensource project hosted on: github.com/marcosruiz</string>
+    <string name="dialog_share">Check Signu, the best way to sign your PDFs</string>
+    <string name="ks_folder">keystores</string>
+    <string name="pdf_folder">pdfs</string>
+    <string name="add">Add</string>
+    <string name="ks">Keystores</string>
+    <string name="user_related_deleted">User related deleted</string>
+
 
 </resources>

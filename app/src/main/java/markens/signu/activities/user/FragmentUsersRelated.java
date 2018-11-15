@@ -18,48 +18,44 @@ import markens.signu.objects.Token;
 import markens.signu.objects.User;
 import markens.signu.objects.ext.UserExt;
 import markens.signu.storage.SharedPrefsCtrl;
-import markens.signu.storage.SharedPrefsGeneralCtrl;
+
 
 public class FragmentUsersRelated extends android.support.v4.app.Fragment {
 
     UserListAdapter userListAdapter;
     UserExt myUserExt;
-    Token myToken;
-
     Context myCtx;
     Context appCtx;
-    private SharedPrefsGeneralCtrl spgc;
+    View view;
+
     private SharedPrefsCtrl spc;
 
     @Override
     public void onResume() {
         super.onResume();
 
+        myUserExt = spc.getUserExt();
+
+        // List users
+        List<User> listUsersRelated = myUserExt.getUsersRelated();
+        ListView list = (ListView) view.findViewById(R.id.listViewUsersRelated);
+        userListAdapter = new UserListAdapter(getContext(), listUsersRelated);
+        list.setAdapter(userListAdapter);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_users_related, container, false);
-
+        view = inflater.inflate(R.layout.fragment_users_related, container, false);
 
         // Get data
         myCtx = getContext();
         appCtx = getContext().getApplicationContext();
-        spgc = new SharedPrefsGeneralCtrl(appCtx);
-        spc = new SharedPrefsCtrl(appCtx, spgc.getUserId());
-        myUserExt = spc.getUserExt();
-        myToken = spc.getToken();
 
-        // List users
-        ListView list = (ListView) view.findViewById(R.id.listViewUsersRelated);
-        List<User> listUsersRelated = myUserExt.getUsersRelated();
-        userListAdapter = new UserListAdapter(getContext(), listUsersRelated);
-        list.setAdapter(userListAdapter);
+        spc = new SharedPrefsCtrl(appCtx, new SharedPrefsCtrl(appCtx).getCurrentUserId());
 
         // Button
         final Button buttonSelectPdf = (Button) view.findViewById(R.id.buttonAddUsersRelated);
-
         buttonSelectPdf.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 launchActivityAddUsers();

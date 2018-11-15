@@ -58,7 +58,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_marginBottom="32dp"
-                    android:text="Upadate email" />
+                    android:text="@string/update_email" />
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/inputLayoutNewPassword"
@@ -98,7 +98,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_marginBottom="32dp"
-                    android:text="Update password" />
+                    android:text="@string/update_password" />
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/inputLayoutNewName"
@@ -121,7 +121,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_marginBottom="32dp"
-                    android:text="Update name" />
+                    android:text="@string/update_name" />
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/inputLayoutNewLastname"
@@ -144,7 +144,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_marginBottom="32dp"
-                    android:text="Update lastname" />
+                    android:text="@string/update_lastname" />
 
                 <android.support.design.widget.TextInputLayout
                     android:id="@+id/inputLayoutPasswordToDelete"
@@ -167,7 +167,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_marginBottom="32dp"
-                    android:text="Delete user" />
+                    android:text="@string/delete_user" />
 
             </LinearLayout>
         </LinearLayout>

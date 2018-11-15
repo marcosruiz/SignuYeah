@@ -1,4 +1,4 @@
-package markens.signu.engine;
+package markens.signu.itext;
 
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.BaseColor;
@@ -25,7 +25,6 @@ import com.itextpdf.text.pdf.security.ExternalDigest;
 import com.itextpdf.text.pdf.security.ExternalSignature;
 import com.itextpdf.text.pdf.security.MakeSignature;
 import com.itextpdf.text.pdf.security.PrivateKeySignature;
-import com.itextpdf.text.pdf.security.TSAClient;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -40,7 +39,6 @@ import java.security.PrivateKey;
 import java.security.Security;
 import java.security.cert.Certificate;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.spongycastle.jce.provider.BouncyCastleProvider;
