@@ -20,7 +20,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.itextpdf.text.DocumentException;
@@ -66,6 +69,7 @@ public class FragmentPdfUpload extends Fragment {
     String fileRoute;
     Token token;
     UserExt userExt;
+    View view;
 
     Context myCtx;
     Context appCtx;
@@ -79,7 +83,7 @@ public class FragmentPdfUpload extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_pdf_upload, container, false);
+        view = inflater.inflate(R.layout.fragment_pdf_upload, container, false);
 
         fragment = this;
         myCtx = getContext();
@@ -96,6 +100,39 @@ public class FragmentPdfUpload extends Fragment {
         List<User> listUsersRelated = userExt.getUsersRelated();
         userListCheckboxAdapter = new UserListCheckboxAdapter(getContext(), listUsersRelated);
         list.setAdapter(userListCheckboxAdapter);
+
+        // Switches
+        final Switch switchAddSigners = (Switch) view.findViewById(R.id.switchAddSigners);
+        final Switch switchStamp = (Switch) view.findViewById(R.id.switchStamp);
+        final Spinner spinnerMargin = (Spinner) view.findViewById(R.id.spinnerMargin);
+
+        switchAddSigners.setChecked(true);
+        switchStamp.setEnabled(false);
+        spinnerMargin.setEnabled(false);
+
+        switchAddSigners.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    switchStamp.setEnabled(false);
+                    switchStamp.setChecked(false);
+                    spinnerMargin.setEnabled(false);
+                } else {
+                    switchStamp.setEnabled(true);
+                    spinnerMargin.setEnabled(true);
+                }
+            }
+        });
+
+        switchStamp.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    switchAddSigners.setChecked(false);
+                    spinnerMargin.setEnabled(true);
+                } else {
+                    spinnerMargin.setEnabled(false);
+                }
+            }
+        });
 
         final Button buttonSelectPdf = (Button) view.findViewById(R.id.buttonSelectPdf);
 
@@ -130,15 +167,35 @@ public class FragmentPdfUpload extends Fragment {
                 } else {
                     fileRoute = appCtx.getFilesDir().getAbsolutePath() + File.separator + originalFile.getName();
                     int qos = userListCheckboxAdapter.getUsersIdSelected().size();
-                    try {
-                        Signature2.addEmptyFields(originalFileRoute, fileRoute, qos, Signature2.Margin.LEFT, null);
+                    if (switchAddSigners.isChecked()) {
                         file = new File(fileRoute);
-                        uploadPdf();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (DocumentException e) {
-                        e.printStackTrace();
+                        uploadPdf(Boolean.TRUE, Boolean.FALSE);
+                    } else {
+                        if (switchStamp.isChecked()) {
+                            int marginSelectedItemPosition = spinnerMargin.getSelectedItemPosition();
+                            Signature2.Margin selectedMargin = Signature2.Margin.TOP;
+                            if (marginSelectedItemPosition == 1) {
+                                selectedMargin = Signature2.Margin.BOT;
+                            } else if (marginSelectedItemPosition == 2) {
+                                selectedMargin = Signature2.Margin.LEFT;
+                            } else if (marginSelectedItemPosition == 3) {
+                                selectedMargin = Signature2.Margin.RIGHT;
+                            }
+                            try {
+                                Signature2.addEmptyFields(originalFileRoute, fileRoute, qos, selectedMargin, null);
+                                file = new File(fileRoute);
+                                uploadPdf(Boolean.FALSE, Boolean.TRUE);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            } catch (DocumentException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            file = new File(fileRoute);
+                            uploadPdf(Boolean.FALSE, Boolean.FALSE);
+                        }
                     }
+
                 }
 
             }
@@ -173,7 +230,7 @@ public class FragmentPdfUpload extends Fragment {
         return false;
     }
 
-    private void uploadPdf() {
+    private void uploadPdf(Boolean addSignersEnabled, Boolean withStamp) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(spc.get("URL_SERVER"))
                 .addConverterFactory(GsonConverterFactory.create())
@@ -196,7 +253,7 @@ public class FragmentPdfUpload extends Fragment {
             Snackbar.make(snackbarLayout, R.string.choose_signer, Snackbar.LENGTH_LONG)
                     .setAction(R.string.action, null).show();
         } else {
-            Call<SSResponse> call = sss.uploadPdfWithSigners(auth, body, signers);
+            Call<SSResponse> call = sss.uploadPdfWithSigners(auth, body, signers, addSignersEnabled, withStamp);
             call.enqueue(new Callback<SSResponse>() {
                 @Override
                 public void onResponse(Call<SSResponse> call, Response<SSResponse> response) {

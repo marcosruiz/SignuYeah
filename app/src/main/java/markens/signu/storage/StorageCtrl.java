@@ -45,10 +45,10 @@ public class StorageCtrl {
         return context.getDir(userId + "." + keystoreNameFolder, Context.MODE_PRIVATE);
     }
 
-    public boolean writeResponseBodyPdfToDisk(ResponseBody body, String fileName) {
+    public boolean writeResponseBodyPdfToDisk(ResponseBody body, String pathName) {
         try {
 //            File file = new File(getExternalFilesDir(null) + File.separator + "Future Studio Icon.png");
-            File file = new File(getPdfsFolder() + File.separator + fileName);
+            File file = new File(pathName);
             InputStream inputStream = null;
             OutputStream outputStream = null;
             try {
@@ -85,8 +85,8 @@ public class StorageCtrl {
         }
     }
 
-    public boolean itExists(String fileName) {
-        File file = new File(context.getApplicationContext().getFilesDir().getAbsolutePath() + File.separator + fileName);
+    public boolean itExists(String pathName) {
+        File file = new File(pathName);
         return file.exists();
     }
 

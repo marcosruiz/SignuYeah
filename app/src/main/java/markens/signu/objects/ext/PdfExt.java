@@ -32,6 +32,8 @@ public class PdfExt implements Serializable {
     private String wasLockedBy;
     @SerializedName("when_was_locked")
     private String whenWhasLocked;
+    @SerializedName("add_signers_enabled")
+    private String addSignersEnabled;
 
     public PdfExt(String id, String originalName, String mimeType, String fileName, String lastEditionDate, String creationDate, markens.signu.objects.User owner, List<SignerExt> signers) {
         this.id = id;
@@ -148,5 +150,13 @@ public class PdfExt implements Serializable {
 
     public void setWhenWhasLocked(String whenWhasLocked) {
         this.whenWhasLocked = whenWhasLocked;
+    }
+
+    public String getAddSignersEnabled() {
+        return addSignersEnabled;
+    }
+
+    public void setAddSignersEnabled(String addSignersEnabled) {
+        this.addSignersEnabled = addSignersEnabled;
     }
 }

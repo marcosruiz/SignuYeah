@@ -29,7 +29,9 @@ public class Pdf  implements Serializable {
     @SerializedName("was_locked_by")
     private String wasLockedBy;
     @SerializedName("when_was_locked")
-    private String whenWhasLocked;
+    private String whenWasLocked;
+    @SerializedName("add_signers_enabled")
+    private boolean addSignersEnabled;
 
     public Pdf(String id, String originalName, String mimeType, String fileName, String lastEditionDate, String creationDate, String ownerId, List<Signer> signers, boolean withStamp, boolean wasLocked, String wasLockedBy, String whenWhasLocked) {
         this.id = id;
@@ -43,7 +45,7 @@ public class Pdf  implements Serializable {
         this.withStamp = withStamp;
         this.wasLocked = wasLocked;
         this.wasLockedBy = wasLockedBy;
-        this.whenWhasLocked = whenWhasLocked;
+        this.whenWasLocked = whenWhasLocked;
     }
 
     public String getOriginalName() {
@@ -127,14 +129,22 @@ public class Pdf  implements Serializable {
     }
 
     public String getWhenWhasLocked() {
-        return whenWhasLocked;
+        return whenWasLocked;
     }
 
     public void setWhenWhasLocked(String whenWhasLocked) {
-        this.whenWhasLocked = whenWhasLocked;
+        this.whenWasLocked = whenWhasLocked;
     }
 
     public boolean isWithStamp() {
         return withStamp;
+    }
+
+    public boolean getAddSignersEnabled() {
+        return addSignersEnabled;
+    }
+
+    public void setAddSignersEnabled(boolean addSignersEnabled) {
+        this.addSignersEnabled = addSignersEnabled;
     }
 }

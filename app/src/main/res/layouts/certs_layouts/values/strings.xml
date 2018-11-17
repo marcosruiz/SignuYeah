@@ -88,6 +88,15 @@
     <string name="add">Add</string>
     <string name="ks">Keystores</string>
     <string name="user_related_deleted">User related deleted</string>
+    <string name="margin">Margin</string>
+    <string name="with_stamp">Do you want a stamp?</string>
+    <string name="add_signers_editable">Do you want to allow the addition of new signers?</string>
+    <string-array name="signature_stamp">
+        <item>Top margin</item>
+        <item>Bottom margin</item>
+        <item>Left margin</item>
+        <item>Right margin</item>
+    </string-array>
 
 
 </resources>

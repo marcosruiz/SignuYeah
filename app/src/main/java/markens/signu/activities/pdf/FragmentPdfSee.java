@@ -1,5 +1,6 @@
 package markens.signu.activities.pdf;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -12,8 +13,13 @@ import java.io.File;
 
 import markens.signu.R;
 import markens.signu.objects.ext.PdfExt;
+import markens.signu.storage.SharedPrefsCtrl;
+import markens.signu.storage.StorageCtrl;
 
 public class FragmentPdfSee extends android.support.v4.app.Fragment {
+
+    Context myCtx;
+    Context appCtx;
 
     @Nullable
     @Override
@@ -22,7 +28,10 @@ public class FragmentPdfSee extends android.support.v4.app.Fragment {
 
         Bundle bundle = getArguments();
         PdfExt pdfExt = (PdfExt) bundle.getSerializable("pdf_ext");
-        String fileRoute = getActivity().getApplicationContext().getFilesDir().getAbsolutePath() + File.separator + pdfExt.getFileName() + ".pdf";
+        myCtx = getContext();
+        appCtx = getContext().getApplicationContext();
+        StorageCtrl sc = new StorageCtrl(appCtx, new SharedPrefsCtrl(appCtx).getCurrentUserId());
+        String fileRoute = sc.getPdfsFolder() + File.separator + pdfExt.getFileName() + ".pdf";
         PDFView pdfView = (PDFView) view.findViewById(R.id.pdfView);
         File file = new File(fileRoute);
         pdfView.fromFile(file).load();

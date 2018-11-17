@@ -34,6 +34,7 @@ public class User implements Serializable {
     @SerializedName("next_email")
     private NextEmail nextEmail;
 
+
     public User() {
     }
 

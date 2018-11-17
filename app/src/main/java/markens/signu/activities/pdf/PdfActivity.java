@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 
 import com.google.gson.Gson;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -117,9 +118,9 @@ public class PdfActivity extends AppCompatActivity {
     };
 
     private void downloadPdf() {
-        StorageCtrl sPdfCtrl = new StorageCtrl(appCtx, new SharedPrefsCtrl(appCtx).getCurrentUserId());
+        StorageCtrl sc = new StorageCtrl(appCtx, new SharedPrefsCtrl(appCtx).getCurrentUserId());
         String pdfName = pdfExt.getFileName() + ".pdf";
-        if (!sPdfCtrl.itExists(pdfName)) {
+        if (!sc.itExists(pdfName)) {
 
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(spc.get("URL_SERVER"))
@@ -135,9 +136,9 @@ public class PdfActivity extends AppCompatActivity {
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     if (response.isSuccessful()) {
                         ResponseBody rb = response.body();
-                        StorageCtrl sPdfC = new StorageCtrl(appCtx, new SharedPrefsCtrl(appCtx).getCurrentUserId());
-                        String fileName = pdfExt.getFileName() + ".pdf";
-                        boolean isOk = sPdfC.writeResponseBodyPdfToDisk(rb, fileName);
+                        StorageCtrl sc = new StorageCtrl(appCtx, new SharedPrefsCtrl(appCtx).getCurrentUserId());
+                        String fileName = sc.getPdfsFolder() + File.separator + pdfExt.getFileName() + ".pdf";
+                        boolean isOk = sc.writeResponseBodyPdfToDisk(rb, fileName);
                     } else {
                         String errBody = null;
                         try {
@@ -168,6 +169,7 @@ public class PdfActivity extends AppCompatActivity {
 
     /**
      * Return true if is a signer and is pending his signature
+     *
      * @param id
      * @param signers
      * @return

@@ -13,25 +13,51 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/textViewPathPdfKey"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/selection_pdf" />
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/textViewPathPdf"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/nothing_selected" />
+                <TextView
+                    android:id="@+id/textViewPathPdfKey"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/selection_pdf" />
+
+                <TextView
+                    android:id="@+id/textViewPathPdf"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/nothing_selected" />
+
+            </LinearLayout>
 
             <Button
                 android:id="@+id/buttonSelectPdf"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/select_pdf_file" />
+
+            <Switch
+                android:id="@+id/switchAddSigners"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/add_signers_editable" />
+
+            <Switch
+                android:id="@+id/switchStamp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/with_stamp" />
+
+            <Spinner
+                android:id="@+id/spinnerMargin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/signature_stamp" />
 
             <TextView
                 android:id="@+id/textViewSelectSignersKey"
@@ -42,15 +68,15 @@
             <ListView
                 android:id="@+id/listViewUsers"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"></ListView>
+                android:layout_height="wrap_content"></ListView>
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="bottom">
+            android:layout_height="wrap_content"
+            android:gravity="bottom"
+            android:orientation="vertical">
 
             <Button
                 android:id="@+id/buttonUploadPdf"

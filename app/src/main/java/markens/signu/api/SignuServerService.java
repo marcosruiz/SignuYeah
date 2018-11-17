@@ -101,7 +101,9 @@ public interface SignuServerService {
     @POST("api/pdfs/")
     Call<SSResponse> uploadPdfWithSigners(@Header("Authorization") String authorization,
                                           @Part MultipartBody.Part pdf,
-                                          @Part List<MultipartBody.Part> signers);
+                                          @Part List<MultipartBody.Part> signers,
+                                          @Part("add_signers_enabled") boolean addSignersEnabed,
+                                          @Part("with_stamp") boolean withStamp);
 
     @Multipart
     @PUT("api/pdfs/{pdf_id}")

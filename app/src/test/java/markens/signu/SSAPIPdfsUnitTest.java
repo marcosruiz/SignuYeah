@@ -20,6 +20,7 @@ import markens.signu.objects.Token;
 import markens.signu.objects.User;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -27,6 +28,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 import static markens.signu.SSAPICommonUnitTest.getPdf;
 import static org.junit.Assert.assertEquals;
@@ -101,6 +103,7 @@ public class SSAPIPdfsUnitTest {
     public void SSS_Pdf_API_Upload_With_Signers_Success() throws Exception {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(URL_LOCAL)
+                .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         final SignuServerService sss = retrofit.create(SignuServerService.class);
@@ -131,14 +134,19 @@ public class SSAPIPdfsUnitTest {
         // Signers
         List<MultipartBody.Part> signers = new ArrayList<>();
         signers.add(MultipartBody.Part.createFormData("signers[0]", u2_1.getId()));
+//        signers.add(MultipartBody.Part.createFormData("with_stamp", "false"));
+//        signers.add(MultipartBody.Part.createFormData("add_signers_enabled", "true"));
 
-        Call<SSResponse> call2 = sss.uploadPdfWithSigners(auth1, body, signers);
+        Call<SSResponse> call2 = sss.uploadPdfWithSigners(auth1, body, signers, true, true);
         Response<SSResponse> response2 = call2.execute();
         assertTrue(response2.isSuccessful());
         SSResponse ssRes = response2.body();
+        Pdf pdf = ssRes.getData().getPdf();
         assertEquals(101, ssRes.getCode());
         assertEquals("PDF created successfully", ssRes.getMessage());
         assertNotNull(ssRes.getData().getPdf());
+        assertEquals(true, pdf.getAddSignersEnabled());
+        assertEquals(false, pdf.isWithStamp());
 
         // Get info user
         User u1_2 = getUser(sss, token1);
