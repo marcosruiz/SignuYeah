@@ -134,8 +134,6 @@ public class SSAPIPdfsUnitTest {
         // Signers
         List<MultipartBody.Part> signers = new ArrayList<>();
         signers.add(MultipartBody.Part.createFormData("signers[0]", u2_1.getId()));
-//        signers.add(MultipartBody.Part.createFormData("with_stamp", "false"));
-//        signers.add(MultipartBody.Part.createFormData("add_signers_enabled", "true"));
 
         Call<SSResponse> call2 = sss.uploadPdfWithSigners(auth1, body, signers, true, true);
         Response<SSResponse> response2 = call2.execute();

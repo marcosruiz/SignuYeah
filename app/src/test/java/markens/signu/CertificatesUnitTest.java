@@ -39,7 +39,5 @@ public class CertificatesUnitTest {
         assertNotNull(ks);
         assertNotNull(ks.aliases());
         assertNotNull(ks.aliases().nextElement());
-
-
     }
 }
